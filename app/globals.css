@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-sand-50 text-clay antialiased;
+    font-family: var(--font-sans);
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-serif);
+    @apply font-medium tracking-tight text-clay;
+  }
+}
+
+@layer components {
+  .container-tight {
+    @apply mx-auto w-full max-w-5xl px-6;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full bg-copper-500 px-7 py-3
+      text-sm font-medium uppercase tracking-[0.15em] text-sand-50 transition
+      hover:bg-copper-600 focus:outline-none focus-visible:ring-2
+      focus-visible:ring-copper-400 focus-visible:ring-offset-2
+      focus-visible:ring-offset-sand-50 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-full border border-copper-300
+      px-7 py-3 text-sm font-medium uppercase tracking-[0.15em] text-copper-700
+      transition hover:border-copper-500 hover:text-copper-800 focus:outline-none
+      focus-visible:ring-2 focus-visible:ring-copper-400;
+  }
+  .eyebrow {
+    @apply text-xs font-medium uppercase tracking-[0.3em] text-copper-500;
+  }
+}
