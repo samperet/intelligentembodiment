@@ -36,6 +36,12 @@ export default function AboutPage() {
       {/* Four pillars */}
       <section className="ie-section px-6">
         <div className="mx-auto max-w-container">
+          <h2
+            className="mb-[clamp(28px,4vw,48px)] text-center font-serif text-ink-900"
+            style={{ fontSize: "clamp(28px,3.8vw,44px)", lineHeight: 1.1 }}
+          >
+            Teacher, Facilitator, Intuitive
+          </h2>
           <div className="grid gap-6 sm:grid-cols-2">
             {aboutPillars.map((p) => (
               <div
