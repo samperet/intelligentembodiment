@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import { Eyebrow, Rule, Stat } from "@/components/brand";
 import { RetreatInterest } from "@/components/RetreatInterest";
@@ -6,6 +8,14 @@ import { Suspense } from "react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { site } from "@/lib/site";
 import { stats } from "@/lib/content";
+
+// Resolve Mackensie's portrait at build time so we never render a broken
+// image. Drop a file at one of these paths in public/imagery to have it
+// appear automatically beside the "Meet Mackensie" button.
+const portrait =
+  ["mackensie.jpg", "mackensie.jpeg", "mackensie.png", "mackensie.webp"]
+    .map((f) => `/imagery/${f}`)
+    .find((p) => fs.existsSync(path.join(process.cwd(), "public", p))) ?? null;
 
 export default function HomePage() {
   return (
@@ -123,23 +133,59 @@ export default function HomePage() {
       {/* ── About teaser + stats ─────────────────────────────────────────── */}
       <section className="ie-section px-6">
         <div className="mx-auto max-w-container">
-          <div className="mx-auto max-w-[720px] text-center">
-            <Eyebrow align="center">Healer · Teacher · Guide</Eyebrow>
-            <h2
-              className="mt-3 font-serif text-ink-900"
-              style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
-            >
-              Nearly three decades of devoted practice
-            </h2>
-            <p className="mt-5 font-sans text-[16px] leading-[1.75] text-ink-500">
-              Some practitioners accumulate credentials. Others accumulate
-              wisdom. A rare few are devoted enough to gather both, and to live
-              what they teach.
-            </p>
-            <Link href="/about" className="btn btn-secondary btn-md mt-8">
-              Meet Mackensie
-            </Link>
-          </div>
+          {portrait ? (
+            <div className="mx-auto grid max-w-[880px] items-center gap-[clamp(28px,5vw,64px)] text-center md:grid-cols-[minmax(0,300px)_1fr] md:text-left">
+              <div className="relative mx-auto w-[220px] md:w-full">
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute -bottom-3 -right-3 h-full w-full rounded-[16px] border border-copper-300"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={portrait}
+                  alt="Mackensie Satya Priya Grant"
+                  width={300}
+                  height={375}
+                  className="relative aspect-[4/5] w-full rounded-[16px] object-cover shadow-md"
+                />
+              </div>
+              <div>
+                <Eyebrow>Healer · Teacher · Guide</Eyebrow>
+                <h2
+                  className="mt-3 font-serif text-ink-900"
+                  style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
+                >
+                  Nearly three decades of devoted practice
+                </h2>
+                <p className="mt-5 font-sans text-[16px] leading-[1.75] text-ink-500">
+                  Some practitioners accumulate credentials. Others accumulate
+                  wisdom. A rare few are devoted enough to gather both, and to
+                  live what they teach.
+                </p>
+                <Link href="/about" className="btn btn-secondary btn-md mt-8">
+                  Meet Mackensie
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="mx-auto max-w-[720px] text-center">
+              <Eyebrow align="center">Healer · Teacher · Guide</Eyebrow>
+              <h2
+                className="mt-3 font-serif text-ink-900"
+                style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
+              >
+                Nearly three decades of devoted practice
+              </h2>
+              <p className="mt-5 font-sans text-[16px] leading-[1.75] text-ink-500">
+                Some practitioners accumulate credentials. Others accumulate
+                wisdom. A rare few are devoted enough to gather both, and to live
+                what they teach.
+              </p>
+              <Link href="/about" className="btn btn-secondary btn-md mt-8">
+                Meet Mackensie
+              </Link>
+            </div>
+          )}
           <div className="mt-[clamp(44px,6vw,72px)]">
             <Rule ornament="mandala" />
             <div className="mt-[clamp(36px,5vw,56px)] grid grid-cols-2 gap-6 md:grid-cols-4">
