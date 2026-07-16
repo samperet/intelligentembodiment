@@ -61,7 +61,7 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
             {w.stanzas.map((stanza, i) => (
               <p
                 key={i}
-                className="font-serif text-[19px] leading-[1.75] text-ink-700"
+                className="font-serif text-[21px] leading-[1.75] text-ink-700"
               >
                 {stanza.map((line, j) => (
                   <span key={j}>
@@ -79,7 +79,7 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
                 key={i}
                 className={
                   i === 0
-                    ? "font-serif text-[21px] italic leading-[1.65] text-ink-700"
+                    ? "font-serif text-[22px] italic leading-[1.65] text-ink-700"
                     : "font-sans text-[16.5px] leading-[1.8] text-ink-700"
                 }
               >
@@ -89,7 +89,7 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
           </div>
         )}
 
-        <p className="mt-10 text-right font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+        <p className="mt-10 text-right font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
           Mackensie Satya Priya
         </p>
 

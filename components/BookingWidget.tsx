@@ -164,12 +164,12 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
             <path d="M20 6 9 17l-5-5" />
           </svg>
         </div>
-        <h2 className="mt-5 font-serif text-[30px] text-ink-900">You&apos;re booked</h2>
-        <p className="mt-3 font-sans text-[15px] leading-[1.65] text-ink-500">
+        <h2 className="mt-5 font-serif text-[32px] text-ink-900">You&apos;re booked</h2>
+        <p className="mt-3 font-sans text-[17px] leading-[1.65] text-ink-500">
           Your <strong>{confirmation.service}</strong> is confirmed for{" "}
           <strong>{confirmation.when}</strong>.
         </p>
-        <p className="mt-2 font-sans text-[14px] text-ink-400">
+        <p className="mt-2 font-sans text-[16px] text-ink-400">
           A confirmation is on its way to <strong>{form.email}</strong>. See you
           at {site.address}.
         </p>
@@ -192,10 +192,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
           height={48}
           className="mx-auto mb-5 opacity-70"
         />
-        <h2 className="font-serif text-[26px] text-ink-900">
+        <h2 className="font-serif text-[28px] text-ink-900">
           Not currently booking
         </h2>
-        <p className="mx-auto mt-3 max-w-[40ch] font-sans text-[15px] leading-[1.7] text-ink-500">
+        <p className="mx-auto mt-3 max-w-[40ch] font-sans text-[17px] leading-[1.7] text-ink-500">
           Mackensie isn&apos;t accepting new appointments online right now.
           Please call or text to be added to the list, and you&apos;ll hear as
           soon as sessions reopen.
@@ -225,10 +225,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                     : "border-copper-700 bg-copper-700 hover:bg-copper-800"
                 }`}
               >
-                <span className="font-serif text-[20px] text-white">
+                <span className="font-serif text-[22px] text-white">
                   {s.name}
                 </span>
-                <span className="font-serif text-[20px] italic text-copper-100">
+                <span className="font-serif text-[22px] italic text-copper-100">
                   ${s.price}
                 </span>
               </button>
@@ -248,14 +248,14 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
               windowDays={windowDays}
             />
             <div>
-              <p className="mb-3 font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
+              <p className="mb-3 font-sans text-[15px] font-medium uppercase tracking-[0.16em] text-ink-500">
                 {selectedDate ? "Available times" : "Select a date"}
               </p>
               {slotsLoading && (
-                <p className="font-sans text-[14px] text-ink-400">Loading times…</p>
+                <p className="font-sans text-[16px] text-ink-400">Loading times…</p>
               )}
               {!slotsLoading && selectedDate && slots.length === 0 && (
-                <p className="font-sans text-[14px] text-ink-400">
+                <p className="font-sans text-[16px] text-ink-400">
                   No openings this day. Try another date, or{" "}
                   <a href={site.phoneHref} className="underline">
                     call to arrange
@@ -271,7 +271,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                       key={slot.start}
                       type="button"
                       onClick={() => setSelectedSlot(slot)}
-                      className={`rounded-full border px-2 py-2.5 font-sans text-[13px] transition ${
+                      className={`rounded-full border px-2 py-2.5 font-sans text-[15px] transition ${
                         active
                           ? "border-copper-800 bg-copper-700 text-white shadow-sm"
                           : "border-copper-300 bg-copper-50 text-ink-700 hover:border-copper-700 hover:bg-copper-100"
@@ -306,7 +306,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
               />
             </label>
 
-            <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[14px] text-ink-700">
+            <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[16px] text-ink-700">
               <strong className="text-ink-900">{service.name}</strong> · $
               {service.price} · {selectedSlot.label},{" "}
               {new Date(selectedSlot.start).toLocaleDateString(undefined, {
@@ -317,7 +317,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
             </div>
 
             {error && (
-              <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
+              <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
                 {error}
               </p>
             )}
@@ -345,7 +345,7 @@ function StepCard({
     <section>
       {showHeader && title && (
         <div className="mb-6 text-center">
-          <h2 className="font-serif text-[24px] text-ink-900">{title}</h2>
+          <h2 className="font-serif text-[26px] text-ink-900">{title}</h2>
           <div className="mx-auto mt-3 flex w-[120px] items-center gap-2.5">
             <span className="h-px flex-1 bg-copper-300" />
             <span className="h-[5px] w-[5px] rotate-45 bg-copper-700" />
@@ -444,7 +444,7 @@ function MonthCalendar({
         >
           ‹
         </button>
-        <span className="font-serif text-[19px] text-ink-900">
+        <span className="font-serif text-[21px] text-ink-900">
           {MONTHS[view.month]} {view.year}
         </span>
         <button
@@ -459,7 +459,7 @@ function MonthCalendar({
       </div>
       <div className="grid grid-cols-7 gap-1 text-center">
         {WEEKDAY_LABELS.map((w) => (
-          <div key={w} className="py-1 font-sans text-[11px] font-medium uppercase tracking-[0.1em] text-ink-400">
+          <div key={w} className="py-1 font-sans text-[12px] font-medium uppercase tracking-[0.1em] text-ink-400">
             {w}
           </div>
         ))}
@@ -474,7 +474,7 @@ function MonthCalendar({
               type="button"
               disabled={!selectable}
               onClick={() => onSelect(key)}
-              className={`aspect-square rounded-md font-sans text-[14px] transition ${
+              className={`aspect-square rounded-md font-sans text-[16px] transition ${
                 isSelected
                   ? "bg-copper-700 text-white"
                   : selectable

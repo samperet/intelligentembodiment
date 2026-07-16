@@ -25,7 +25,7 @@ function FooterNav({
           <li key={l.href}>
             <Link
               href={l.href}
-              className="font-sans text-[14px] text-ink-700 transition hover:text-copper-800"
+              className="font-sans text-[16px] text-ink-700 transition hover:text-copper-800"
             >
               {l.label}
             </Link>
@@ -55,7 +55,7 @@ export function Footer() {
                 className="h-[44px] w-auto"
               />
             </Link>
-            <p className="mt-5 max-w-[30ch] font-serif text-[18px] italic leading-[1.5] text-ink-500">
+            <p className="mt-5 max-w-[30ch] font-serif text-[20px] italic leading-[1.5] text-ink-500">
               {site.tagline}. Intuitive massage therapy in Burlington, VT.
             </p>
             <Link href="/#book" className="btn btn-primary btn-md mt-6">
@@ -69,7 +69,7 @@ export function Footer() {
           {/* Connect */}
           <div>
             <h3 className="eyebrow">Connect</h3>
-            <ul className="mt-4 space-y-3 font-sans text-[14px] text-ink-700">
+            <ul className="mt-4 space-y-3 font-sans text-[16px] text-ink-700">
               <li>
                 <a
                   href={site.phoneHref}
@@ -111,7 +111,7 @@ export function Footer() {
                 href="https://www.paypal.com/paypalme/mackensiegrant"
                 target="_blank"
                 rel="noreferrer"
-                className="font-sans text-[12px] uppercase tracking-[0.14em] text-ink-500 transition hover:text-copper-800"
+                className="font-sans text-[13px] uppercase tracking-[0.14em] text-ink-500 transition hover:text-copper-800"
               >
                 PayPal
               </a>
@@ -119,7 +119,7 @@ export function Footer() {
                 href="https://venmo.com/u/mackensie-grant"
                 target="_blank"
                 rel="noreferrer"
-                className="font-sans text-[12px] uppercase tracking-[0.14em] text-ink-500 transition hover:text-copper-800"
+                className="font-sans text-[13px] uppercase tracking-[0.14em] text-ink-500 transition hover:text-copper-800"
               >
                 Venmo
               </a>
@@ -127,7 +127,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-[26px] font-sans text-[12px] text-ink-400">
+        <p className="mt-[26px] font-sans text-[13px] text-ink-400">
           © {new Date().getFullYear()} {site.name} · {site.tagline}
         </p>
       </div>

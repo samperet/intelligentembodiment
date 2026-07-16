@@ -79,7 +79,7 @@ export function Stat({ value, label }: { value: string; label: string }) {
       >
         {value}
       </div>
-      <div className="mt-2.5 font-sans text-[12px] font-medium uppercase tracking-[0.16em] text-ink-500">
+      <div className="mt-2.5 font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
         {label}
       </div>
     </div>
@@ -146,18 +146,18 @@ export function OfferingCard({ o }: { o: Offering }) {
       </div>
       <div className="flex flex-1 flex-col gap-3.5 p-[30px]">
         <Eyebrow>{o.eyebrow}</Eyebrow>
-        <h3 className="font-serif text-[30px] leading-[1.1] text-ink-900">
+        <h3 className="font-serif text-[32px] leading-[1.1] text-ink-900">
           {o.title}
         </h3>
         <div className="flex flex-wrap items-baseline gap-2.5">
-          <span className="font-serif text-[20px] italic text-copper-800">
+          <span className="font-serif text-[22px] italic text-copper-800">
             {o.price}
           </span>
           {o.note && (
-            <span className="font-sans text-[13px] text-ink-400">{o.note}</span>
+            <span className="font-sans text-[15px] text-ink-400">{o.note}</span>
           )}
         </div>
-        <p className="font-sans text-[15px] leading-[1.65] text-ink-500">
+        <p className="font-sans text-[17px] leading-[1.65] text-ink-500">
           {o.description}
         </p>
         <div className="mt-auto pt-1.5">

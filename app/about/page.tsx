@@ -3,7 +3,6 @@ import path from "node:path";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow, Stat } from "@/components/brand";
-import { MandalaKaleidoscope } from "@/components/MandalaKaleidoscope";
 import { RetreatInterest } from "@/components/RetreatInterest";
 import { aboutPillars, lineageTeachers, stats } from "@/lib/content";
 
@@ -81,7 +80,7 @@ export default function AboutPage() {
                       className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
                     />
                   </div>
-                  <figcaption className="mt-3 text-center font-sans text-[12px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                  <figcaption className="mt-3 text-center font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
                     {p.caption}
                   </figcaption>
                 </figure>
@@ -95,7 +94,7 @@ export default function AboutPage() {
       <section className="px-6 pb-[clamp(48px,7vw,80px)]">
         <div className="mx-auto max-w-[760px]">
           <Eyebrow align="center">My Path</Eyebrow>
-          <div className="mt-6 space-y-5 font-sans text-[17px] leading-[1.8] text-ink-700">
+          <div className="mt-6 space-y-5 font-sans text-[19px] leading-[1.8] text-ink-700">
             <p>
               Integrating credentials with lived wisdom, Mackensie has woven
               thirty years of deep spiritual practice into an offering that
@@ -142,10 +141,10 @@ export default function AboutPage() {
                   height={30}
                   className="opacity-50"
                 />
-                <h3 className="mt-4 font-serif text-[24px] text-ink-900">
+                <h3 className="mt-4 font-serif text-[26px] text-ink-900">
                   {p.title}
                 </h3>
-                <p className="mt-2 font-sans text-[15px] leading-[1.7] text-ink-500">
+                <p className="mt-2 font-sans text-[17px] leading-[1.7] text-ink-500">
                   {p.body}
                 </p>
               </div>
@@ -156,22 +155,26 @@ export default function AboutPage() {
 
       {/* Lineage + wider path, indigo */}
       <section className="ie-section relative overflow-hidden bg-indigo-700 px-6">
-        <MandalaKaleidoscope />
-        <div className="relative mx-auto max-w-[1000px] text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-[-22%] right-[-7%] w-[440px] opacity-[0.06]"
+          style={{ filter: "brightness(0) invert(1)" }}
+        />
+        <div className="relative mx-auto max-w-[900px] text-center">
           <Eyebrow align="center" paper>
             Lineage & Teachers
           </Eyebrow>
-          <div className="mx-auto mt-8 flex max-w-[960px] flex-wrap items-center justify-center gap-x-6 gap-y-3">
+          <div className="mx-auto mt-6 flex max-w-[760px] flex-wrap items-center justify-center gap-x-5 gap-y-2.5">
             {lineageTeachers.map((t, i) => (
-              <span key={t} className="inline-flex items-center gap-6">
-                <span
-                  className="font-serif leading-[1.05] text-white/90"
-                  style={{ fontSize: "clamp(28px,5vw,54px)" }}
-                >
+              <span key={t} className="inline-flex items-center gap-5">
+                <span className="font-serif text-[22px] text-white/90">
                   {t}
                 </span>
                 {i < lineageTeachers.length - 1 && (
-                  <span className="text-[22px] text-copper-400">·</span>
+                  <span className="text-copper-500">·</span>
                 )}
               </span>
             ))}

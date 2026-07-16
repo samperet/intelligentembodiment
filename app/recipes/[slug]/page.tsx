@@ -55,8 +55,8 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
               key={i}
               className={
                 i === 0
-                  ? "font-serif text-[20px] italic leading-[1.6] text-ink-500"
-                  : "font-sans text-[16px] leading-[1.75] text-ink-500"
+                  ? "font-serif text-[22px] italic leading-[1.6] text-ink-500"
+                  : "font-sans text-[18px] leading-[1.75] text-ink-500"
               }
             >
               {p}
@@ -78,14 +78,14 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         {/* Benefits */}
         {r.benefits && (
           <section className="mt-10">
-            <h2 className="font-serif text-[26px] text-ink-900">
+            <h2 className="font-serif text-[28px] text-ink-900">
               Daily self-massage helps to…
             </h2>
             <ul className="mt-4 grid gap-2 sm:grid-cols-2">
               {r.benefits.map((b) => (
                 <li
                   key={b}
-                  className="flex items-start gap-2.5 font-sans text-[15px] leading-[1.6] text-ink-500"
+                  className="flex items-start gap-2.5 font-sans text-[17px] leading-[1.6] text-ink-500"
                 >
                   <span className="mt-[9px] h-[5px] w-[5px] flex-none rounded-full bg-copper-700" />
                   {b}
@@ -98,12 +98,12 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         {/* Ingredients */}
         {r.ingredients && (
           <section className="mt-10 rounded-xl border border-[color:var(--border)] bg-paper-2 p-8">
-            <h2 className="font-serif text-[26px] text-ink-900">Ingredients</h2>
+            <h2 className="font-serif text-[28px] text-ink-900">Ingredients</h2>
             <ul className="mt-4 space-y-2.5">
               {r.ingredients.map((ing) => (
                 <li
                   key={ing}
-                  className="flex items-start gap-2.5 font-sans text-[15px] leading-[1.6] text-ink-700"
+                  className="flex items-start gap-2.5 font-sans text-[17px] leading-[1.6] text-ink-700"
                 >
                   <span className="mt-[9px] h-[5px] w-[5px] flex-none rounded-full bg-copper-700" />
                   {ing}
@@ -116,14 +116,14 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         {/* Directions */}
         {r.directions && (
           <section className="mt-10">
-            <h2 className="font-serif text-[26px] text-ink-900">Directions</h2>
+            <h2 className="font-serif text-[28px] text-ink-900">Directions</h2>
             <ol className="mt-5 space-y-5">
               {r.directions.map((d, i) => (
                 <li key={i} className="flex gap-5">
-                  <span className="font-serif text-[22px] italic leading-[1.3] text-copper-700">
+                  <span className="font-serif text-[24px] italic leading-[1.3] text-copper-700">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="font-sans text-[15px] leading-[1.7] text-ink-500">
+                  <p className="font-sans text-[17px] leading-[1.7] text-ink-500">
                     {d}
                   </p>
                 </li>
@@ -133,7 +133,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         )}
 
         {r.note && (
-          <p className="mt-8 font-serif text-[17px] italic text-ink-500">
+          <p className="mt-8 font-serif text-[19px] italic text-ink-500">
             {r.note}
           </p>
         )}
@@ -163,10 +163,10 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
 function Meta({ k, v }: { k: string; v: string }) {
   return (
     <div>
-      <span className="block font-sans text-[10px] font-medium uppercase tracking-[0.2em] text-ink-400">
+      <span className="block font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink-400">
         {k}
       </span>
-      <span className="font-serif text-[18px] text-ink-900">{v}</span>
+      <span className="font-serif text-[20px] text-ink-900">{v}</span>
     </div>
   );
 }

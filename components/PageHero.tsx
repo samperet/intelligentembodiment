@@ -1,4 +1,5 @@
 import { Eyebrow } from "./brand";
+import { KaleidoscopeMandala } from "./KaleidoscopeMandala";
 
 export function PageHero({
   eyebrow,
@@ -11,12 +12,9 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden px-6 pb-[clamp(40px,6vw,72px)] pt-[clamp(64px,9vw,110px)] text-center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/mandala.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[-30%] w-[min(640px,110%)] -translate-x-1/2 select-none opacity-[0.045]"
+      <KaleidoscopeMandala
+        petals={8}
+        className="pointer-events-none absolute inset-0 h-full w-full select-none opacity-[0.07]"
       />
       <div className="relative mx-auto max-w-[820px]">
         {eyebrow && <Eyebrow align="center">{eyebrow}</Eyebrow>}

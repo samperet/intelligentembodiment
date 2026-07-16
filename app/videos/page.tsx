@@ -32,11 +32,11 @@ export default function VideosPage() {
                   />
                 </div>
                 <figcaption className="p-5">
-                  <h2 className="font-serif text-[20px] text-paper-2">
+                  <h2 className="font-serif text-[22px] text-paper-2">
                     {v.title}
                   </h2>
                   {v.note && (
-                    <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-white/65">
+                    <p className="mt-1.5 font-sans text-[15px] leading-[1.6] text-white/65">
                       {v.note}
                     </p>
                   )}

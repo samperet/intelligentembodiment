@@ -28,7 +28,7 @@ export function Nav() {
         <Link href="/#top" className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/mandala.png" alt="" width={38} height={38} />
-          <span className="font-serif uppercase leading-[1.05] text-indigo-700 tracking-[0.14em] text-[16px]">
+          <span className="font-serif uppercase leading-[1.05] text-indigo-700 tracking-[0.14em] text-[16px] sm:text-[18px]">
             Intelligent
             <br />
             Embodiment
@@ -44,7 +44,7 @@ export function Nav() {
             <span className="text-copper-800">
               <Icon name="phone" size={17} />
             </span>
-            <span className="hidden font-sans text-[12px] md:inline">
+            <span className="hidden font-sans text-[13px] md:inline">
               {site.phone}
             </span>
           </a>
@@ -56,7 +56,7 @@ export function Nav() {
             <span className="text-copper-800">
               <Icon name="mail" size={17} />
             </span>
-            <span className="hidden font-sans text-[12px] md:inline">
+            <span className="hidden font-sans text-[13px] md:inline">
               {site.email}
             </span>
           </a>

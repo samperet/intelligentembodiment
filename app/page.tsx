@@ -104,7 +104,7 @@ export default function HomePage() {
               <BookingWidget />
             </Suspense>
           </div>
-          <p className="mt-8 text-center font-sans text-[14px] text-ink-500">
+          <p className="mt-8 text-center font-sans text-[16px] text-ink-500">
             Call or text for additional availability{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}
@@ -119,7 +119,7 @@ export default function HomePage() {
             >
               Experienced bodywork, intuitive insight
             </h3>
-            <div className="mt-5 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
+            <div className="mt-5 space-y-4 font-sans text-[18px] leading-[1.75] text-ink-500">
               <p>
                 Specializing with women, Mackensie brings a skilled
                 understanding of physical and energetic anatomy to every
@@ -162,7 +162,7 @@ export default function HomePage() {
                 >
                   Nearly three decades of devoted practice
                 </h2>
-                <p className="mt-5 font-sans text-[16px] leading-[1.75] text-ink-500">
+                <p className="mt-5 font-sans text-[18px] leading-[1.75] text-ink-500">
                   Some practitioners accumulate credentials. Others accumulate
                   wisdom. A rare few are devoted enough to gather both, and to
                   live what they teach.
@@ -181,7 +181,7 @@ export default function HomePage() {
               >
                 Nearly three decades of devoted practice
               </h2>
-              <p className="mt-5 font-sans text-[16px] leading-[1.75] text-ink-500">
+              <p className="mt-5 font-sans text-[18px] leading-[1.75] text-ink-500">
                 Some practitioners accumulate credentials. Others accumulate
                 wisdom. A rare few are devoted enough to gather both, and to live
                 what they teach.

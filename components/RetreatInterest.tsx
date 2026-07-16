@@ -28,7 +28,7 @@ export function RetreatInterest() {
 
   if (status === "done") {
     return (
-      <p className="mx-auto mt-8 max-w-[46ch] font-serif text-[19px] italic leading-[1.6] text-copper-800">
+      <p className="mx-auto mt-8 max-w-[46ch] font-serif text-[21px] italic leading-[1.6] text-copper-800">
         Thank you, {form.name.trim().split(" ")[0]}. You&apos;ll be among the
         first to hear when a new retreat opens.
       </p>
@@ -72,7 +72,7 @@ export function RetreatInterest() {
         {status === "submitting" ? "Sending…" : "Notify Me"}
       </button>
       {error && (
-        <p className="w-full text-center font-sans text-[13px] text-copper-800 sm:absolute">
+        <p className="w-full text-center font-sans text-[15px] text-copper-800 sm:absolute">
           {error}
         </p>
       )}

@@ -210,7 +210,7 @@ export function AdminPanel() {
   if (booting) {
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-sm items-center justify-center px-6">
-        <p className="font-sans text-[14px] text-ink-400">Loading…</p>
+        <p className="font-sans text-[16px] text-ink-400">Loading…</p>
       </div>
     );
   }
@@ -218,7 +218,7 @@ export function AdminPanel() {
   if (!authed) {
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-6">
-        <h1 className="text-center font-serif text-[34px] text-ink-900">Admin</h1>
+        <h1 className="text-center font-serif text-[36px] text-ink-900">Admin</h1>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -237,7 +237,7 @@ export function AdminPanel() {
             />
           </label>
           {error && (
-            <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
+            <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
               {error}
             </p>
           )}
@@ -255,22 +255,22 @@ export function AdminPanel() {
         <button
           type="button"
           onClick={signOut}
-          className="font-sans text-[13px] text-ink-400 underline transition hover:text-copper-800"
+          className="font-sans text-[15px] text-ink-400 underline transition hover:text-copper-800"
         >
           Sign out
         </button>
       </div>
       {/* ── Booking availability ─────────────────────────────────────────── */}
       <section>
-        <h1 className="font-serif text-[32px] text-ink-900">
+        <h1 className="font-serif text-[34px] text-ink-900">
           Booking Availability
         </h1>
-        <p className="mt-1 font-sans text-[14px] text-ink-500">
+        <p className="mt-1 font-sans text-[16px] text-ink-500">
           When clients are allowed to book. Times are in the practice timezone
           (Eastern).
         </p>
         {persisted === false && (
-          <p className="mt-3 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
+          <p className="mt-3 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
             These are the built-in defaults, nothing is saved to R2 yet. If a
             save doesn&apos;t stick, the CLOUDFLARE_API token likely needs R2
             Object Read &amp; Write permission for this bucket.
@@ -306,7 +306,7 @@ export function AdminPanel() {
                       key={d}
                       type="button"
                       onClick={() => toggleDay(d)}
-                      className={`rounded-full border px-4 py-2 font-sans text-[13px] transition ${
+                      className={`rounded-full border px-4 py-2 font-sans text-[15px] transition ${
                         on
                           ? "border-copper-800 bg-copper-700 text-white"
                           : "border-[color:var(--border-strong)] bg-white text-ink-700 hover:border-copper-700"
@@ -374,7 +374,7 @@ export function AdminPanel() {
               </button>
               {settingsMsg && (
                 <span
-                  className={`font-sans text-[14px] ${
+                  className={`font-sans text-[16px] ${
                     settingsOk ? "text-sage" : "text-copper-900"
                   }`}
                 >
@@ -390,10 +390,10 @@ export function AdminPanel() {
       <section className="mt-14">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="font-serif text-[28px] text-ink-900">
+            <h2 className="font-serif text-[30px] text-ink-900">
               Newsletter Subscribers
             </h2>
-            <p className="mt-1 font-sans text-[14px] text-ink-500">
+            <p className="mt-1 font-sans text-[16px] text-ink-500">
               {entries.length}{" "}
               {entries.length === 1 ? "subscriber" : "subscribers"}
             </p>
@@ -424,18 +424,18 @@ export function AdminPanel() {
         </div>
 
         {note && (
-          <p className="mt-6 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
+          <p className="mt-6 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
             {note}
           </p>
         )}
 
         {entries.length === 0 ? (
-          <p className="mt-8 font-sans text-[15px] text-ink-500">
+          <p className="mt-8 font-sans text-[17px] text-ink-500">
             No subscribers yet.
           </p>
         ) : (
           <div className="mt-8 overflow-x-auto rounded-lg border border-[color:var(--border)]">
-            <table className="w-full border-collapse text-left font-sans text-[14px]">
+            <table className="w-full border-collapse text-left font-sans text-[16px]">
               <thead>
                 <tr className="border-b border-[color:var(--border)] bg-paper-2">
                   <th className="px-4 py-3 font-medium uppercase tracking-[0.12em] text-ink-500">
@@ -497,8 +497,8 @@ function Toggle({
   return (
     <div className="flex items-start justify-between gap-4 rounded-lg border border-[color:var(--border)] bg-white p-4">
       <div>
-        <span className="block font-serif text-[18px] text-ink-900">{label}</span>
-        <span className="mt-0.5 block font-sans text-[13px] text-ink-500">
+        <span className="block font-serif text-[20px] text-ink-900">{label}</span>
+        <span className="mt-0.5 block font-sans text-[15px] text-ink-500">
           {on ? onText : offText}
         </span>
       </div>

@@ -31,7 +31,7 @@ export default function WritingsPage() {
                 href={`/writings/${w.slug}`}
                 className="group block rounded-xl border border-[color:var(--border)] bg-paper-2 p-8 transition hover:border-[color:var(--border-strong)] hover:shadow-md sm:p-10"
               >
-                <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink-400">
+                <p className="font-sans text-[12px] font-medium uppercase tracking-[0.2em] text-ink-400">
                   {new Date(w.date + "T12:00:00").toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -39,13 +39,13 @@ export default function WritingsPage() {
                   })}{" "}
                   · {w.kind}
                 </p>
-                <h2 className="mt-3 font-serif text-[32px] leading-[1.1] text-ink-900 transition group-hover:text-copper-900">
+                <h2 className="mt-3 font-serif text-[34px] leading-[1.1] text-ink-900 transition group-hover:text-copper-900">
                   {w.title}
                 </h2>
-                <p className="mt-3 max-w-[62ch] font-serif text-[18px] italic leading-[1.6] text-ink-500">
+                <p className="mt-3 max-w-[62ch] font-serif text-[20px] italic leading-[1.6] text-ink-500">
                   {w.excerpt}
                 </p>
-                <span className="mt-5 inline-block font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+                <span className="mt-5 inline-block font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
                   Read →
                 </span>
               </Link>

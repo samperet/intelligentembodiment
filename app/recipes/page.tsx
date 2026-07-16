@@ -42,13 +42,13 @@ export default function RecipesPage() {
                     className="opacity-30 transition group-hover:rotate-45 group-hover:opacity-60"
                   />
                 </div>
-                <h2 className="mt-4 font-serif text-[28px] leading-[1.1] text-ink-900 transition group-hover:text-copper-900">
+                <h2 className="mt-4 font-serif text-[30px] leading-[1.1] text-ink-900 transition group-hover:text-copper-900">
                   {r.title}
                 </h2>
-                <p className="mt-3 flex-1 font-sans text-[14px] leading-[1.65] text-ink-500">
+                <p className="mt-3 flex-1 font-sans text-[16px] leading-[1.65] text-ink-500">
                   {r.intro[0]}
                 </p>
-                <span className="mt-5 inline-block font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+                <span className="mt-5 inline-block font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
                   Open recipe →
                 </span>
               </Link>
