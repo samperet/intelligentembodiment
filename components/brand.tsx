@@ -120,6 +120,9 @@ type Offering = {
   tone: "copper" | "indigo" | "sand";
   cta?: string;
   href?: string;
+  /** Optional real photograph for the card header; falls back to the
+   *  in-palette gradient tile when omitted. */
+  image?: string;
 };
 
 const toneGradient: Record<Offering["tone"], string> = {
@@ -131,18 +134,28 @@ const toneGradient: Record<Offering["tone"], string> = {
 export function OfferingCard({ o }: { o: Offering }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-lg border border-[color:var(--border)] bg-paper-2 shadow-sm transition hover:border-[color:var(--border-strong)] hover:shadow-md">
-      {/* In-palette placeholder tile — swap for real photography in public/imagery */}
+      {/* Real photography when provided; otherwise an in-palette gradient tile. */}
       <div
         className="relative h-[180px] overflow-hidden"
-        style={{ background: toneGradient[o.tone] }}
+        style={o.image ? undefined : { background: toneGradient[o.tone] }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/mandala.png"
-          alt=""
-          aria-hidden="true"
-          className="absolute left-1/2 top-1/2 w-[150px] -translate-x-1/2 -translate-y-1/2 opacity-20 mix-blend-multiply transition-transform duration-[700ms] group-hover:scale-105"
-        />
+        {o.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={o.image}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover transition-transform duration-[700ms] group-hover:scale-105"
+          />
+        ) : (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src="/mandala.png"
+            alt=""
+            aria-hidden="true"
+            className="absolute left-1/2 top-1/2 w-[150px] -translate-x-1/2 -translate-y-1/2 opacity-20 mix-blend-multiply transition-transform duration-[700ms] group-hover:scale-105"
+          />
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-3.5 p-[30px]">
         <Eyebrow>{o.eyebrow}</Eyebrow>

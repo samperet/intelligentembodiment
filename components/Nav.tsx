@@ -7,6 +7,7 @@ import { Icon } from "./Icon";
 const links = [
   { label: "About", href: "/#about" },
   { label: "Offerings", href: "/#offerings" },
+  { label: "Voices", href: "/#testimonials" },
   { label: "Lineage", href: "/#lineage" },
   { label: "Contact", href: "/#contact" },
 ];

@@ -26,6 +26,7 @@ const offerings: Offering[] = [
     tone: "copper",
     cta: "Book a Session",
     href: "/book",
+    image: "/imagery/hands-oil.jpg",
   },
   {
     eyebrow: "Energy & Insight",
@@ -48,6 +49,28 @@ const offerings: Offering[] = [
     tone: "sand",
     cta: "Enquire",
     href: "/#contact",
+    image: "/imagery/mackensie-harmonium.jpg",
+  },
+];
+
+// Client reflections carried over from the practice's earlier retreats and
+// circles. Names weren't recorded with the originals, so attributions are kept
+// general — confirm with Mackensie before adding full names.
+const testimonials = [
+  {
+    quote:
+      "A talented, intuitive facilitator, Mackensie guided with wisdom, love, empathy and humor.",
+    who: "Retreat participant",
+  },
+  {
+    quote:
+      "She has a gift for seeing the real, real underneath my surface expressions, and challenges me in her most loving, yet direct way.",
+    who: "Bodywork & circle client",
+  },
+  {
+    quote:
+      "An invaluable experience of safety and connection. This is such powerful work — I couldn't possibly recommend it more.",
+    who: "Workshop participant",
   },
 ];
 
@@ -140,9 +163,9 @@ export default function HomePage() {
           <div className="overflow-hidden rounded-lg shadow-md">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src="/imagery/hands-oil.jpg"
-              alt="Intuitive bodywork"
-              className="block w-full object-cover"
+              src="/imagery/mackensie-portrait.jpg"
+              alt="Mackensie Satya Priya Grant"
+              className="block w-full object-cover object-[center_20%]"
               style={{ height: "clamp(340px,46vw,520px)" }}
             />
           </div>
@@ -184,6 +207,39 @@ export default function HomePage() {
               >
                 {b}
               </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ─────────────────────────────────────────────────── */}
+      <section id="testimonials" className="ie-section px-6">
+        <div className="mx-auto max-w-container">
+          <SectionHeading
+            align="center"
+            eyebrow="In Their Words"
+            title="Reflections from the work"
+          />
+          <div className="mt-[clamp(40px,6vw,64px)] grid gap-6 md:grid-cols-3">
+            {testimonials.map((t) => (
+              <figure
+                key={t.who + t.quote.slice(0, 12)}
+                className="flex flex-col rounded-lg border border-[color:var(--border)] bg-paper-2 p-[30px] shadow-sm"
+              >
+                <div
+                  className="font-serif text-copper-500"
+                  style={{ fontSize: "48px", lineHeight: 0.6, height: "26px" }}
+                  aria-hidden="true"
+                >
+                  &ldquo;
+                </div>
+                <blockquote className="font-serif italic leading-[1.5] text-ink-700 text-[19px]">
+                  {t.quote}
+                </blockquote>
+                <figcaption className="mt-5 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-700">
+                  {t.who}
+                </figcaption>
+              </figure>
             ))}
           </div>
         </div>
