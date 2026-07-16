@@ -3,11 +3,13 @@
 import { useEffect, useRef } from "react";
 
 /**
- * A true mirrored kaleidoscope of the mandala, rendered to a canvas behind the
- * page header. The circle is divided into `petals * 2` wedges that converge at
- * the center; adjacent wedges are mirror reflections of each other, so each
- * petal-width (360/petals) is a mirrored pair. The source sampling is driven by
- * cursor movement — no autonomous animation, so it's calm until you move.
+ * A mirrored kaleidoscope of the mandala behind the page header. The circle is
+ * divided into `petals * 2` wedges converging at the center; adjacent wedges
+ * are mirror reflections (a mirror seam per petal edge).
+ *
+ * Interaction: it only responds while the cursor is over the header. Moving the
+ * mouse imparts angular momentum; when the cursor leaves, friction eases the
+ * spin to a slow stop rather than snapping.
  */
 export function KaleidoscopeMandala({
   petals = 8,
@@ -23,6 +25,8 @@ export function KaleidoscopeMandala({
     const parent = canvas?.parentElement;
     const ctx = canvas?.getContext("2d");
     if (!canvas || !parent || !ctx) return;
+
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const img = new Image();
     let ready = false;
@@ -48,41 +52,44 @@ export function KaleidoscopeMandala({
     const ro = new ResizeObserver(resize);
     ro.observe(parent);
 
-    // Cursor-driven targets (eased toward each frame).
-    let tRot = 0;
-    let tPan = 0;
-    let tZoom = 1;
-    let rot = 0;
-    let pan = 0;
-    let zoom = 1;
+    // Angular position + velocity (momentum model). Impulses are only added
+    // from mousemove over the header, so leaving simply stops the input and
+    // friction glides the spin to rest.
+    let angle = 0;
+    let vel = 0;
+
+    const MAX_VEL = 0.05;
+    const IMPULSE_K = 0.00004; // spin added per px of horizontal mouse motion
+    const FRICTION = 0.965; // per-frame decay → gentle glide-down
 
     const onMove = (e: MouseEvent) => {
-      const nx = e.clientX / Math.max(1, window.innerWidth); // 0..1
-      const ny = e.clientY / Math.max(1, window.innerHeight);
-      tRot = (nx - 0.5) * Math.PI; // spin the source
-      tPan = (ny - 0.5) * 0.5; // slide the source in/out
-      tZoom = 1 + (ny - 0.5) * 0.35; // and zoom it a touch
+      if (reduce) return;
+      vel += e.movementX * IMPULSE_K;
+      if (vel > MAX_VEL) vel = MAX_VEL;
+      else if (vel < -MAX_VEL) vel = -MAX_VEL;
     };
-    window.addEventListener("mousemove", onMove, { passive: true });
+    parent.addEventListener("mousemove", onMove, { passive: true });
 
     const seg = Math.max(2, Math.round(petals) * 2);
     const ang = (Math.PI * 2) / seg;
 
     let raf = 0;
     const frame = () => {
-      rot += (tRot - rot) * 0.08;
-      pan += (tPan - pan) * 0.08;
-      zoom += (tZoom - zoom) * 0.08;
+      // Integrate + decay. Friction always applies, so momentum glides to rest
+      // whether the cursor stopped moving or left the section entirely.
+      angle += vel;
+      vel *= FRICTION;
+      if (Math.abs(vel) < 1e-5) vel = 0;
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
 
       if (ready && W > 0 && H > 0) {
         const cx = W * 0.5;
-        const cy = H * 0.34; // sit high in the header like a backdrop
-        const R =
-          Math.hypot(Math.max(cx, W - cx), Math.max(cy, H - cy)) * 1.15;
-        const s = R * 1.7 * zoom; // source draw size
+        const cy = H * 0.5;
+        const R = Math.hypot(W, H); // clip well past the drawn image
+        // Draw the mandala near its original header scale (~640px wide).
+        const s = Math.min(660, W * 1.05);
 
         for (let i = 0; i < seg; i++) {
           ctx.save();
@@ -93,15 +100,13 @@ export function KaleidoscopeMandala({
             ctx.rotate(ang);
             ctx.scale(1, -1);
           }
-          // Clip to one wedge [0, ang] (slight overlap hides hairline seams).
           ctx.beginPath();
           ctx.moveTo(0, 0);
           ctx.arc(0, 0, R, -0.008, ang + 0.008);
           ctx.closePath();
           ctx.clip();
-          // Draw the source, spun and panned by the cursor.
-          ctx.rotate(rot * 0.5);
-          ctx.drawImage(img, -s / 2, -s / 2 + pan * R, s, s);
+          ctx.rotate(angle);
+          ctx.drawImage(img, -s / 2, -s / 2, s, s);
           ctx.restore();
         }
       }
@@ -112,7 +117,7 @@ export function KaleidoscopeMandala({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      window.removeEventListener("mousemove", onMove);
+      parent.removeEventListener("mousemove", onMove);
     };
   }, [petals]);
 
