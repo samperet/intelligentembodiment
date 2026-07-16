@@ -26,14 +26,15 @@ export default function HomePage() {
           <Eyebrow align="center">Massage Therapy · Burlington, VT</Eyebrow>
           <h1
             className="mt-5 font-serif text-ink-900"
-            style={{ fontSize: "clamp(44px,7.4vw,84px)", lineHeight: 1.02 }}
+            style={{ fontSize: "clamp(40px,6.6vw,78px)", lineHeight: 1.02 }}
           >
-            Awake <em className="text-copper-800">in</em> the Body
+            Intelligent Embodiment
           </h1>
-          <p className="lead mt-6 max-w-[42ch]">
-            Intuitive massage with Mackensie Satya Priya. Three decades of
-            skilled bodywork that meets physical tension, and the deeper roots
-            beneath it.
+          <p
+            className="mt-4 font-serif italic text-copper-800"
+            style={{ fontSize: "clamp(20px,2.8vw,30px)", lineHeight: 1.3 }}
+          >
+            Awake in the Body
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3.5">
             <Link href="/book" className="btn btn-primary btn-lg">
