@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { site } from "@/lib/site";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
+import { retreatClientEmail, retreatOwnerEmail } from "@/lib/emails";
 
 export const dynamic = "force-dynamic";
 
@@ -33,12 +34,24 @@ export async function POST(request: Request) {
   // configured yet. When Resend is set up, the owner also gets an email.
   console.log(`Retreat interest signup: ${name} <${email}>`);
 
+  // Notify the practitioner.
+  const ownerMail = retreatOwnerEmail({ name, email });
   await sendEmail({
     to: [owner],
-    subject: `Retreat interest: ${name}`,
-    html: `<p>New retreat mailing-list signup.</p><p><strong>${name}</strong><br/>${email}</p>`,
-    text: `New retreat mailing-list signup.\n\nName: ${name}\nEmail: ${email}`,
+    subject: ownerMail.subject,
+    html: ownerMail.html,
+    text: ownerMail.text,
     replyTo: email,
+  });
+
+  // Confirm to the subscriber.
+  const clientMail = retreatClientEmail({ name });
+  await sendEmail({
+    to: [email],
+    subject: clientMail.subject,
+    html: clientMail.html,
+    text: clientMail.text,
+    replyTo: site.email,
   });
 
   return NextResponse.json({ ok: true, notified: isEmailConfigured() });

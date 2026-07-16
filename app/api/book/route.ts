@@ -7,6 +7,7 @@ import {
 import { isSlotStillOpen } from "@/lib/availability";
 import { buildICS } from "@/lib/ics";
 import { sendEmail } from "@/lib/email";
+import { bookingClientEmail, bookingOwnerEmail } from "@/lib/emails";
 import { formatInTimeZone } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -126,30 +127,37 @@ export async function POST(request: Request) {
       attendeeName: name.trim(),
     });
 
-    const clientHtml = confirmationHtml({
+    // Confirmation to the client (with the calendar invite attached).
+    const clientEmail = bookingClientEmail({
       name: name.trim(),
       service: service.name,
       price: service.price,
       when: whenLabel,
-      address: site.address,
     });
-    const clientText = `Hi ${name.trim()},\n\nYour ${service.name} with ${site.practitioner} is confirmed for ${whenLabel} at ${site.address}.\n\nWith care,\n${site.name}`;
-
     await sendEmail({
       to: [email],
-      subject: `Confirmed: ${service.name} on ${formatInTimeZone(startDate, TIMEZONE, { month: "short", day: "numeric" })}`,
-      html: clientHtml,
-      text: clientText,
+      subject: clientEmail.subject,
+      html: clientEmail.html,
+      text: clientEmail.text,
       icsContent: ics,
       replyTo: site.email,
     });
 
-    // Notify the practitioner (in addition to the calendar invite).
+    // Notification to the practitioner.
+    const ownerEmail = bookingOwnerEmail({
+      name: name.trim(),
+      email,
+      phone,
+      service: service.name,
+      price: service.price,
+      when: whenLabel,
+      notes,
+    });
     await sendEmail({
       to: [process.env.OWNER_EMAIL || site.email],
-      subject: `New booking: ${service.name}, ${name.trim()} (${whenLabel})`,
-      html: `<p>New booking received.</p><pre>${description}</pre>`,
-      text: `New booking received.\n\n${description}`,
+      subject: ownerEmail.subject,
+      html: ownerEmail.html,
+      text: ownerEmail.text,
       icsContent: ics,
       replyTo: email,
     });
@@ -172,26 +180,4 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
-}
-
-function confirmationHtml(o: {
-  name: string;
-  service: string;
-  price: number;
-  when: string;
-  address: string;
-}): string {
-  return `
-  <div style="font-family:Georgia,serif;max-width:520px;margin:0 auto;color:#3a2e26">
-    <h2 style="color:#9a5632;font-weight:500">Your session is confirmed</h2>
-    <p>Dear ${o.name},</p>
-    <p>Thank you for booking. I look forward to meeting you on the table.</p>
-    <table style="margin:20px 0;font-family:Arial,sans-serif;font-size:14px">
-      <tr><td style="padding:4px 16px 4px 0;color:#9a5632">Session</td><td>${o.service} ($${o.price})</td></tr>
-      <tr><td style="padding:4px 16px 4px 0;color:#9a5632">When</td><td>${o.when}</td></tr>
-      <tr><td style="padding:4px 16px 4px 0;color:#9a5632">Where</td><td>${o.address}</td></tr>
-    </table>
-    <p style="font-size:13px;color:#6b5b4d">A calendar invitation is attached. If you need to reschedule, simply reply to this email.</p>
-    <p style="margin-top:24px">With care,<br/>${site.practitioner}<br/><em>${site.name}</em></p>
-  </div>`;
 }
