@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Eyebrow, Rule, Stat } from "@/components/brand";
 import { RetreatInterest } from "@/components/RetreatInterest";
+import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { services, site } from "@/lib/site";
-import { testimonials, stats } from "@/lib/content";
+import { stats } from "@/lib/content";
 
 export default function HomePage() {
   return (
@@ -195,24 +196,8 @@ export default function HomePage() {
           <Eyebrow align="center" paper>
             In Their Words
           </Eyebrow>
-          <div className="mt-[clamp(32px,5vw,56px)] grid gap-10 md:grid-cols-3">
-            {testimonials.map((t) => (
-              <figure key={t.author} className="text-center md:text-left">
-                <div
-                  className="font-serif text-copper-500"
-                  style={{ fontSize: "56px", lineHeight: 0.6, height: "30px" }}
-                  aria-hidden="true"
-                >
-                  &ldquo;
-                </div>
-                <blockquote className="font-serif text-[18px] italic leading-[1.55] text-paper-2">
-                  {t.quote}
-                </blockquote>
-                <figcaption className="mt-4 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-500">
-                  {t.author}
-                </figcaption>
-              </figure>
-            ))}
+          <div className="mt-[clamp(32px,5vw,56px)]">
+            <TestimonialCarousel />
           </div>
         </div>
       </section>

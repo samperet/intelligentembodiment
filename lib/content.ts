@@ -247,17 +247,17 @@ export type Testimonial = { quote: string; author: string };
 export const testimonials: Testimonial[] = [
   {
     quote:
-      "When I first heard about the women's circle my gut screamed YES! What was surfacing was me. Long clouded in “niceness” and fear of rejection, the circle allowed me to say it all. To express, without apology. This is such powerful work. I couldn't possibly recommend it more.",
+      "When I first heard about the women's circle my gut screamed YES! I not only needed this experience, I wanted it. What was surfacing was me. Long clouded in “niceness” and fear of rejection, the circle allowed me to say it all, to unleash it all, to express without apology. This is such powerful work. I couldn't possibly recommend it more. Ultimately it has helped me explore the fullness of my being in an incredibly supportive, safe and loving environment. Thank you for your work, Mackensie!",
     author: "K.B.",
   },
   {
     quote:
-      "A talented, intuitive facilitator, Mackensie guided with wisdom, love, empathy and humor. I can truly say that I feel more acceptance of all the parts of me, particularly those that I have so often rejected and neglected, and thus acceptance of others as well.",
-    author: "A.G.",
+      "Mackensie provided an invaluable experience of safety and connection, and encouraged pushing the envelope of comfort in order to release, learn and grow. A talented, intuitive facilitator, she guided with wisdom, love, empathy and humor. I can truly say that I feel more acceptance of all the parts of me, particularly those I have so often rejected and neglected, and thus acceptance of others as well. This sisterhood connection, love and affection has filled my heart.",
+    author: "Ally G.",
   },
   {
     quote:
-      "My favorite part of any experience with Mackensie as teacher is her ability to see the real, real underneath my surface expressions, and challenge me in her most loving, yet direct way, to experiment with my discomfort. Through her more than any other teacher, I've learned the deep bliss that can come from giving attention to my pain.",
+      "My retreat with Mackensie was an incredibly expansive experience. Each day brought its own medicine, much of which continues to show up for me in surprising ways even months after. She powerfully held a safe, sacred and deeply loving container in which any and all internal experience was safe to be felt, expressed, and released. My favorite part is her ability to see the real, real underneath my surface expressions, and to challenge me in her most loving yet direct way. Through her, more than any other teacher, I've learned the deep bliss that can come from giving attention to my pain.",
     author: "Erin M.",
   },
 ];

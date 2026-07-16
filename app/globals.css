@@ -117,6 +117,15 @@
   }
   .btn-ghost:hover { @apply text-copper-900; }
 
+  /* Swipeable track — hide scrollbar (scroll-snap handles paging) */
+  .ie-swipe {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .ie-swipe::-webkit-scrollbar {
+    display: none;
+  }
+
   /* Mandala divider */
   .ie-rule {
     @apply flex items-center;
