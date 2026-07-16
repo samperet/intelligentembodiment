@@ -40,6 +40,8 @@ const config: Config = {
           900: "#211F33",
         },
         sage: { DEFAULT: "#6E8B6A", bg: "#E9EFE6" },
+        // Business-card front "Blue" from the design system
+        cardblue: "#52708F",
       },
       fontFamily: {
         serif: ["var(--font-serif)", "Georgia", "serif"],

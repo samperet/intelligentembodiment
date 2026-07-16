@@ -183,7 +183,7 @@ export default function HomePage() {
       </section>
 
       {/* ── Testimonials ─────────────────────────────────────────────────── */}
-      <section className="ie-section relative overflow-hidden bg-indigo-700 px-6">
+      <section className="ie-section relative overflow-hidden bg-cardblue px-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/mandala.png"
