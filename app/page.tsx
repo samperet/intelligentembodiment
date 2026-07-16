@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Eyebrow, Rule, Stat } from "@/components/brand";
+import { RetreatInterest } from "@/components/RetreatInterest";
 import { services, site } from "@/lib/site";
 import { testimonials, stats } from "@/lib/content";
 
@@ -155,6 +156,27 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* ── Retreats ─────────────────────────────────────────────────────── */}
+      <section id="retreats" className="ie-section bg-sand px-6">
+        <div className="mx-auto max-w-container text-center">
+          <Eyebrow align="center">Retreats</Eyebrow>
+          <h2
+            className="mt-3 font-serif text-ink-900"
+            style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
+          >
+            Gatherings &amp; immersions
+          </h2>
+          <p className="lead mx-auto mt-4 max-w-[44ch]">
+            There are no retreats currently scheduled.
+          </p>
+          <p className="mx-auto mt-3 max-w-[50ch] font-sans text-[15px] leading-[1.7] text-ink-500">
+            Leave your name and email to be among the first to hear about future
+            retreats, women&apos;s circles, and immersions.
+          </p>
+          <RetreatInterest />
         </div>
       </section>
 

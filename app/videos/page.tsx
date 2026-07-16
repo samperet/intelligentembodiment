@@ -13,15 +13,7 @@ export const metadata: Metadata = {
 export default function VideosPage() {
   return (
     <>
-      <PageHero
-        eyebrow="The Practice Library"
-        title={
-          <>
-            Practice with Mackensie, <em className="text-copper-800">free</em>
-          </>
-        }
-        lead="Short teachings and guided practices, filmed with love. Roll out a mat, or simply watch and absorb."
-      />
+      <PageHero title="Video Library" />
 
       <section className="ie-section bg-indigo-700 px-6">
         <div className="mx-auto max-w-container">

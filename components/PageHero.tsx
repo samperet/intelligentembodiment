@@ -5,7 +5,7 @@ export function PageHero({
   title,
   lead,
 }: {
-  eyebrow: string;
+  eyebrow?: string;
   title: React.ReactNode;
   lead?: string;
 }) {
@@ -19,7 +19,7 @@ export function PageHero({
         className="pointer-events-none absolute left-1/2 top-[-30%] w-[min(640px,110%)] -translate-x-1/2 select-none opacity-[0.045]"
       />
       <div className="relative mx-auto max-w-[820px]">
-        <Eyebrow align="center">{eyebrow}</Eyebrow>
+        {eyebrow && <Eyebrow align="center">{eyebrow}</Eyebrow>}
         <h1
           className="mt-4 font-serif text-ink-900"
           style={{ fontSize: "clamp(38px,5.6vw,64px)", lineHeight: 1.05 }}
