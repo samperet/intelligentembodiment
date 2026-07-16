@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow } from "@/components/brand";
-import { practiceVideos } from "@/lib/content";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -51,54 +50,26 @@ export default function YogaPage() {
         </div>
       </section>
 
-      {/* Video library */}
-      <section className="ie-section bg-indigo-700 px-6">
-        <div className="mx-auto max-w-container">
-          <div className="text-center">
-            <Eyebrow align="center" paper>
-              The Practice Library
-            </Eyebrow>
-            <h2
-              className="mt-3 font-serif text-paper-2"
-              style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
-            >
-              Practice with Mackensie — free
-            </h2>
-            <p className="mx-auto mt-4 max-w-[52ch] font-serif text-[18px] italic leading-[1.55] text-white/75">
-              Short teachings and guided practices, filmed with love. Roll out a
-              mat, or simply watch and absorb.
-            </p>
-          </div>
-
-          <div className="mt-[clamp(36px,5vw,56px)] grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {practiceVideos.map((v) => (
-              <figure
-                key={v.youtubeId}
-                className="overflow-hidden rounded-xl bg-indigo-800 shadow-md"
-              >
-                <div className="relative aspect-video">
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${v.youtubeId}`}
-                    title={v.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                    className="absolute inset-0 h-full w-full border-0"
-                  />
-                </div>
-                <figcaption className="p-5">
-                  <h3 className="font-serif text-[20px] text-paper-2">
-                    {v.title}
-                  </h3>
-                  {v.note && (
-                    <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-white/65">
-                      {v.note}
-                    </p>
-                  )}
-                </figcaption>
-              </figure>
-            ))}
-          </div>
+      {/* Practice library teaser */}
+      <section className="ie-section bg-indigo-700 px-6 text-center">
+        <div className="mx-auto max-w-[640px]">
+          <Eyebrow align="center" paper>
+            The Practice Library
+          </Eyebrow>
+          <h2
+            className="mt-3 font-serif text-paper-2"
+            style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
+          >
+            Practice with Mackensie — free
+          </h2>
+          <p className="mx-auto mt-4 max-w-[52ch] font-serif text-[18px] italic leading-[1.55] text-white/75">
+            A library of short teachings and guided practices, filmed with
+            love — down dog, hip opening, breath expansion, and more. Roll out
+            a mat, or simply watch and absorb.
+          </p>
+          <Link href="/videos" className="btn btn-primary btn-lg mt-8">
+            Watch the Practice Videos
+          </Link>
         </div>
       </section>
 

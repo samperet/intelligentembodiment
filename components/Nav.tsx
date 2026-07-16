@@ -8,7 +8,6 @@ const links = [
   { label: "Massage", href: "/massage" },
   { label: "Yoga", href: "/yoga" },
   { label: "Health Coaching", href: "/health-coaching" },
-  { label: "Writings", href: "/writings" },
   { label: "About", href: "/about" },
 ];
 
