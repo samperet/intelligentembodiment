@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow, Stat } from "@/components/brand";
@@ -8,6 +10,24 @@ export const metadata: Metadata = {
   description:
     "Mackensie Satya Priya, nearly three decades of devoted practice in yoga, bodywork, and the art of healing.",
 };
+
+// Candid photos surfaced only when the file is actually present in
+// public/imagery, so a missing file never renders a broken box.
+const galleryCandidates: { file: string; alt: string; caption: string }[] = [
+  {
+    file: "yoga-class.jpg",
+    alt: "Mackensie teaching a yoga class, guiding a student through a pose",
+    caption: "In the teaching seat",
+  },
+  {
+    file: "family.jpg",
+    alt: "Mackensie with her family on a summer evening in Vermont",
+    caption: "Life in Vermont",
+  },
+];
+const gallery = galleryCandidates.filter((p) =>
+  fs.existsSync(path.join(process.cwd(), "public", "imagery", p.file)),
+);
 
 export default function AboutPage() {
   return (
@@ -32,6 +52,35 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      {/* Candid photos */}
+      {gallery.length > 0 && (
+        <section className="px-6 pb-[clamp(48px,7vw,80px)]">
+          <div className="mx-auto max-w-container">
+            <div
+              className={`grid gap-5 ${
+                gallery.length > 1 ? "sm:grid-cols-2" : "mx-auto max-w-[760px]"
+              }`}
+            >
+              {gallery.map((p) => (
+                <figure key={p.file} className="group">
+                  <div className="overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/imagery/${p.file}`}
+                      alt={p.alt}
+                      className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <figcaption className="mt-3 text-center font-sans text-[12px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                    {p.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Four pillars */}
       <section className="ie-section px-6">
