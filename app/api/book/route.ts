@@ -92,16 +92,23 @@ export async function POST(request: Request) {
           { status: 409 },
         );
       }
-      const created = await createCalendarEvent({
-        summary,
-        description,
-        start: startDate,
-        end: endDate,
-        attendeeName: name.trim(),
-        attendeeEmail: email,
-        location: site.address,
-      });
-      eventLink = created.htmlLink;
+      try {
+        const created = await createCalendarEvent({
+          summary,
+          description,
+          start: startDate,
+          end: endDate,
+          attendeeName: name.trim(),
+          attendeeEmail: email,
+          location: site.address,
+        });
+        eventLink = created.htmlLink;
+      } catch (calErr) {
+        // Calendar is misconfigured (bad key / not shared / API off). Don't
+        // fail the booking — fall through to the email/ICS fallback so the
+        // request still reaches the practitioner.
+        console.error("createCalendarEvent failed; using email fallback:", calErr);
+      }
     }
 
     // Build an ICS invite and (optionally) send confirmation emails. When

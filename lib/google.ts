@@ -37,26 +37,43 @@ function getClient(): calendar_v3.Calendar {
   return google.calendar({ version: "v3", auth: getAuth() });
 }
 
-/** Busy intervals on the practice calendar between two instants. */
+/**
+ * Busy intervals on the practice calendar between two instants.
+ * Resilient by design: if the Google credentials are missing OR the Calendar
+ * call fails (bad key, calendar not shared, API disabled, transient outage),
+ * this returns [] so the booking page still shows open times instead of
+ * breaking. The failure is logged, and createCalendarEvent will surface the
+ * real problem at booking time.
+ */
 export async function getBusyIntervals(
   timeMin: Date,
   timeMax: Date,
 ): Promise<BusyInterval[]> {
   if (!isGoogleConfigured()) return [];
-  const calendar = getClient();
-  const res = await calendar.freebusy.query({
-    requestBody: {
-      timeMin: timeMin.toISOString(),
-      timeMax: timeMax.toISOString(),
-      timeZone: TIMEZONE,
-      items: [{ id: getCalendarId() }],
-    },
-  });
-  const cal = res.data.calendars?.[getCalendarId()];
-  const busy = cal?.busy ?? [];
-  return busy
-    .filter((b) => b.start && b.end)
-    .map((b) => ({ start: new Date(b.start!), end: new Date(b.end!) }));
+  try {
+    const calendar = getClient();
+    const res = await calendar.freebusy.query({
+      requestBody: {
+        timeMin: timeMin.toISOString(),
+        timeMax: timeMax.toISOString(),
+        timeZone: TIMEZONE,
+        items: [{ id: getCalendarId() }],
+      },
+    });
+    const cal = res.data.calendars?.[getCalendarId()];
+    if (cal?.errors?.length) {
+      // e.g. calendar not shared with the service account ("notFound").
+      console.error("Google Calendar freebusy errors:", cal.errors);
+      return [];
+    }
+    const busy = cal?.busy ?? [];
+    return busy
+      .filter((b) => b.start && b.end)
+      .map((b) => ({ start: new Date(b.start!), end: new Date(b.end!) }));
+  } catch (err) {
+    console.error("Google Calendar freebusy failed; serving open slots:", err);
+    return [];
+  }
 }
 
 export type CreateBookingInput = {
