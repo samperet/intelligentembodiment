@@ -13,7 +13,7 @@ export default function HomePage() {
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
       <section
         id="top"
-        className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-24 text-center"
+        className="relative flex min-h-[calc(100vh-75px)] items-center justify-center overflow-hidden px-6 py-12 text-center"
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img

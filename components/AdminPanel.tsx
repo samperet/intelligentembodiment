@@ -34,6 +34,8 @@ export function AdminPanel() {
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsMsg, setSettingsMsg] = useState<string | null>(null);
 
+  const [copied, setCopied] = useState(false);
+
   async function load(pw: string) {
     setLoading(true);
     setError(null);
@@ -98,6 +100,23 @@ export function AdminPanel() {
       ? settings.weekdays.filter((x) => x !== d)
       : [...settings.weekdays, d].sort((a, b) => a - b);
     set("weekdays", next);
+  }
+
+  async function copyEmails() {
+    const emails = entries.map((s) => s.email).join(", ");
+    try {
+      await navigator.clipboard.writeText(emails);
+    } catch {
+      // Fallback for browsers without clipboard permission.
+      const ta = document.createElement("textarea");
+      ta.value = emails;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }
 
   function csv() {
@@ -278,9 +297,18 @@ export function AdminPanel() {
               Refresh
             </button>
             {entries.length > 0 && (
-              <button type="button" onClick={csv} className="btn btn-primary btn-sm">
-                Download CSV
-              </button>
+              <>
+                <button
+                  type="button"
+                  onClick={copyEmails}
+                  className="btn btn-secondary btn-sm"
+                >
+                  {copied ? "Copied!" : "Copy emails"}
+                </button>
+                <button type="button" onClick={csv} className="btn btn-primary btn-sm">
+                  Download CSV
+                </button>
+              </>
             )}
           </div>
         </div>
