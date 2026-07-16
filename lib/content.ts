@@ -205,6 +205,11 @@ export type PracticeVideo = {
 
 export const practiceVideos: PracticeVideo[] = [
   {
+    youtubeId: "hUYGjrJ6BGQ",
+    title: "Shoulder Health",
+    note: "Practices for freeing and strengthening the shoulders.",
+  },
+  {
     youtubeId: "lt1Dc3iUNzA",
     title: "Down Dog Walkthrough",
     note: "A short exploration of downward dog.",

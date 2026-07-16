@@ -13,7 +13,13 @@ import { stats } from "@/lib/content";
 // image. Drop a file at one of these paths in public/imagery to have it
 // appear automatically beside the "Meet Mackensie" button.
 const portrait =
-  ["mackensie.jpg", "mackensie.jpeg", "mackensie.png", "mackensie.webp"]
+  [
+    "mackensie-portrait.jpg",
+    "mackensie.jpg",
+    "mackensie.jpeg",
+    "mackensie.png",
+    "mackensie.webp",
+  ]
     .map((f) => `/imagery/${f}`)
     .find((p) => fs.existsSync(path.join(process.cwd(), "public", p))) ?? null;
 
