@@ -75,12 +75,11 @@ export default function HomePage() {
       {/* ── Sessions ─────────────────────────────────────────────────────── */}
       <section id="sessions" className="ie-section bg-sand px-6">
         <div className="mx-auto max-w-container text-center">
-          <Eyebrow align="center">Sessions &amp; Rates</Eyebrow>
           <h2
-            className="mt-3 font-serif text-ink-900"
+            className="font-serif text-ink-900"
             style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
           >
-            Choose your time on the table
+            Book a Session
           </h2>
           <div className="mx-auto mt-[clamp(32px,4vw,48px)] max-w-md space-y-3.5">
             {services.map((s) => (
