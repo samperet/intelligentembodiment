@@ -3,6 +3,7 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { ConditionalFooter } from "@/components/ConditionalFooter";
 import { AdminHotkey } from "@/components/AdminHotkey";
 
 export const metadata: Metadata = {
@@ -47,7 +48,9 @@ export default function RootLayout({
         <AdminHotkey />
         <Nav />
         <main>{children}</main>
-        <Footer />
+        <ConditionalFooter>
+          <Footer />
+        </ConditionalFooter>
       </body>
     </html>
   );
