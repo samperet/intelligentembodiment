@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isR2Configured, listSubscribers, r2Bucket } from "@/lib/r2";
+import { isAuthorized } from "@/lib/adminAuth";
 
 export const dynamic = "force-dynamic";
 
@@ -19,7 +20,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
   }
 
-  if (typeof body?.password !== "string" || body.password !== adminPw) {
+  if (!isAuthorized(request, body?.password)) {
     return NextResponse.json({ error: "Incorrect password." }, { status: 401 });
   }
 

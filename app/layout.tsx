@@ -3,6 +3,7 @@ import "./globals.css";
 import { site } from "@/lib/site";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
+import { AdminHotkey } from "@/components/AdminHotkey";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -43,6 +44,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <AdminHotkey />
         <Nav />
         <main>{children}</main>
         <Footer />

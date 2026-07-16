@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 import Link from "next/link";
 import { Eyebrow, Rule, Stat } from "@/components/brand";
-import { RetreatInterest } from "@/components/RetreatInterest";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { Suspense } from "react";
 import { BookingWidget } from "@/components/BookingWidget";
@@ -200,23 +199,6 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ── Retreats ─────────────────────────────────────────────────────── */}
-      <section id="retreats" className="ie-section bg-sand px-6">
-        <div className="mx-auto max-w-container text-center">
-          <Eyebrow align="center">Retreats</Eyebrow>
-          <h2
-            className="mt-3 font-serif text-ink-900"
-            style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
-          >
-            Gatherings &amp; immersions
-          </h2>
-          <p className="lead mx-auto mt-4 max-w-[46ch]">
-            Hear about retreats, events, women&apos;s circles, and immersions.
-          </p>
-          <RetreatInterest />
         </div>
       </section>
 

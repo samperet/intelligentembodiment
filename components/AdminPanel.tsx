@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Subscriber = { name: string; email: string; date: string };
 type BookingSettings = {
@@ -39,6 +39,57 @@ export function AdminPanel() {
   const [persisted, setPersisted] = useState<boolean | null>(null);
 
   const [copied, setCopied] = useState(false);
+  const [booting, setBooting] = useState(true);
+
+  // Auto-authenticate from the session cookie (set by the hidden type-anywhere
+  // login or a previous sign-in) so no password prompt is needed.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/admin/session")
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled) return;
+        if (d?.authed) return load("");
+        setBooting(false);
+      })
+      .catch(() => {
+        if (!cancelled) setBooting(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  async function authenticate(value: string) {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value }),
+      });
+      if (!res.ok) throw new Error("Incorrect password.");
+      await load(""); // cookie is set now; load via session
+    } catch (e: any) {
+      setError(e.message);
+      setAuthed(false);
+      setLoading(false);
+    }
+  }
+
+  async function signOut() {
+    try {
+      await fetch("/api/admin/login", { method: "DELETE" });
+    } catch {
+      /* ignore */
+    }
+    setAuthed(false);
+    setEntries([]);
+    setSettings(null);
+    setPassword("");
+  }
 
   async function load(pw: string) {
     setLoading(true);
@@ -69,6 +120,7 @@ export function AdminPanel() {
       setAuthed(false);
     } finally {
       setLoading(false);
+      setBooting(false);
     }
   }
 
@@ -155,6 +207,14 @@ export function AdminPanel() {
     URL.revokeObjectURL(url);
   }
 
+  if (booting) {
+    return (
+      <div className="mx-auto flex min-h-[70vh] max-w-sm items-center justify-center px-6">
+        <p className="font-sans text-[14px] text-ink-400">Loading…</p>
+      </div>
+    );
+  }
+
   if (!authed) {
     return (
       <div className="mx-auto flex min-h-[70vh] max-w-sm flex-col justify-center px-6">
@@ -162,7 +222,7 @@ export function AdminPanel() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            load(password);
+            authenticate(password);
           }}
           className="mt-8 space-y-4"
         >
@@ -191,6 +251,15 @@ export function AdminPanel() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
+      <div className="mb-6 flex justify-end">
+        <button
+          type="button"
+          onClick={signOut}
+          className="font-sans text-[13px] text-ink-400 underline transition hover:text-copper-800"
+        >
+          Sign out
+        </button>
+      </div>
       {/* ── Booking availability ─────────────────────────────────────────── */}
       <section>
         <h1 className="font-serif text-[32px] text-ink-900">

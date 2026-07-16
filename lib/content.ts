@@ -274,7 +274,7 @@ export const aboutPillars = [
     body: "Movement as inquiry. Five teacher trainings with senior teachers including Richard Freeman, John Friend, and Darren Rhodes.",
   },
   {
-    title: "Sacred Touch",
+    title: "Sacred Touch for women",
     body: "Craniosacral, polarity, Temple Lomi, hands that listen as much as heal, drawing from nearly three decades of intuitive bodywork.",
   },
   {

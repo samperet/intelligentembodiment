@@ -3,6 +3,8 @@ import path from "node:path";
 import type { Metadata } from "next";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow, Stat } from "@/components/brand";
+import { MandalaKaleidoscope } from "@/components/MandalaKaleidoscope";
+import { RetreatInterest } from "@/components/RetreatInterest";
 import { aboutPillars, lineageTeachers, stats } from "@/lib/content";
 
 export const metadata: Metadata = {
@@ -154,28 +156,43 @@ export default function AboutPage() {
 
       {/* Lineage + wider path, indigo */}
       <section className="ie-section relative overflow-hidden bg-indigo-700 px-6">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/mandala.png"
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-[-22%] right-[-7%] w-[440px] opacity-[0.06]"
-          style={{ filter: "brightness(0) invert(1)" }}
-        />
-        <div className="relative mx-auto max-w-[900px] text-center">
+        <MandalaKaleidoscope />
+        <div className="relative mx-auto max-w-[1000px] text-center">
           <Eyebrow align="center" paper>
             Lineage & Teachers
           </Eyebrow>
-          <div className="mx-auto mt-6 flex max-w-[720px] flex-wrap justify-center gap-x-5 gap-y-2.5">
+          <div className="mx-auto mt-8 flex max-w-[960px] flex-wrap items-center justify-center gap-x-6 gap-y-3">
             {lineageTeachers.map((t, i) => (
-              <span key={t} className="inline-flex items-center gap-5">
-                <span className="font-serif text-[18px] text-white/80">{t}</span>
+              <span key={t} className="inline-flex items-center gap-6">
+                <span
+                  className="font-serif leading-[1.05] text-white/90"
+                  style={{ fontSize: "clamp(28px,5vw,54px)" }}
+                >
+                  {t}
+                </span>
                 {i < lineageTeachers.length - 1 && (
-                  <span className="text-copper-500">·</span>
+                  <span className="text-[22px] text-copper-400">·</span>
                 )}
               </span>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Newsletter signup (moved from home) */}
+      <section id="newsletter" className="ie-section bg-sand px-6">
+        <div className="mx-auto max-w-container text-center">
+          <Eyebrow align="center">Stay in Touch</Eyebrow>
+          <h2
+            className="mt-3 font-serif text-ink-900"
+            style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
+          >
+            Retreats &amp; gatherings
+          </h2>
+          <p className="lead mx-auto mt-4 max-w-[46ch]">
+            Hear about retreats, events, women&apos;s circles, and immersions.
+          </p>
+          <RetreatInterest />
         </div>
       </section>
     </>
