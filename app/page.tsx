@@ -50,36 +50,24 @@ export default function HomePage() {
 
       {/* ── The work ─────────────────────────────────────────────────────── */}
       <section className="px-6 pb-[clamp(56px,8vw,96px)]">
-        <div className="mx-auto grid max-w-container items-center gap-[clamp(36px,5vw,72px)] md:grid-cols-2">
-          <div className="overflow-hidden rounded-lg shadow-md">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/imagery/hands-oil.jpg"
-              alt="Intuitive bodywork"
-              className="block w-full object-cover"
-              style={{ height: "clamp(320px,44vw,500px)" }}
-            />
-          </div>
-          <div>
-            <Eyebrow bracketed>Hands that listen</Eyebrow>
-            <h2
-              className="mt-4 font-serif text-ink-900"
-              style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
-            >
-              Experienced bodywork, intuitive insight
-            </h2>
-            <div className="mt-5 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
-              <p>
-                Specializing with women, Mackensie brings a skilled
-                understanding of anatomy to every session, drawing on
-                craniosacral therapy, polarity therapy, and Temple Lomi.
-              </p>
-              <p>
-                Sessions address physical tension and pain, yet often lead to
-                insight around deeper emotional root causes. Nothing is rushed.
-                Each hour meets you exactly where you are that day.
-              </p>
-            </div>
+        <div className="mx-auto max-w-[760px] text-center">
+          <h2
+            className="font-serif text-ink-900"
+            style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
+          >
+            Experienced bodywork, intuitive insight
+          </h2>
+          <div className="mt-6 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
+            <p>
+              Specializing with women, Mackensie brings a skilled understanding
+              of anatomy to every session, drawing on craniosacral therapy,
+              polarity therapy, and Temple Lomi.
+            </p>
+            <p>
+              Sessions address physical tension and pain, yet often lead to
+              insight around deeper emotional root causes. Nothing is rushed.
+              Each hour meets you exactly where you are that day.
+            </p>
           </div>
         </div>
       </section>
