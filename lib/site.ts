@@ -46,7 +46,7 @@ export const services: Service[] = [
   {
     id: "phone-consultation",
     name: "Phone Consultation",
-    durationMinutes: 30,
+    durationMinutes: 60,
     price: 75,
     blurb:
       "A focused conversation by phone to explore your health, discuss what you're navigating, and find the right next step.",

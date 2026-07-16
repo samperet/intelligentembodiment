@@ -82,27 +82,23 @@ export default function HomePage() {
           >
             Choose your time on the table
           </h2>
-          <div className="mx-auto mt-[clamp(32px,4vw,48px)] max-w-md">
-            <ul className="divide-y divide-[color:var(--border)]">
-              {services.map((s) => (
-                <li
-                  key={s.id}
-                  className="flex items-baseline justify-between gap-4 py-4"
-                >
-                  <span className="font-serif text-[22px] text-ink-900">
-                    {s.name}
-                  </span>
-                  <span className="font-serif text-[22px] italic text-copper-800">
-                    ${s.price}
-                  </span>
-                </li>
-              ))}
-            </ul>
+          <div className="mx-auto mt-[clamp(32px,4vw,48px)] max-w-md space-y-3.5">
+            {services.map((s) => (
+              <Link
+                key={s.id}
+                href={`/book?service=${s.id}`}
+                className="group flex items-baseline justify-between gap-4 rounded-full border border-[color:var(--border-strong)] bg-paper-2 px-7 py-4 text-left transition hover:border-copper-700 hover:bg-copper-50"
+              >
+                <span className="font-serif text-[21px] text-ink-900 transition group-hover:text-copper-900">
+                  {s.name}
+                </span>
+                <span className="font-serif text-[21px] italic text-copper-800">
+                  ${s.price}
+                </span>
+              </Link>
+            ))}
           </div>
-          <Link href="/book" className="btn btn-primary btn-lg mt-9">
-            Book a Session
-          </Link>
-          <p className="mt-6 font-sans text-[14px] text-ink-500">
+          <p className="mt-8 font-sans text-[14px] text-ink-500">
             Additional slots often available. Text or call{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}
