@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { practiceVideos } from "@/lib/content";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Videos",
@@ -49,29 +47,6 @@ export default function VideosPage() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="px-6 py-[clamp(56px,8vw,96px)] text-center">
-        <div className="mx-auto max-w-[640px]">
-          <h2
-            className="font-serif text-ink-900"
-            style={{ fontSize: "clamp(28px,3.6vw,42px)", lineHeight: 1.1 }}
-          >
-            Practice together, in person
-          </h2>
-          <p className="mx-auto mt-4 max-w-[46ch] font-sans text-[16px] leading-[1.7] text-ink-500">
-            Private sessions and group classes are arranged directly, reach
-            out to find a time.
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3.5">
-            <Link href="/#book" className="btn btn-primary btn-lg">
-              Book a Session
-            </Link>
-            <a href={`mailto:${site.email}`} className="btn btn-secondary btn-lg">
-              Enquire by Email
-            </a>
-          </div>
-        </div>
-      </section>
     </>
   );
 }

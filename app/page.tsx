@@ -44,33 +44,6 @@ export default function HomePage() {
               Book a Session
             </Link>
           </div>
-          <div className="mt-[54px] w-[min(420px,80%)]">
-            <Rule ornament="dot" />
-          </div>
-        </div>
-      </section>
-
-      {/* ── The work ─────────────────────────────────────────────────────── */}
-      <section className="px-6 pb-[clamp(56px,8vw,96px)]">
-        <div className="mx-auto max-w-[760px] text-center">
-          <h2
-            className="font-serif text-ink-900"
-            style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
-          >
-            Experienced bodywork, intuitive insight
-          </h2>
-          <div className="mt-6 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
-            <p>
-              Specializing with women, Mackensie brings a skilled understanding
-              of physical and energetic anatomy to every session, drawing on
-              craniosacral therapy, polarity therapy, Temple Lomi and her deep
-              intuition.
-            </p>
-            <p>
-              Sessions address physical tension and pain, yet often lead to
-              insight around emotional root causes.
-            </p>
-          </div>
         </div>
       </section>
 
@@ -124,6 +97,30 @@ export default function HomePage() {
             </a>
             .
           </p>
+        </div>
+      </section>
+
+      {/* ── The work ─────────────────────────────────────────────────────── */}
+      <section className="px-6 py-[clamp(56px,8vw,96px)]">
+        <div className="mx-auto max-w-[760px] text-center">
+          <h2
+            className="font-serif text-ink-900"
+            style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
+          >
+            Experienced bodywork, intuitive insight
+          </h2>
+          <div className="mt-6 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
+            <p>
+              Specializing with women, Mackensie brings a skilled understanding
+              of physical and energetic anatomy to every session, drawing on
+              craniosacral therapy, polarity therapy, Temple Lomi and her deep
+              intuition.
+            </p>
+            <p>
+              Sessions address physical tension and pain, yet often lead to
+              insight around emotional root causes.
+            </p>
+          </div>
         </div>
       </section>
 
