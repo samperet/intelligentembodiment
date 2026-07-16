@@ -164,19 +164,16 @@ export default function HomePage() {
       </section>
 
       {/* ── Testimonials ─────────────────────────────────────────────────── */}
-      <section className="ie-section relative overflow-hidden bg-cardblue px-6">
+      <section className="ie-section relative overflow-hidden bg-paper-2 px-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/mandala.png"
           alt=""
           aria-hidden="true"
-          className="pointer-events-none absolute bottom-[-24%] right-[-8%] w-[440px] opacity-[0.06]"
-          style={{ filter: "brightness(0) invert(1)" }}
+          className="pointer-events-none absolute bottom-[-24%] right-[-8%] w-[440px] opacity-[0.05]"
         />
         <div className="relative mx-auto max-w-container">
-          <Eyebrow align="center" paper>
-            In Their Words
-          </Eyebrow>
+          <Eyebrow align="center">In Their Words</Eyebrow>
           <div className="mt-[clamp(32px,5vw,56px)]">
             <TestimonialCarousel />
           </div>

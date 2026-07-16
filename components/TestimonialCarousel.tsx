@@ -58,10 +58,10 @@ export function TestimonialCarousel() {
               >
                 &ldquo;
               </div>
-              <blockquote className="font-serif text-[20px] italic leading-[1.55] text-paper-2 sm:text-[23px]">
+              <blockquote className="font-serif text-[20px] italic leading-[1.55] text-ink-700 sm:text-[23px]">
                 {t.quote}
               </blockquote>
-              <figcaption className="mt-6 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-500">
+              <figcaption className="mt-6 font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-800">
                 {t.author}
               </figcaption>
             </div>
@@ -76,7 +76,7 @@ export function TestimonialCarousel() {
           onClick={() => goTo(index - 1)}
           disabled={index === 0}
           aria-label="Previous testimonial"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-[18px] text-paper-2 transition hover:border-copper-500 hover:text-copper-500 disabled:opacity-30 disabled:hover:border-white/25 disabled:hover:text-paper-2"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--border-strong)] text-[18px] text-ink-700 transition hover:border-copper-700 hover:text-copper-800 disabled:opacity-30 disabled:hover:border-[color:var(--border-strong)] disabled:hover:text-ink-700"
         >
           ‹
         </button>
@@ -89,7 +89,9 @@ export function TestimonialCarousel() {
               aria-label={`Go to testimonial ${i + 1}`}
               aria-current={i === index}
               className={`h-2 w-2 rounded-full transition ${
-                i === index ? "bg-copper-500" : "bg-white/30 hover:bg-white/50"
+                i === index
+                  ? "bg-copper-700"
+                  : "bg-ink-900/15 hover:bg-ink-900/30"
               }`}
             />
           ))}
@@ -99,7 +101,7 @@ export function TestimonialCarousel() {
           onClick={() => goTo(index + 1)}
           disabled={index === testimonials.length - 1}
           aria-label="Next testimonial"
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 text-[18px] text-paper-2 transition hover:border-copper-500 hover:text-copper-500 disabled:opacity-30 disabled:hover:border-white/25 disabled:hover:text-paper-2"
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--border-strong)] text-[18px] text-ink-700 transition hover:border-copper-700 hover:text-copper-800 disabled:opacity-30 disabled:hover:border-[color:var(--border-strong)] disabled:hover:text-ink-700"
         >
           ›
         </button>
