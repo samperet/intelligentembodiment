@@ -7,7 +7,6 @@ import { site } from "@/lib/site";
 
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -36,69 +35,36 @@ export function Nav() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-[28px] md:flex">
+        <div className="flex items-center gap-4 sm:gap-5">
           <a
             href={site.phoneHref}
-            className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
+            aria-label={`Call ${site.phone}`}
+            className="inline-flex items-center gap-1.5 text-ink-700 transition hover:text-copper-800"
           >
             <span className="text-copper-800">
-              <Icon name="phone" size={14} />
+              <Icon name="phone" size={17} />
             </span>
-            {site.phone}
+            <span className="hidden font-sans text-[12px] md:inline">
+              {site.phone}
+            </span>
           </a>
           <a
             href={`mailto:${site.email}`}
-            className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
+            aria-label={`Email ${site.email}`}
+            className="inline-flex items-center gap-1.5 text-ink-700 transition hover:text-copper-800"
           >
             <span className="text-copper-800">
-              <Icon name="mail" size={14} />
+              <Icon name="mail" size={17} />
             </span>
-            {site.email}
+            <span className="hidden font-sans text-[12px] md:inline">
+              {site.email}
+            </span>
           </a>
           <Link href="/book" className="btn btn-primary btn-sm">
             Book
           </Link>
-        </nav>
-
-        <button
-          type="button"
-          className="text-ink-700 md:hidden"
-          aria-label="Menu"
-          onClick={() => setMenuOpen((o) => !o)}
-        >
-          <Icon name={menuOpen ? "x" : "menu"} size={22} />
-        </button>
-      </div>
-
-      {menuOpen && (
-        <div className="border-t border-[color:var(--border)] bg-paper-2 px-6 pb-6 pt-4 md:hidden">
-          <a
-            href={site.phoneHref}
-            className="flex items-center gap-2.5 border-b border-[color:var(--border)] py-3 font-sans text-[14px] text-ink-700"
-          >
-            <span className="text-copper-800">
-              <Icon name="phone" size={15} />
-            </span>
-            {site.phone}
-          </a>
-          <a
-            href={`mailto:${site.email}`}
-            className="flex items-center gap-2.5 border-b border-[color:var(--border)] py-3 font-sans text-[14px] text-ink-700"
-          >
-            <span className="text-copper-800">
-              <Icon name="mail" size={15} />
-            </span>
-            {site.email}
-          </a>
-          <Link
-            href="/book"
-            onClick={() => setMenuOpen(false)}
-            className="btn btn-primary btn-md mt-4 w-full"
-          >
-            Book a Session
-          </Link>
         </div>
-      )}
+      </div>
     </header>
   );
 }

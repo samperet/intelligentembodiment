@@ -24,7 +24,7 @@ export default function HomePage() {
         <div className="relative mx-auto flex max-w-[880px] animate-fade-up flex-col items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/mandala.png" alt="" width={104} height={104} className="mb-7" />
-          <Eyebrow align="center">Massage Therapy · Burlington, VT</Eyebrow>
+          <Eyebrow align="center">Massage · Yoga · Qigong · Guide</Eyebrow>
           <h1
             className="mt-5 font-serif text-ink-900"
             style={{ fontSize: "clamp(40px,6.6vw,78px)", lineHeight: 1.02 }}
