@@ -5,10 +5,11 @@ import Link from "next/link";
 import { Icon } from "./Icon";
 
 const links = [
-  { label: "About", href: "/#about" },
-  { label: "Offerings", href: "/#offerings" },
-  { label: "Lineage", href: "/#lineage" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Massage", href: "/massage" },
+  { label: "Yoga", href: "/yoga" },
+  { label: "Health Coaching", href: "/health-coaching" },
+  { label: "Writings", href: "/writings" },
+  { label: "About", href: "/about" },
 ];
 
 export function Nav() {
