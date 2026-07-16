@@ -93,47 +93,6 @@ export const recipes: Recipe[] = [
       "Let soak, the longer they rest, the richer they become. Enjoy one as a daily tonic.",
     ],
   },
-  {
-    slug: "digestive-teas",
-    title: "Digestive Teas",
-    tag: "Two daily brews",
-    intro: [
-      "Two of my favorite teas that we have going most days in our home, come fall and winter: Ginger Tea made from fresh ginger root, and Tummy Love made from cumin, coriander, and fennel seeds.",
-      "The digestive fire, Agni, is at the heart of health in Ayurveda. Ginger helps build Agni and strengthen digestion, so we are automatically on our way to building the foundation of our health. If you suffer from bloating, gas, chronic colds, indigestion, or occasional stomach aches, this could be a gentle yet powerful ally.",
-    ],
-    ingredients: [
-      "Ginger Tea: fresh organic ginger root, maple syrup, and a lime",
-      "Tummy Love: 1 Tbs each cumin seed, coriander seed, fennel seed",
-    ],
-    directions: [
-      "Ginger Tea, Boil a pot of water and turn it off. Add grated or finely chopped ginger and cover for 10 minutes. Add a little maple and a squeeze of lime for minerals and balance. Wonderful first thing in the morning, during a cleanse, or any time you have a cold.",
-      "Tummy Love, Steep equal parts (1 Tbs each) cumin, coriander, and fennel seed for 5–10 minutes in 4–5 cups boiled water. Strain and enjoy throughout the day, especially when you need a little more soothing.",
-    ],
-  },
-  {
-    slug: "abhyanga",
-    title: "Abhyanga",
-    tag: "Warm-oil self-massage",
-    intro: [
-      "Abhyanga: oil massage. A wonderful practice, some consider it essential, especially for vata (dry, cool) types. You can buy body oils made for this, or simply warm organic (untoasted) sesame oil from the grocery store in a little pan and rub yourself down. It can be a quick 2–3 minutes or a slower 10–15 minute massage.",
-    ],
-    benefits: [
-      "Creates a sense of calm",
-      "Soothes body and mind",
-      "Promotes better sleep",
-      "Relaxes and de-stresses",
-      "Nourishes and builds reserves",
-      "Calms the nerves",
-      "Moves lymph",
-    ],
-    directions: [
-      "Warm your oil.",
-      "Oil your whole body, including the head, being generous with the oil, in a slow fashion. Massage the oil in for 1–10 minutes.",
-      "Take a warm shower with as little soap as possible to keep the oil on. Pat dry.",
-      "For long hair: put shampoo on the hair before it gets too wet, it helps get the oils out more easily.",
-      "Short on time? Shower first, then oil up immediately after you dry off.",
-    ],
-  },
 ];
 
 export function getRecipe(slug: string): Recipe | undefined {

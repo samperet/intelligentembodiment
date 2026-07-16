@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
-import { Eyebrow, Rule, Stat } from "@/components/brand";
+import { Eyebrow, Stat } from "@/components/brand";
 import { aboutPillars, lineageTeachers, stats } from "@/lib/content";
-import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -38,16 +36,7 @@ export default function AboutPage() {
       {/* Four pillars */}
       <section className="ie-section px-6">
         <div className="mx-auto max-w-container">
-          <div className="text-center">
-            <Eyebrow align="center">The Work</Eyebrow>
-            <h2
-              className="mt-3 font-serif text-ink-900"
-              style={{ fontSize: "clamp(28px,3.8vw,44px)", lineHeight: 1.1 }}
-            >
-              Four threads, one weave
-            </h2>
-          </div>
-          <div className="mt-[clamp(32px,5vw,56px)] grid gap-6 sm:grid-cols-2">
+          <div className="grid gap-6 sm:grid-cols-2">
             {aboutPillars.map((p) => (
               <div
                 key={p.title}
@@ -96,27 +85,6 @@ export default function AboutPage() {
                 )}
               </span>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Closing CTA */}
-      <section className="px-6 py-[clamp(64px,9vw,110px)] text-center">
-        <div className="mx-auto max-w-[520px]">
-          <Rule ornament="mandala" />
-          <h2
-            className="mt-8 font-serif text-ink-900"
-            style={{ fontSize: "clamp(26px,3.4vw,38px)", lineHeight: 1.1 }}
-          >
-            Ready to begin your path?
-          </h2>
-          <div className="mt-7 flex flex-wrap justify-center gap-3.5">
-            <Link href="/book" className="btn btn-primary btn-lg">
-              Book a Session
-            </Link>
-            <a href={`mailto:${site.email}`} className="btn btn-secondary btn-lg">
-              Inquire
-            </a>
           </div>
         </div>
       </section>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
-import { Eyebrow, Rule } from "@/components/brand";
+import { Eyebrow } from "@/components/brand";
 import { services, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -109,19 +109,6 @@ export default function MassagePage() {
         </div>
       </section>
 
-      {/* Abhyanga cross-link */}
-      <section className="px-6 py-[clamp(48px,7vw,80px)]">
-        <div className="mx-auto max-w-[720px] text-center">
-          <Rule ornament="mandala" />
-          <p className="mt-8 font-serif text-[20px] italic leading-[1.6] text-ink-500">
-            Between sessions, keep the nervous system nourished with{" "}
-            <Link href="/recipes/abhyanga" className="text-copper-800 underline">
-              Abhyanga
-            </Link>
-            , the Ayurvedic warm-oil self-massage.
-          </p>
-        </div>
-      </section>
     </>
   );
 }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Icon } from "./Icon";
+import { site } from "@/lib/site";
 
 const links = [
   { label: "Massage", href: "/massage" },
@@ -41,7 +42,7 @@ export function Nav() {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-[34px] md:flex">
+        <nav className="hidden items-center gap-[28px] md:flex">
           {links.map((l) => (
             <Link
               key={l.label}
@@ -51,6 +52,29 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+
+          {/* Contact */}
+          <span className="hidden items-center gap-5 border-l border-[color:var(--border)] pl-[28px] lg:flex">
+            <a
+              href={site.phoneHref}
+              className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
+            >
+              <span className="text-copper-800">
+                <Icon name="phone" size={14} />
+              </span>
+              {site.phone}
+            </a>
+            <a
+              href={`mailto:${site.email}`}
+              className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
+            >
+              <span className="text-copper-800">
+                <Icon name="mail" size={14} />
+              </span>
+              {site.email}
+            </a>
+          </span>
+
           <Link href="/book" className="btn btn-primary btn-sm">
             Book
           </Link>
@@ -78,6 +102,27 @@ export function Nav() {
               {l.label}
             </Link>
           ))}
+
+          {/* Contact */}
+          <a
+            href={site.phoneHref}
+            className="flex items-center gap-2.5 border-b border-[color:var(--border)] py-3 font-sans text-[14px] text-ink-700"
+          >
+            <span className="text-copper-800">
+              <Icon name="phone" size={15} />
+            </span>
+            {site.phone}
+          </a>
+          <a
+            href={`mailto:${site.email}`}
+            className="flex items-center gap-2.5 border-b border-[color:var(--border)] py-3 font-sans text-[14px] text-ink-700"
+          >
+            <span className="text-copper-800">
+              <Icon name="mail" size={15} />
+            </span>
+            {site.email}
+          </a>
+
           <Link
             href="/book"
             onClick={() => setMenuOpen(false)}
