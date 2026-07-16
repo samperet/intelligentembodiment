@@ -58,7 +58,7 @@ export function Footer() {
             <p className="mt-5 max-w-[30ch] font-serif text-[18px] italic leading-[1.5] text-ink-500">
               {site.tagline}. Intuitive massage therapy in Burlington, VT.
             </p>
-            <Link href="/book" className="btn btn-primary btn-md mt-6">
+            <Link href="/#book" className="btn btn-primary btn-md mt-6">
               Book a Session
             </Link>
           </div>

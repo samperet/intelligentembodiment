@@ -60,7 +60,7 @@ export function Nav() {
               {site.email}
             </span>
           </a>
-          <Link href="/book" className="btn btn-primary btn-sm">
+          <Link href="/#book" className="btn btn-primary btn-sm">
             Book
           </Link>
         </div>

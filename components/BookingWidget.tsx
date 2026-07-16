@@ -132,7 +132,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     <div className="mx-auto grid max-w-4xl gap-6">
       {/* Step 1, Session */}
       <StepCard step={1} title="Choose your session" done={!!service}>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <div className="mx-auto grid max-w-[520px] gap-3.5">
           {services.map((s) => {
             const active = service?.id === s.id;
             return (
@@ -140,20 +140,26 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                 key={s.id}
                 type="button"
                 onClick={() => chooseService(s)}
-                className={`rounded-lg border p-5 text-left transition ${
+                className={`group flex items-baseline justify-between gap-4 rounded-full border px-7 py-4 text-left transition ${
                   active
-                    ? "border-copper-700 bg-copper-50 ring-1 ring-copper-300"
-                    : "border-[color:var(--border)] bg-paper-2 hover:border-[color:var(--border-strong)]"
+                    ? "border-copper-800 bg-copper-700 shadow-md"
+                    : "border-copper-300 bg-copper-50 hover:border-copper-700 hover:bg-copper-100"
                 }`}
               >
-                <div className="flex items-baseline justify-between gap-3">
-                  <span className="font-serif text-[20px] text-ink-900">
-                    {s.name}
-                  </span>
-                  <span className="font-serif text-[20px] italic text-copper-800">
-                    ${s.price}
-                  </span>
-                </div>
+                <span
+                  className={`font-serif text-[20px] transition ${
+                    active ? "text-white" : "text-ink-900"
+                  }`}
+                >
+                  {s.name}
+                </span>
+                <span
+                  className={`font-serif text-[20px] italic transition ${
+                    active ? "text-copper-100" : "text-copper-800"
+                  }`}
+                >
+                  ${s.price}
+                </span>
               </button>
             );
           })}
@@ -189,10 +195,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                       key={slot.start}
                       type="button"
                       onClick={() => setSelectedSlot(slot)}
-                      className={`rounded-lg border px-2 py-2.5 font-sans text-[13px] transition ${
+                      className={`rounded-full border px-2 py-2.5 font-sans text-[13px] transition ${
                         active
-                          ? "border-copper-700 bg-copper-700 text-white"
-                          : "border-[color:var(--border-strong)] bg-paper-2 text-ink-700 hover:border-copper-700"
+                          ? "border-copper-800 bg-copper-700 text-white shadow-sm"
+                          : "border-copper-300 bg-copper-50 text-ink-700 hover:border-copper-700 hover:bg-copper-100"
                       }`}
                     >
                       {slot.label}
@@ -262,18 +268,27 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-lg border border-[color:var(--border)] bg-paper-2 p-6 shadow-sm sm:p-8">
-      <div className="mb-5 flex items-center gap-3">
-        <span
-          className={`flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-medium ${
-            done ? "bg-copper-700 text-white" : "bg-copper-100 text-copper-800"
-          }`}
-        >
-          {done ? "✓" : step}
+    <section className="relative overflow-hidden rounded-xl border border-copper-100 bg-paper-2 p-6 shadow-sm sm:p-9">
+      {/* corner mandala flourish */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/mandala.png"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute right-[-34px] top-[-34px] w-[120px] opacity-[0.06]"
+      />
+      <div className="relative mb-6 text-center">
+        <span className="font-serif text-[15px] italic text-copper-700">
+          {done ? "✓" : `0${step}`}
         </span>
-        <h2 className="font-serif text-[22px] text-ink-900">{title}</h2>
+        <h2 className="mt-1 font-serif text-[24px] text-ink-900">{title}</h2>
+        <div className="mx-auto mt-3 flex w-[120px] items-center gap-2.5">
+          <span className="h-px flex-1 bg-copper-300" />
+          <span className="h-[5px] w-[5px] rotate-45 bg-copper-700" />
+          <span className="h-px flex-1 bg-copper-300" />
+        </div>
       </div>
-      {children}
+      <div className="relative">{children}</div>
     </section>
   );
 }

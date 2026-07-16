@@ -2,7 +2,9 @@ import Link from "next/link";
 import { Eyebrow, Rule, Stat } from "@/components/brand";
 import { RetreatInterest } from "@/components/RetreatInterest";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
-import { services, site } from "@/lib/site";
+import { Suspense } from "react";
+import { BookingWidget } from "@/components/BookingWidget";
+import { site } from "@/lib/site";
 import { stats } from "@/lib/content";
 
 export default function HomePage() {
@@ -38,7 +40,7 @@ export default function HomePage() {
             Awake in the Body
           </p>
           <div className="mt-9 flex flex-wrap justify-center gap-3.5">
-            <Link href="/book" className="btn btn-primary btn-lg">
+            <Link href="/#book" className="btn btn-primary btn-lg">
               Book a Session
             </Link>
           </div>
@@ -72,32 +74,50 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Sessions ─────────────────────────────────────────────────────── */}
-      <section id="sessions" className="ie-section bg-sand px-6">
-        <div className="mx-auto max-w-container text-center">
-          <h2
-            className="font-serif text-ink-900"
-            style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
-          >
-            Book a Session
-          </h2>
-          <div className="mx-auto mt-[clamp(32px,4vw,48px)] max-w-md space-y-3.5">
-            {services.map((s) => (
-              <Link
-                key={s.id}
-                href={`/book?service=${s.id}`}
-                className="group flex items-baseline justify-between gap-4 rounded-full border border-[color:var(--border-strong)] bg-paper-2 px-7 py-4 text-left transition hover:border-copper-700 hover:bg-copper-50"
-              >
-                <span className="font-serif text-[21px] text-ink-900 transition group-hover:text-copper-900">
-                  {s.name}
-                </span>
-                <span className="font-serif text-[21px] italic text-copper-800">
-                  ${s.price}
-                </span>
-              </Link>
-            ))}
+      {/* ── Book a Session (inline booking) ──────────────────────────────── */}
+      <section id="book" className="ie-section relative overflow-hidden bg-sand px-6">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute left-[-120px] top-[-80px] w-[380px] select-none opacity-[0.05]"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-[-100px] right-[-110px] w-[380px] select-none opacity-[0.05]"
+        />
+        <div className="relative mx-auto max-w-container">
+          <div className="text-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/mandala.png"
+              alt=""
+              width={56}
+              height={56}
+              className="mx-auto mb-5"
+            />
+            <h2
+              className="font-serif text-ink-900"
+              style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
+            >
+              Book a Session
+            </h2>
+            <div className="mx-auto mt-5 flex w-[min(360px,70%)] items-center gap-3">
+              <span className="h-px flex-1 bg-copper-300" />
+              <span className="h-[6px] w-[6px] rotate-45 bg-copper-700" />
+              <span className="h-px flex-1 bg-copper-300" />
+            </div>
           </div>
-          <p className="mt-8 font-sans text-[14px] text-ink-500">
+          <div className="mt-[clamp(32px,4vw,48px)]">
+            <Suspense>
+              <BookingWidget />
+            </Suspense>
+          </div>
+          <p className="mt-8 text-center font-sans text-[14px] text-ink-500">
             Additional slots often available. Text or call{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}

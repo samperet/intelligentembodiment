@@ -63,7 +63,7 @@ export default function VideosPage() {
             out to find a time.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3.5">
-            <Link href="/book" className="btn btn-primary btn-lg">
+            <Link href="/#book" className="btn btn-primary btn-lg">
               Book a Session
             </Link>
             <a href={`mailto:${site.email}`} className="btn btn-secondary btn-lg">
