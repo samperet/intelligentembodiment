@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { site } from "@/lib/site";
 import { sendEmail, isEmailConfigured } from "@/lib/email";
 import { retreatClientEmail, retreatOwnerEmail } from "@/lib/emails";
+import { isR2Configured, addSubscriber } from "@/lib/r2";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,15 @@ export async function POST(request: Request) {
   // Always log so the signup is captured in server logs even if email isn't
   // configured yet. When Resend is set up, the owner also gets an email.
   console.log(`Retreat interest signup: ${name} <${email}>`);
+
+  // Persist to R2 (resilient — a storage failure must not break the signup).
+  if (isR2Configured()) {
+    try {
+      await addSubscriber({ name, email, date: new Date().toISOString() });
+    } catch (err) {
+      console.error("R2 subscriber store failed:", err);
+    }
+  }
 
   // Notify the practitioner.
   const ownerMail = retreatOwnerEmail({ name, email });
