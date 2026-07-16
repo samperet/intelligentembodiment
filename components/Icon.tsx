@@ -1,4 +1,4 @@
-// Minimal inline icon set (Lucide-style strokes) — avoids an icon dependency.
+// Minimal inline icon set (Lucide-style strokes), avoids an icon dependency.
 type IconName =
   | "phone"
   | "mail"

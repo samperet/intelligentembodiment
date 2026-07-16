@@ -2,17 +2,16 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { Icon } from "./Icon";
 
-const offerings = [
-  { label: "Massage", href: "/massage" },
-  { label: "Yoga", href: "/yoga" },
-  { label: "Health Coaching", href: "/health-coaching" },
-];
-
 const explore = [
-  { label: "Writings", href: "/writings" },
-  { label: "Videos", href: "/videos" },
+  { label: "Massage", href: "/massage" },
   { label: "About", href: "/about" },
   { label: "Book a Session", href: "/book" },
+];
+
+const library = [
+  { label: "Recipes", href: "/recipes" },
+  { label: "Writings", href: "/writings" },
+  { label: "Videos", href: "/videos" },
 ];
 
 function FooterNav({
@@ -61,16 +60,15 @@ export function Footer() {
               />
             </Link>
             <p className="mt-5 max-w-[30ch] font-serif text-[18px] italic leading-[1.5] text-ink-500">
-              {site.tagline} — massage, yoga, and root-cause health coaching in
-              Burlington, VT.
+              {site.tagline}. Intuitive massage therapy in Burlington, VT.
             </p>
             <Link href="/book" className="btn btn-primary btn-md mt-6">
               Book a Session
             </Link>
           </div>
 
-          <FooterNav heading="Offerings" links={offerings} />
           <FooterNav heading="Explore" links={explore} />
+          <FooterNav heading="Library" links={library} />
 
           {/* Connect */}
           <div>

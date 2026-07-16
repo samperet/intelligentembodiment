@@ -14,7 +14,7 @@ export const site = {
   addressMapUrl: "https://maps.google.com/?q=33+Main+St+Burlington+VT",
   url: "https://intelligentembodiment.com",
   description:
-    "Somatic bodywork, yoga, and intuitive consulting with Mackensie Grant in Burlington, VT. Massage therapy that addresses physical tension and its deeper roots.",
+    "Intuitive massage therapy with Mackensie Grant in Burlington, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
 };
 
 export type Service = {
@@ -33,7 +33,7 @@ export const services: Service[] = [
     durationMinutes: 60,
     price: 120,
     blurb:
-      "A focused hour of integrative bodywork — craniosacral, polarity, and intuitive touch to release tension and restore ease.",
+      "A focused hour of integrative bodywork, craniosacral, polarity, and intuitive touch to release tension and restore ease.",
   },
   {
     id: "massage-90",

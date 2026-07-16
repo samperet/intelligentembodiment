@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Mackensie Satya Priya — nearly three decades of devoted practice in yoga, bodywork, and the art of healing.",
+    "Mackensie Satya Priya, nearly three decades of devoted practice in yoga, bodywork, and the art of healing.",
 };
 
 export default function AboutPage() {
@@ -22,7 +22,7 @@ export default function AboutPage() {
             <em className="text-copper-800">devoted practice</em>
           </>
         }
-        lead="Some practitioners accumulate credentials. Others accumulate wisdom. A rare few are devoted enough to gather both — and to live what they teach."
+        lead="Some practitioners accumulate credentials. Others accumulate wisdom. A rare few are devoted enough to gather both, and to live what they teach."
       />
 
       {/* Stats */}
@@ -50,8 +50,8 @@ export default function AboutPage() {
             <div className="mt-5 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
               <p>
                 For nearly thirty years, two parallel rivers have shaped this
-                work: the precision and inspiration of yoga — Hatha, Kripalu,
-                Anusara, Ashtanga — and the intimate intelligence of touch:
+                work: the precision and inspiration of yoga, Hatha, Kripalu,
+                Anusara, Ashtanga, and the intimate intelligence of touch:
                 massage therapy, polarity therapy, craniosacral therapy, Temple
                 Lomi. Each tradition absorbed not as a technique, but as a
                 language of the body&apos;s deeper intelligence.
@@ -59,7 +59,7 @@ export default function AboutPage() {
               <p>
                 Seven-to-ten-day silent meditation retreats, year after year,
                 weren&apos;t spiritual tourism. They were a practitioner&apos;s
-                commitment to sanity — to understanding, with clarity, who we
+                commitment to sanity, to understanding, with clarity, who we
                 really are beneath the noise.
               </p>
             </div>
@@ -114,7 +114,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Lineage + wider path — indigo */}
+      {/* Lineage + wider path, indigo */}
       <section className="ie-section relative overflow-hidden bg-indigo-700 px-6">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -146,10 +146,10 @@ export default function AboutPage() {
             <p className="mt-5 font-serif text-[19px] italic leading-[1.65] text-white/85">
               Ayurveda and holistic health. Women&apos;s Qi Gong with Daisy
               Lee. Seven years with Sufi guides in Hawai&apos;i, immersed in
-              the joyful practices of the Ruhaniat order — finding a connection
+              the joyful practices of the Ruhaniat order, finding a connection
               that ran beneath doctrine, into something more essential.
               Spiritual pilgrimages in Hawaii and on the mainland. Not as
-              escape — as return.
+              escape, as return.
             </p>
           </div>
         </div>
@@ -170,7 +170,7 @@ export default function AboutPage() {
             style={{ fontSize: "clamp(22px,2.8vw,30px)", lineHeight: 1.45 }}
           >
             Today, the deepest work is helping women get to the root cause of
-            illness — exploring where emotion, energy, and physicality
+            illness, exploring where emotion, energy, and physicality
             intersect. Not managing symptoms. Uncovering patterns. Reclaiming
             vitality from the inside out.
           </blockquote>
@@ -188,7 +188,7 @@ export default function AboutPage() {
             </h2>
             <p className="mt-4 font-sans text-[15px] leading-[1.7] text-ink-500">
               Whether you&apos;re navigating chronic imbalance, seeking deeper
-              embodiment, or feeling a quiet pull toward transformation — this
+              embodiment, or feeling a quiet pull toward transformation, this
               work is designed for you.
             </p>
             <div className="mt-7 flex flex-wrap justify-center gap-3.5">

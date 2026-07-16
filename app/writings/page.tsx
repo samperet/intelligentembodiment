@@ -6,7 +6,7 @@ import { writings } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Writings",
   description:
-    "Essays and poems by Mackensie Satya Priya — on embodiment, vulnerability, motherhood, and the path of the heart.",
+    "Essays and poems by Mackensie Satya Priya, on embodiment, vulnerability, motherhood, and the path of the heart.",
 };
 
 export default function WritingsPage() {

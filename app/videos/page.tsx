@@ -7,7 +7,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Videos",
   description:
-    "A free library of short yoga teachings and guided practices with Mackensie Satya Priya — down dog, hip opening, breath expansion, and more.",
+    "A free library of short yoga teachings and guided practices with Mackensie Satya Priya, down dog, hip opening, breath expansion, and more.",
 };
 
 export default function VideosPage() {
@@ -17,7 +17,7 @@ export default function VideosPage() {
         eyebrow="The Practice Library"
         title={
           <>
-            Practice with Mackensie — <em className="text-copper-800">free</em>
+            Practice with Mackensie, <em className="text-copper-800">free</em>
           </>
         }
         lead="Short teachings and guided practices, filmed with love. Roll out a mat, or simply watch and absorb."
@@ -67,12 +67,12 @@ export default function VideosPage() {
             Practice together, in person
           </h2>
           <p className="mx-auto mt-4 max-w-[46ch] font-sans text-[16px] leading-[1.7] text-ink-500">
-            Private sessions and group classes are arranged directly — reach
+            Private sessions and group classes are arranged directly, reach
             out to find a time.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3.5">
-            <Link href="/yoga" className="btn btn-primary btn-lg">
-              About the Yoga
+            <Link href="/book" className="btn btn-primary btn-lg">
+              Book a Session
             </Link>
             <a href={`mailto:${site.email}`} className="btn btn-secondary btn-lg">
               Enquire by Email

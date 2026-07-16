@@ -131,7 +131,7 @@ const toneGradient: Record<Offering["tone"], string> = {
 export function OfferingCard({ o }: { o: Offering }) {
   return (
     <div className="group flex flex-col overflow-hidden rounded-lg border border-[color:var(--border)] bg-paper-2 shadow-sm transition hover:border-[color:var(--border-strong)] hover:shadow-md">
-      {/* In-palette placeholder tile — swap for real photography in public/imagery */}
+      {/* In-palette placeholder tile, swap for real photography in public/imagery */}
       <div
         className="relative h-[180px] overflow-hidden"
         style={{ background: toneGradient[o.tone] }}

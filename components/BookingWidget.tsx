@@ -130,7 +130,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
 
   return (
     <div className="mx-auto grid max-w-4xl gap-6">
-      {/* Step 1 — Session */}
+      {/* Step 1, Session */}
       <StepCard step={1} title="Choose your session" done={!!service}>
         <div className="grid gap-4 sm:grid-cols-2">
           {services.map((s) => {
@@ -163,7 +163,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         </div>
       </StepCard>
 
-      {/* Step 2 — Date & time */}
+      {/* Step 2, Date & time */}
       {service && (
         <StepCard step={2} title="Pick a date & time" done={!!selectedSlot}>
           <div className="grid gap-8 md:grid-cols-[auto_1fr]">
@@ -208,7 +208,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         </StepCard>
       )}
 
-      {/* Step 3 — Details */}
+      {/* Step 3, Details */}
       {service && selectedSlot && (
         <StepCard step={3} title="Your details" done={false}>
           <form onSubmit={submit} className="grid gap-4">

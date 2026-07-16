@@ -85,8 +85,8 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
           </div>
         )}
 
-        <p className="mt-10 text-right font-serif text-[18px] italic text-copper-800">
-          — Mackensie Satya Priya
+        <p className="mt-10 text-right font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+          Mackensie Satya Priya
         </p>
 
         <div className="mt-12">

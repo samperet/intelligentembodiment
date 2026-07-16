@@ -1,5 +1,5 @@
 // Optional transactional email via Resend (https://resend.com).
-// If RESEND_API_KEY is unset this is a no-op — Google Calendar already emails
+// If RESEND_API_KEY is unset this is a no-op, Google Calendar already emails
 // the invite to both parties when the event is created.
 
 export function isEmailConfigured(): boolean {

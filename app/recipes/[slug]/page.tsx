@@ -142,10 +142,7 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
         <div className="mt-14">
           <Rule ornament="mandala" />
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4">
-            <Link
-              href="/health-coaching#recipes"
-              className="btn btn-secondary btn-md"
-            >
+            <Link href="/recipes" className="btn btn-secondary btn-md">
               ← All recipes
             </Link>
             {r.slug === "kitchari" && (

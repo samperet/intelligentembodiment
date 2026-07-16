@@ -7,21 +7,21 @@ import { services, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Massage",
   description:
-    "Intuitive massage therapy with Mackensie Satya Priya in Burlington, VT — craniosacral, polarity, and Temple Lomi woven into sessions of 60 or 90 minutes.",
+    "Intuitive massage therapy with Mackensie Satya Priya in Burlington, VT, craniosacral, polarity, and Temple Lomi woven into sessions of 60 or 90 minutes.",
 };
 
 const threads = [
   {
     title: "Skilled Anatomy",
-    body: "Sessions address physical tension and pain with a practiced understanding of the body's structure — three decades of hands-on work across craniosacral, polarity therapy, and Temple Lomi.",
+    body: "Sessions address physical tension and pain with a practiced understanding of the body's structure, three decades of hands-on work across craniosacral, polarity therapy, and Temple Lomi.",
   },
   {
     title: "Intuitive Insight",
-    body: "Specializing with women, the work often reveals what lives beneath the tension — the deeper emotional root causes that ask to be heard before the body can truly soften.",
+    body: "Specializing with women, the work often reveals what lives beneath the tension, the deeper emotional root causes that ask to be heard before the body can truly soften.",
   },
   {
     title: "Sacred Pace",
-    body: "Nothing is rushed. Each session meets you where you are that day — body, energy, and insight woven into one unhurried hour (or a spacious ninety minutes).",
+    body: "Nothing is rushed. Each session meets you where you are that day, body, energy, and insight woven into one unhurried hour (or a spacious ninety minutes).",
   },
 ];
 
@@ -35,7 +35,7 @@ export default function MassagePage() {
             Hands that <em className="text-copper-800">listen</em>
           </>
         }
-        lead="Experienced bodywork with intuitive insights — addressing physical tension while often revealing the deeper roots beneath it."
+        lead="Experienced bodywork with intuitive insights, addressing physical tension while often revealing the deeper roots beneath it."
       />
 
       {/* Photo + threads */}
@@ -100,7 +100,7 @@ export default function MassagePage() {
             ))}
           </div>
           <p className="mt-8 font-sans text-[14px] text-ink-500">
-            Additional slots often available — text or call{" "}
+            Additional slots often available, text or call{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}
             </a>
@@ -117,8 +117,8 @@ export default function MassagePage() {
             Between sessions, keep the nervous system nourished with{" "}
             <Link href="/recipes/abhyanga" className="text-copper-800 underline">
               Abhyanga
-            </Link>{" "}
-            — the Ayurvedic warm-oil self-massage.
+            </Link>
+            , the Ayurvedic warm-oil self-massage.
           </p>
         </div>
       </section>

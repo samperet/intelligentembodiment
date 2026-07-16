@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     hour12: true,
   })}`;
 
-  const summary = `${service.name} — ${name.trim()}`;
+  const summary = `${service.name}, ${name.trim()}`;
   const descriptionLines = [
     `Booking via ${site.url}`,
     `Session: ${service.name} ($${service.price})`,
@@ -87,7 +87,7 @@ export async function POST(request: Request) {
         return NextResponse.json(
           {
             error:
-              "Sorry — that time was just taken. Please choose another slot.",
+              "Sorry, that time was just taken. Please choose another slot.",
           },
           { status: 409 },
         );
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
     // Notify the practitioner (in addition to the calendar invite).
     await sendEmail({
       to: [process.env.OWNER_EMAIL || site.email],
-      subject: `New booking: ${service.name} — ${name.trim()} (${whenLabel})`,
+      subject: `New booking: ${service.name}, ${name.trim()} (${whenLabel})`,
       html: `<p>New booking received.</p><pre>${description}</pre>`,
       text: `New booking received.\n\n${description}`,
       icsContent: ics,

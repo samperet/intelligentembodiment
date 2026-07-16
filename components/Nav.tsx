@@ -6,8 +6,7 @@ import { Icon } from "./Icon";
 
 const links = [
   { label: "Massage", href: "/massage" },
-  { label: "Yoga", href: "/yoga" },
-  { label: "Health Coaching", href: "/health-coaching" },
+  { label: "Recipes", href: "/recipes" },
   { label: "About", href: "/about" },
 ];
 
