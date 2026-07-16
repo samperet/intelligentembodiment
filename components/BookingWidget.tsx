@@ -131,7 +131,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
   return (
     <div className="mx-auto grid max-w-4xl gap-6">
       {/* Step 1, Session */}
-      <StepCard step={1} title="Choose your session" done={!!service}>
+      <StepCard showHeader={false}>
         <div className="mx-auto grid max-w-[520px] gap-3.5">
           {services.map((s) => {
             const active = service?.id === s.id;
@@ -140,24 +140,16 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                 key={s.id}
                 type="button"
                 onClick={() => chooseService(s)}
-                className={`group flex items-baseline justify-between gap-4 rounded-full border px-7 py-4 text-left transition ${
+                className={`flex items-baseline justify-between gap-4 rounded-full border px-7 py-4 text-left shadow-sm transition ${
                   active
-                    ? "border-copper-800 bg-copper-700 shadow-md"
-                    : "border-copper-300 bg-copper-50 hover:border-copper-700 hover:bg-copper-100"
+                    ? "border-copper-900 bg-copper-800 shadow-md ring-2 ring-copper-300"
+                    : "border-copper-700 bg-copper-700 hover:bg-copper-800"
                 }`}
               >
-                <span
-                  className={`font-serif text-[20px] transition ${
-                    active ? "text-white" : "text-ink-900"
-                  }`}
-                >
+                <span className="font-serif text-[20px] text-white">
                   {s.name}
                 </span>
-                <span
-                  className={`font-serif text-[20px] italic transition ${
-                    active ? "text-copper-100" : "text-copper-800"
-                  }`}
-                >
+                <span className="font-serif text-[20px] italic text-copper-100">
                   ${s.price}
                 </span>
               </button>
@@ -168,7 +160,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
 
       {/* Step 2, Date & time */}
       {service && (
-        <StepCard step={2} title="Pick a date & time" done={!!selectedSlot}>
+        <StepCard title="Pick a date & time">
           <div className="grid gap-8 md:grid-cols-[auto_1fr]">
             <MonthCalendar selected={selectedDate} onSelect={chooseDate} />
             <div>
@@ -213,7 +205,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
 
       {/* Step 3, Details */}
       {service && selectedSlot && (
-        <StepCard step={3} title="Your details" done={false}>
+        <StepCard title="Your details">
           <form onSubmit={submit} className="grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Name" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
@@ -230,7 +222,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
               />
             </label>
 
-            <div className="mt-2 rounded-lg bg-sand p-4 font-sans text-[14px] text-ink-700">
+            <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[14px] text-ink-700">
               <strong className="text-ink-900">{service.name}</strong> · $
               {service.price} · {selectedSlot.label},{" "}
               {new Date(selectedSlot.start).toLocaleDateString(undefined, {
@@ -257,38 +249,27 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
 }
 
 function StepCard({
-  step,
   title,
-  done,
   children,
+  showHeader = true,
 }: {
-  step: number;
-  title: string;
-  done: boolean;
+  title?: string;
   children: React.ReactNode;
+  showHeader?: boolean;
 }) {
   return (
-    <section className="relative overflow-hidden rounded-xl border border-copper-100 bg-paper-2 p-6 shadow-sm sm:p-9">
-      {/* corner mandala flourish */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/mandala.png"
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute right-[-34px] top-[-34px] w-[120px] opacity-[0.06]"
-      />
-      <div className="relative mb-6 text-center">
-        <span className="font-serif text-[15px] italic text-copper-700">
-          {done ? "✓" : `0${step}`}
-        </span>
-        <h2 className="mt-1 font-serif text-[24px] text-ink-900">{title}</h2>
-        <div className="mx-auto mt-3 flex w-[120px] items-center gap-2.5">
-          <span className="h-px flex-1 bg-copper-300" />
-          <span className="h-[5px] w-[5px] rotate-45 bg-copper-700" />
-          <span className="h-px flex-1 bg-copper-300" />
+    <section>
+      {showHeader && title && (
+        <div className="mb-6 text-center">
+          <h2 className="font-serif text-[24px] text-ink-900">{title}</h2>
+          <div className="mx-auto mt-3 flex w-[120px] items-center gap-2.5">
+            <span className="h-px flex-1 bg-copper-300" />
+            <span className="h-[5px] w-[5px] rotate-45 bg-copper-700" />
+            <span className="h-px flex-1 bg-copper-300" />
+          </div>
         </div>
-      </div>
-      <div className="relative">{children}</div>
+      )}
+      {children}
     </section>
   );
 }

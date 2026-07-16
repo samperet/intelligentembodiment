@@ -118,7 +118,7 @@ export default function HomePage() {
             </Suspense>
           </div>
           <p className="mt-8 text-center font-sans text-[14px] text-ink-500">
-            Additional slots often available. Text or call{" "}
+            Call or text for additional availability{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}
             </a>
