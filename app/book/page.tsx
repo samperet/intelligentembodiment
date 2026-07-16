@@ -32,10 +32,6 @@ export default function BookPage({
         >
           Reserve your session
         </h1>
-        <p className="mx-auto mt-4 max-w-xl font-sans text-[16px] leading-[1.7] text-ink-500">
-          Choose a session, pick a time that suits you, and you&apos;ll receive
-          a confirmation right away. All times shown in Eastern Time.
-        </p>
       </div>
       <Suspense>
         <BookingWidget initialService={searchParams.service} />
