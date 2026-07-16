@@ -3,7 +3,6 @@ import { site } from "@/lib/site";
 import { Icon } from "./Icon";
 
 const explore = [
-  { label: "Massage", href: "/massage" },
   { label: "About", href: "/about" },
   { label: "Book a Session", href: "/book" },
 ];

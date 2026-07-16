@@ -38,9 +38,6 @@ export default function HomePage() {
             <Link href="/book" className="btn btn-primary btn-lg">
               Book a Session
             </Link>
-            <Link href="/massage" className="btn btn-secondary btn-lg">
-              About the Work
-            </Link>
           </div>
           <div className="mt-[54px] w-[min(420px,80%)]">
             <Rule ornament="dot" />
@@ -80,9 +77,6 @@ export default function HomePage() {
                 Each hour meets you exactly where you are that day.
               </p>
             </div>
-            <Link href="/massage" className="btn btn-secondary btn-md mt-8">
-              Explore the massage
-            </Link>
           </div>
         </div>
       </section>

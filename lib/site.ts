@@ -9,7 +9,7 @@ export const site = {
   practitioner: "Mackensie Satya Priya Grant",
   phone: "808.463.9195",
   phoneHref: "tel:+18084639195",
-  email: "mackensie11@gmail.com",
+  email: "mackensie@intelligentembodiment.com",
   address: "33 Main St, Burlington, VT",
   addressMapUrl: "https://maps.google.com/?q=33+Main+St+Burlington+VT",
   url: "https://intelligentembodiment.com",

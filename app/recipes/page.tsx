@@ -54,14 +54,6 @@ export default function RecipesPage() {
               </Link>
             ))}
           </div>
-
-          <p className="mt-10 text-center font-sans text-[14px] text-ink-500">
-            Curious about your constitution? Read{" "}
-            <Link href="/writings/how-i-came-to-kitchari" className="underline">
-              How I Came to Kitchari
-            </Link>
-            , the story behind the kitchen.
-          </p>
         </div>
       </section>
     </>
