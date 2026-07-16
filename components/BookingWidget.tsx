@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   services,
   AVAILABLE_WEEKDAYS,
@@ -47,6 +47,27 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     service: string;
     price: number;
   }>(null);
+
+  // Which days are selectable / how far ahead — mirrors the server settings
+  // (admin-editable). Starts from the code defaults, then refines on load.
+  const [weekdays, setWeekdays] = useState<number[]>(AVAILABLE_WEEKDAYS);
+  const [windowDays, setWindowDays] = useState<number>(BOOKING_WINDOW_DAYS);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/booking-settings")
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled || !d?.settings) return;
+        if (Array.isArray(d.settings.weekdays)) setWeekdays(d.settings.weekdays);
+        if (typeof d.settings.bookingWindowDays === "number")
+          setWindowDays(d.settings.bookingWindowDays);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const loadSlots = useCallback(async (date: string, serviceId: string) => {
     setSlotsLoading(true);
@@ -162,7 +183,12 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       {service && (
         <StepCard title="Pick a date & time">
           <div className="grid gap-8 md:grid-cols-[auto_1fr]">
-            <MonthCalendar selected={selectedDate} onSelect={chooseDate} />
+            <MonthCalendar
+              selected={selectedDate}
+              onSelect={chooseDate}
+              weekdays={weekdays}
+              windowDays={windowDays}
+            />
             <div>
               <p className="mb-3 font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
                 {selectedDate ? "Available times" : "Select a date"}
@@ -304,9 +330,13 @@ function Field({
 function MonthCalendar({
   selected,
   onSelect,
+  weekdays,
+  windowDays,
 }: {
   selected: string | null;
   onSelect: (date: string) => void;
+  weekdays: number[];
+  windowDays: number;
 }) {
   const today = startOfToday();
   const [view, setView] = useState({
@@ -315,7 +345,7 @@ function MonthCalendar({
   });
 
   const maxDate = new Date(today);
-  maxDate.setDate(maxDate.getDate() + BOOKING_WINDOW_DAYS);
+  maxDate.setDate(maxDate.getDate() + windowDays);
 
   const firstOfMonth = new Date(view.year, view.month, 1);
   const startWeekday = firstOfMonth.getDay();
@@ -328,7 +358,7 @@ function MonthCalendar({
 
   function isSelectable(d: Date): boolean {
     if (d < today || d > maxDate) return false;
-    return AVAILABLE_WEEKDAYS.includes(d.getDay());
+    return weekdays.includes(d.getDay());
   }
 
   const canPrev =

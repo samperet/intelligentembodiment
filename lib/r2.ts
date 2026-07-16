@@ -6,8 +6,15 @@
 //   CLOUDFLARE_ACCOUNT_ID   — your Cloudflare account id
 //   R2_BUCKET               — the bucket name (default "intelligent-embodiment")
 
+import {
+  defaultBookingSettings,
+  normalizeBookingSettings,
+  type BookingSettings,
+} from "./site";
+
 const BASE = "https://api.cloudflare.com/client/v4";
 const SUBS_KEY = "newsletter/subscribers.json";
+const SETTINGS_KEY = "booking/settings.json";
 
 export type Subscriber = { name: string; email: string; date: string };
 
@@ -83,4 +90,28 @@ export async function addSubscriber(sub: Subscriber): Promise<void> {
 export async function listSubscribers(): Promise<Subscriber[]> {
   const list = (await getJson<Subscriber[]>(SUBS_KEY)) || [];
   return [...list].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/**
+ * Effective booking settings: the stored overrides merged over the code
+ * defaults. Never throws — falls back to defaults if R2 is unset or errors,
+ * so availability generation is always safe.
+ */
+export async function getBookingSettings(): Promise<BookingSettings> {
+  if (!isR2Configured()) return defaultBookingSettings;
+  try {
+    const stored = await getJson<Partial<BookingSettings>>(SETTINGS_KEY);
+    return normalizeBookingSettings(stored);
+  } catch {
+    return defaultBookingSettings;
+  }
+}
+
+/** Persist booking settings (validated/clamped). Requires R2. */
+export async function saveBookingSettings(
+  input: Partial<BookingSettings>,
+): Promise<BookingSettings> {
+  const clean = normalizeBookingSettings(input);
+  await putJson(SETTINGS_KEY, clean);
+  return clean;
 }

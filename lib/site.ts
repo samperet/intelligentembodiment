@@ -78,3 +78,54 @@ export const BUFFER_MINUTES = 15;
 // How far ahead clients may book (days) and the minimum lead time (hours).
 export const BOOKING_WINDOW_DAYS = 60;
 export const MIN_LEAD_HOURS = 12;
+
+// Editable booking parameters (overridable from /admin, persisted in R2).
+export type BookingSettings = {
+  weekdays: number[]; // 0=Sun … 6=Sat
+  dayStartHour: number; // 0–23
+  dayEndHour: number; // 0–24, exclusive end
+  slotIntervalMinutes: number;
+  bufferMinutes: number;
+  bookingWindowDays: number;
+  minLeadHours: number;
+};
+
+export const defaultBookingSettings: BookingSettings = {
+  weekdays: AVAILABLE_WEEKDAYS,
+  dayStartHour: DAY_START_HOUR,
+  dayEndHour: DAY_END_HOUR,
+  slotIntervalMinutes: SLOT_INTERVAL_MINUTES,
+  bufferMinutes: BUFFER_MINUTES,
+  bookingWindowDays: BOOKING_WINDOW_DAYS,
+  minLeadHours: MIN_LEAD_HOURS,
+};
+
+/** Clamp/sanitize an incoming settings object to safe bounds. */
+export function normalizeBookingSettings(
+  input: Partial<BookingSettings> | null | undefined,
+): BookingSettings {
+  const d = defaultBookingSettings;
+  const s = { ...d, ...(input ?? {}) };
+  const clampInt = (v: unknown, min: number, max: number, fb: number) => {
+    const n = Math.round(Number(v));
+    return Number.isFinite(n) ? Math.min(max, Math.max(min, n)) : fb;
+  };
+  let weekdays = Array.isArray(s.weekdays)
+    ? Array.from(new Set(s.weekdays.map((n) => Math.round(Number(n)))))
+        .filter((n) => n >= 0 && n <= 6)
+        .sort((a, b) => a - b)
+    : d.weekdays;
+  if (weekdays.length === 0) weekdays = d.weekdays;
+  let dayStartHour = clampInt(s.dayStartHour, 0, 22, d.dayStartHour);
+  let dayEndHour = clampInt(s.dayEndHour, 1, 24, d.dayEndHour);
+  if (dayEndHour <= dayStartHour) dayEndHour = Math.min(24, dayStartHour + 1);
+  return {
+    weekdays,
+    dayStartHour,
+    dayEndHour,
+    slotIntervalMinutes: clampInt(s.slotIntervalMinutes, 5, 120, d.slotIntervalMinutes),
+    bufferMinutes: clampInt(s.bufferMinutes, 0, 120, d.bufferMinutes),
+    bookingWindowDays: clampInt(s.bookingWindowDays, 1, 365, d.bookingWindowDays),
+    minLeadHours: clampInt(s.minLeadHours, 0, 720, d.minLeadHours),
+  };
+}

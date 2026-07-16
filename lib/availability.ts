@@ -1,12 +1,4 @@
-import {
-  TIMEZONE,
-  DAY_START_HOUR,
-  DAY_END_HOUR,
-  SLOT_INTERVAL_MINUTES,
-  BUFFER_MINUTES,
-  AVAILABLE_WEEKDAYS,
-  MIN_LEAD_HOURS,
-} from "./site";
+import { TIMEZONE } from "./site";
 import {
   parseISODate,
   weekdayInTimeZone,
@@ -14,6 +6,7 @@ import {
   formatInTimeZone,
 } from "./time";
 import { getBusyIntervals, type BusyInterval } from "./google";
+import { getBookingSettings } from "./r2";
 
 export type Slot = {
   /** UTC ISO start instant. */
@@ -34,8 +27,9 @@ function overlaps(
 
 /**
  * Available start times for a given local date and session duration.
- * Filters out slots that: fall outside working hours, start too soon
- * (min lead time), or collide with existing calendar events (+buffer).
+ * Filters out slots that: fall outside the configured working hours/days,
+ * start too soon (min lead time), or collide with existing calendar events
+ * (+buffer). Availability parameters come from the admin-editable settings.
  */
 export async function getAvailableSlots(
   dateStr: string,
@@ -45,37 +39,37 @@ export async function getAvailableSlots(
   const parsed = parseISODate(dateStr);
   if (!parsed) return [];
 
-  // Build the day's start/end instants to bound the freebusy query and
-  // confirm the date is a bookable weekday.
+  const cfg = await getBookingSettings();
+
   const dayOpen = zonedWallTimeToUtc(
-    { ...parsed, hour: DAY_START_HOUR, minute: 0 },
+    { ...parsed, hour: cfg.dayStartHour, minute: 0 },
     TIMEZONE,
   );
   const weekday = weekdayInTimeZone(dayOpen, TIMEZONE);
-  if (!AVAILABLE_WEEKDAYS.includes(weekday)) return [];
+  if (!cfg.weekdays.includes(weekday)) return [];
 
   const dayClose = zonedWallTimeToUtc(
-    { ...parsed, hour: DAY_END_HOUR, minute: 0 },
+    { ...parsed, hour: cfg.dayEndHour, minute: 0 },
     TIMEZONE,
   );
 
   const busy = await getBusyIntervals(dayOpen, dayClose);
-  const minStart = new Date(now.getTime() + MIN_LEAD_HOURS * 60 * 60 * 1000);
+  const minStart = new Date(now.getTime() + cfg.minLeadHours * 60 * 60 * 1000);
 
   const slots: Slot[] = [];
-  const totalMinutes = (DAY_END_HOUR - DAY_START_HOUR) * 60;
+  const totalMinutes = (cfg.dayEndHour - cfg.dayStartHour) * 60;
 
   for (
     let offset = 0;
     offset + durationMinutes <= totalMinutes;
-    offset += SLOT_INTERVAL_MINUTES
+    offset += cfg.slotIntervalMinutes
   ) {
-    const hour = DAY_START_HOUR + Math.floor(offset / 60);
+    const hour = cfg.dayStartHour + Math.floor(offset / 60);
     const minute = offset % 60;
     const start = zonedWallTimeToUtc({ ...parsed, hour, minute }, TIMEZONE);
     const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
     const endWithBuffer = new Date(
-      end.getTime() + BUFFER_MINUTES * 60 * 1000,
+      end.getTime() + cfg.bufferMinutes * 60 * 1000,
     );
 
     if (start < minStart) continue;
@@ -100,10 +94,11 @@ export async function isSlotStillOpen(
   start: Date,
   durationMinutes: number,
 ): Promise<boolean> {
+  const cfg = await getBookingSettings();
   const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
-  const endWithBuffer = new Date(end.getTime() + BUFFER_MINUTES * 60 * 1000);
+  const endWithBuffer = new Date(end.getTime() + cfg.bufferMinutes * 60 * 1000);
   const busy = await getBusyIntervals(
-    new Date(start.getTime() - BUFFER_MINUTES * 60 * 1000),
+    new Date(start.getTime() - cfg.bufferMinutes * 60 * 1000),
     endWithBuffer,
   );
   return !overlaps(start, endWithBuffer, busy);
