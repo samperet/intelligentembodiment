@@ -81,6 +81,7 @@ export const MIN_LEAD_HOURS = 12;
 
 // Editable booking parameters (overridable from /admin, persisted in R2).
 export type BookingSettings = {
+  acceptingBookings: boolean; // master on/off for new appointments
   weekdays: number[]; // 0=Sun … 6=Sat
   dayStartHour: number; // 0–23
   dayEndHour: number; // 0–24, exclusive end
@@ -91,6 +92,7 @@ export type BookingSettings = {
 };
 
 export const defaultBookingSettings: BookingSettings = {
+  acceptingBookings: true,
   weekdays: AVAILABLE_WEEKDAYS,
   dayStartHour: DAY_START_HOUR,
   dayEndHour: DAY_END_HOUR,
@@ -120,6 +122,10 @@ export function normalizeBookingSettings(
   let dayEndHour = clampInt(s.dayEndHour, 1, 24, d.dayEndHour);
   if (dayEndHour <= dayStartHour) dayEndHour = Math.min(24, dayStartHour + 1);
   return {
+    acceptingBookings:
+      typeof s.acceptingBookings === "boolean"
+        ? s.acceptingBookings
+        : d.acceptingBookings,
     weekdays,
     dayStartHour,
     dayEndHour,

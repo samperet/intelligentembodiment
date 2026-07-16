@@ -4,6 +4,7 @@ import { useState } from "react";
 
 type Subscriber = { name: string; email: string; date: string };
 type BookingSettings = {
+  acceptingBookings: boolean;
   weekdays: number[];
   dayStartHour: number;
   dayEndHour: number;
@@ -208,6 +209,37 @@ export function AdminPanel() {
 
         {settings && (
           <div className="mt-6 space-y-6 rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
+            <div className="flex items-start justify-between gap-4 rounded-lg border border-[color:var(--border)] bg-white p-4">
+              <div>
+                <span className="block font-serif text-[18px] text-ink-900">
+                  Accepting new appointments
+                </span>
+                <span className="mt-0.5 block font-sans text-[13px] text-ink-500">
+                  {settings.acceptingBookings
+                    ? "The booking calendar is live on the site."
+                    : "Booking is paused — visitors see a “not currently booking” note and are asked to call."}
+                </span>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={settings.acceptingBookings}
+                onClick={() =>
+                  set("acceptingBookings", !settings.acceptingBookings)
+                }
+                className={`relative mt-1 inline-flex h-7 w-12 flex-none items-center rounded-full transition ${
+                  settings.acceptingBookings ? "bg-copper-700" : "bg-ink-400/40"
+                }`}
+              >
+                <span className="sr-only">Toggle accepting new appointments</span>
+                <span
+                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+                    settings.acceptingBookings ? "translate-x-6" : "translate-x-1"
+                  }`}
+                />
+              </button>
+            </div>
+
             <div>
               <span className="field-label">Bookable days</span>
               <div className="mt-1 flex flex-wrap gap-2">

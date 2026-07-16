@@ -5,6 +5,7 @@ import {
   isGoogleConfigured,
 } from "@/lib/google";
 import { isSlotStillOpen } from "@/lib/availability";
+import { getBookingSettings } from "@/lib/r2";
 import { buildICS } from "@/lib/ics";
 import { sendEmail } from "@/lib/email";
 import { bookingClientEmail, bookingOwnerEmail } from "@/lib/emails";
@@ -23,6 +24,18 @@ export async function POST(request: Request) {
   }
 
   const { serviceId, start, name, email, phone, notes } = payload ?? {};
+
+  // ── Booking window ────────────────────────────────────────────────────────
+  const settings = await getBookingSettings();
+  if (!settings.acceptingBookings) {
+    return NextResponse.json(
+      {
+        error:
+          "Online booking is closed right now. Please call or text to arrange a session.",
+      },
+      { status: 403 },
+    );
+  }
 
   // ── Validation ──────────────────────────────────────────────────────────
   const service = getService(serviceId);

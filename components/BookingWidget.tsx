@@ -52,6 +52,8 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
   // (admin-editable). Starts from the code defaults, then refines on load.
   const [weekdays, setWeekdays] = useState<number[]>(AVAILABLE_WEEKDAYS);
   const [windowDays, setWindowDays] = useState<number>(BOOKING_WINDOW_DAYS);
+  // null = still loading; true/false once settings arrive.
+  const [accepting, setAccepting] = useState<boolean | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -62,8 +64,11 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         if (Array.isArray(d.settings.weekdays)) setWeekdays(d.settings.weekdays);
         if (typeof d.settings.bookingWindowDays === "number")
           setWindowDays(d.settings.bookingWindowDays);
+        setAccepting(d.settings.acceptingBookings !== false);
       })
-      .catch(() => {});
+      .catch(() => {
+        if (!cancelled) setAccepting(true);
+      });
     return () => {
       cancelled = true;
     };
@@ -144,6 +149,33 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         </p>
         <a href="/" className="btn btn-secondary btn-md mt-8">
           Return home
+        </a>
+      </div>
+    );
+  }
+
+  if (accepting === false) {
+    return (
+      <div className="mx-auto max-w-xl rounded-lg border border-[color:var(--border)] bg-paper-2 p-10 text-center shadow-sm">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          aria-hidden="true"
+          width={48}
+          height={48}
+          className="mx-auto mb-5 opacity-70"
+        />
+        <h2 className="font-serif text-[26px] text-ink-900">
+          Not currently booking
+        </h2>
+        <p className="mx-auto mt-3 max-w-[40ch] font-sans text-[15px] leading-[1.7] text-ink-500">
+          Mackensie isn&apos;t accepting new appointments online right now.
+          Please call or text to be added to the list, and you&apos;ll hear as
+          soon as sessions reopen.
+        </p>
+        <a href={site.phoneHref} className="btn btn-secondary btn-md mt-7">
+          {site.phone}
         </a>
       </div>
     );

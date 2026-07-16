@@ -40,6 +40,7 @@ export async function getAvailableSlots(
   if (!parsed) return [];
 
   const cfg = await getBookingSettings();
+  if (!cfg.acceptingBookings) return [];
 
   const dayOpen = zonedWallTimeToUtc(
     { ...parsed, hour: cfg.dayStartHour, minute: 0 },
@@ -95,6 +96,7 @@ export async function isSlotStillOpen(
   durationMinutes: number,
 ): Promise<boolean> {
   const cfg = await getBookingSettings();
+  if (!cfg.acceptingBookings) return false;
   const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
   const endWithBuffer = new Date(end.getTime() + cfg.bufferMinutes * 60 * 1000);
   const busy = await getBusyIntervals(
