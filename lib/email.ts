@@ -51,8 +51,16 @@ export async function sendEmail(args: SendArgs): Promise<boolean> {
       },
       body: JSON.stringify(body),
     });
-    return res.ok;
-  } catch {
+    if (!res.ok) {
+      const detail = await res.text().catch(() => "");
+      console.error(
+        `Resend send failed (${res.status}) from "${FROM}" to ${args.to.join(", ")}: ${detail}`,
+      );
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Resend request threw:", err);
     return false;
   }
 }
