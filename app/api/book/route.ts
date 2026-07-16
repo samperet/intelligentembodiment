@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getService, site, TIMEZONE } from "@/lib/site";
+import { getService, isServiceBookable, site, TIMEZONE } from "@/lib/site";
 import {
   createCalendarEvent,
   isGoogleConfigured,
@@ -25,22 +25,24 @@ export async function POST(request: Request) {
 
   const { serviceId, start, name, email, phone, notes } = payload ?? {};
 
-  // ── Booking window ────────────────────────────────────────────────────────
-  const settings = await getBookingSettings();
-  if (!settings.acceptingBookings) {
-    return NextResponse.json(
-      {
-        error:
-          "Online booking is closed right now. Please call or text to arrange a session.",
-      },
-      { status: 403 },
-    );
-  }
-
   // ── Validation ──────────────────────────────────────────────────────────
   const service = getService(serviceId);
   if (!service) {
     return NextResponse.json({ error: "Please choose a session." }, { status: 400 });
+  }
+
+  // ── Booking window (per category) ─────────────────────────────────────────
+  const settings = await getBookingSettings();
+  if (!isServiceBookable(service, settings)) {
+    return NextResponse.json(
+      {
+        error:
+          service.category === "phone"
+            ? "Phone consultations aren’t being booked online right now. Please call or text to arrange one."
+            : "New massage appointments aren’t being booked online right now. Please call or text to arrange one.",
+      },
+      { status: 403 },
+    );
   }
   if (!name || typeof name !== "string" || name.trim().length < 2) {
     return NextResponse.json({ error: "Please enter your name." }, { status: 400 });
@@ -96,7 +98,7 @@ export async function POST(request: Request) {
 
     if (isGoogleConfigured()) {
       // Guard against a double-book between availability load and submit.
-      const open = await isSlotStillOpen(startDate, service.durationMinutes);
+      const open = await isSlotStillOpen(startDate, service);
       if (!open) {
         return NextResponse.json(
           {

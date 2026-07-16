@@ -92,7 +92,7 @@ export default function AboutPage() {
       {/* Her path — narrative bio */}
       <section className="px-6 pb-[clamp(48px,7vw,80px)]">
         <div className="mx-auto max-w-[760px]">
-          <Eyebrow align="center">Her Path</Eyebrow>
+          <Eyebrow align="center">My Path</Eyebrow>
           <div className="mt-6 space-y-5 font-sans text-[17px] leading-[1.8] text-ink-700">
             <p>
               Integrating credentials with lived wisdom, Mackensie has woven

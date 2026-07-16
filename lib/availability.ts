@@ -1,4 +1,4 @@
-import { TIMEZONE } from "./site";
+import { TIMEZONE, isServiceBookable, type Service } from "./site";
 import {
   parseISODate,
   weekdayInTimeZone,
@@ -33,15 +33,16 @@ function overlaps(
  */
 export async function getAvailableSlots(
   dateStr: string,
-  durationMinutes: number,
+  service: Pick<Service, "durationMinutes" | "category">,
   now: Date = new Date(),
 ): Promise<Slot[]> {
   const parsed = parseISODate(dateStr);
   if (!parsed) return [];
 
   const cfg = await getBookingSettings();
-  if (!cfg.acceptingBookings) return [];
+  if (!isServiceBookable(service, cfg)) return [];
 
+  const durationMinutes = service.durationMinutes;
   const dayOpen = zonedWallTimeToUtc(
     { ...parsed, hour: cfg.dayStartHour, minute: 0 },
     TIMEZONE,
@@ -93,10 +94,11 @@ export async function getAvailableSlots(
 /** Re-check a single proposed slot right before booking (race guard). */
 export async function isSlotStillOpen(
   start: Date,
-  durationMinutes: number,
+  service: Pick<Service, "durationMinutes" | "category">,
 ): Promise<boolean> {
   const cfg = await getBookingSettings();
-  if (!cfg.acceptingBookings) return false;
+  if (!isServiceBookable(service, cfg)) return false;
+  const durationMinutes = service.durationMinutes;
   const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
   const endWithBuffer = new Date(end.getTime() + cfg.bufferMinutes * 60 * 1000);
   const busy = await getBusyIntervals(

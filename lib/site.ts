@@ -17,12 +17,15 @@ export const site = {
     "Intuitive massage therapy with Mackensie Grant in Burlington, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
 };
 
+export type ServiceCategory = "massage" | "phone";
+
 export type Service = {
   id: string;
   name: string;
   durationMinutes: number;
   price: number;
   blurb: string;
+  category: ServiceCategory;
 };
 
 // Bookable sessions. Add more here if desired.
@@ -32,6 +35,7 @@ export const services: Service[] = [
     name: "60 Min Massage",
     durationMinutes: 60,
     price: 120,
+    category: "massage",
     blurb:
       "A focused hour of integrative bodywork, craniosacral, polarity, and intuitive touch to release tension and restore ease.",
   },
@@ -40,6 +44,7 @@ export const services: Service[] = [
     name: "90 Min Massage",
     durationMinutes: 90,
     price: 180,
+    category: "massage",
     blurb:
       "A spacious ninety minutes for whole-body release and deep nervous-system rest, working with both physical holding and its emotional roots.",
   },
@@ -48,6 +53,7 @@ export const services: Service[] = [
     name: "Phone Consultation",
     durationMinutes: 60,
     price: 75,
+    category: "phone",
     blurb:
       "A focused conversation by phone to explore your health, discuss what you're navigating, and find the right next step.",
   },
@@ -55,6 +61,16 @@ export const services: Service[] = [
 
 export function getService(id: string): Service | undefined {
   return services.find((s) => s.id === id);
+}
+
+/** Whether a given service's category is currently accepting bookings. */
+export function isServiceBookable(
+  service: Pick<Service, "category">,
+  settings: Pick<BookingSettings, "acceptingMassage" | "acceptingPhone">,
+): boolean {
+  return service.category === "phone"
+    ? settings.acceptingPhone
+    : settings.acceptingMassage;
 }
 
 // ── Booking availability ─────────────────────────────────────────────────────
@@ -81,7 +97,8 @@ export const MIN_LEAD_HOURS = 12;
 
 // Editable booking parameters (overridable from /admin, persisted in R2).
 export type BookingSettings = {
-  acceptingBookings: boolean; // master on/off for new appointments
+  acceptingMassage: boolean; // accept new massage clients
+  acceptingPhone: boolean; // accept new phone consultations
   weekdays: number[]; // 0=Sun … 6=Sat
   dayStartHour: number; // 0–23
   dayEndHour: number; // 0–24, exclusive end
@@ -92,7 +109,8 @@ export type BookingSettings = {
 };
 
 export const defaultBookingSettings: BookingSettings = {
-  acceptingBookings: true,
+  acceptingMassage: true,
+  acceptingPhone: true,
   weekdays: AVAILABLE_WEEKDAYS,
   dayStartHour: DAY_START_HOUR,
   dayEndHour: DAY_END_HOUR,
@@ -121,11 +139,19 @@ export function normalizeBookingSettings(
   let dayStartHour = clampInt(s.dayStartHour, 0, 22, d.dayStartHour);
   let dayEndHour = clampInt(s.dayEndHour, 1, 24, d.dayEndHour);
   if (dayEndHour <= dayStartHour) dayEndHour = Math.min(24, dayStartHour + 1);
+  // Accept the new per-category flags; fall back to the legacy single
+  // `acceptingBookings` flag (or the default) for objects saved before the
+  // split. Read from `input` (not `s`, which is spread over defaults).
+  const raw = (input ?? {}) as Partial<BookingSettings> & {
+    acceptingBookings?: unknown;
+  };
+  const legacyBool =
+    typeof raw.acceptingBookings === "boolean" ? raw.acceptingBookings : undefined;
+  const flag = (v: unknown, fb: boolean) =>
+    typeof v === "boolean" ? v : legacyBool ?? fb;
   return {
-    acceptingBookings:
-      typeof s.acceptingBookings === "boolean"
-        ? s.acceptingBookings
-        : d.acceptingBookings,
+    acceptingMassage: flag(raw.acceptingMassage, d.acceptingMassage),
+    acceptingPhone: flag(raw.acceptingPhone, d.acceptingPhone),
     weekdays,
     dayStartHour,
     dayEndHour,

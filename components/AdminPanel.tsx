@@ -4,7 +4,8 @@ import { useState } from "react";
 
 type Subscriber = { name: string; email: string; date: string };
 type BookingSettings = {
-  acceptingBookings: boolean;
+  acceptingMassage: boolean;
+  acceptingPhone: boolean;
   weekdays: number[];
   dayStartHour: number;
   dayEndHour: number;
@@ -209,35 +210,21 @@ export function AdminPanel() {
 
         {settings && (
           <div className="mt-6 space-y-6 rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
-            <div className="flex items-start justify-between gap-4 rounded-lg border border-[color:var(--border)] bg-white p-4">
-              <div>
-                <span className="block font-serif text-[18px] text-ink-900">
-                  Accepting new appointments
-                </span>
-                <span className="mt-0.5 block font-sans text-[13px] text-ink-500">
-                  {settings.acceptingBookings
-                    ? "The booking calendar is live on the site."
-                    : "Booking is paused — visitors see a “not currently booking” note and are asked to call."}
-                </span>
-              </div>
-              <button
-                type="button"
-                role="switch"
-                aria-checked={settings.acceptingBookings}
-                onClick={() =>
-                  set("acceptingBookings", !settings.acceptingBookings)
-                }
-                className={`relative mt-1 inline-flex h-7 w-12 flex-none items-center rounded-full transition ${
-                  settings.acceptingBookings ? "bg-copper-700" : "bg-ink-400/40"
-                }`}
-              >
-                <span className="sr-only">Toggle accepting new appointments</span>
-                <span
-                  className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
-                    settings.acceptingBookings ? "translate-x-6" : "translate-x-1"
-                  }`}
-                />
-              </button>
+            <div className="space-y-3">
+              <Toggle
+                label="Accepting massage clients"
+                on={settings.acceptingMassage}
+                onText="60 & 90 minute massage sessions are bookable online."
+                offText="Massage booking is paused — visitors are asked to call."
+                onToggle={() => set("acceptingMassage", !settings.acceptingMassage)}
+              />
+              <Toggle
+                label="Accepting phone consultations"
+                on={settings.acceptingPhone}
+                onText="Phone consultations are bookable online."
+                offText="Phone consultations are paused — visitors are asked to call."
+                onToggle={() => set("acceptingPhone", !settings.acceptingPhone)}
+              />
             </div>
 
             <div>
@@ -421,6 +408,47 @@ export function AdminPanel() {
           </div>
         )}
       </section>
+    </div>
+  );
+}
+
+function Toggle({
+  label,
+  on,
+  onText,
+  offText,
+  onToggle,
+}: {
+  label: string;
+  on: boolean;
+  onText: string;
+  offText: string;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 rounded-lg border border-[color:var(--border)] bg-white p-4">
+      <div>
+        <span className="block font-serif text-[18px] text-ink-900">{label}</span>
+        <span className="mt-0.5 block font-sans text-[13px] text-ink-500">
+          {on ? onText : offText}
+        </span>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        aria-label={label}
+        onClick={onToggle}
+        className={`relative mt-1 inline-flex h-7 w-12 flex-none items-center rounded-full transition ${
+          on ? "bg-copper-700" : "bg-ink-400/40"
+        }`}
+      >
+        <span
+          className={`inline-block h-5 w-5 transform rounded-full bg-white shadow transition ${
+            on ? "translate-x-6" : "translate-x-1"
+          }`}
+        />
+      </button>
     </div>
   );
 }

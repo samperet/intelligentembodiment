@@ -23,7 +23,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const slots = await getAvailableSlots(date, service.durationMinutes);
+    const slots = await getAvailableSlots(date, service);
     return NextResponse.json({
       date,
       service: service.id,

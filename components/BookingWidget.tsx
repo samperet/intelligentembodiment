@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import {
   services,
+  isServiceBookable,
   AVAILABLE_WEEKDAYS,
   BOOKING_WINDOW_DAYS,
   site,
@@ -52,8 +53,11 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
   // (admin-editable). Starts from the code defaults, then refines on load.
   const [weekdays, setWeekdays] = useState<number[]>(AVAILABLE_WEEKDAYS);
   const [windowDays, setWindowDays] = useState<number>(BOOKING_WINDOW_DAYS);
-  // null = still loading; true/false once settings arrive.
-  const [accepting, setAccepting] = useState<boolean | null>(null);
+  // Which categories accept new bookings. null = still loading.
+  const [accept, setAccept] = useState<{
+    massage: boolean;
+    phone: boolean;
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -64,15 +68,37 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         if (Array.isArray(d.settings.weekdays)) setWeekdays(d.settings.weekdays);
         if (typeof d.settings.bookingWindowDays === "number")
           setWindowDays(d.settings.bookingWindowDays);
-        setAccepting(d.settings.acceptingBookings !== false);
+        const next = {
+          massage: d.settings.acceptingMassage !== false,
+          phone: d.settings.acceptingPhone !== false,
+        };
+        setAccept(next);
+        // If a preselected service's category is now closed, drop it.
+        setService((cur) =>
+          cur && !isServiceBookable(cur, {
+            acceptingMassage: next.massage,
+            acceptingPhone: next.phone,
+          })
+            ? null
+            : cur,
+        );
       })
       .catch(() => {
-        if (!cancelled) setAccepting(true);
+        if (!cancelled) setAccept({ massage: true, phone: true });
       });
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const bookableServices = services.filter((s) =>
+    accept
+      ? isServiceBookable(s, {
+          acceptingMassage: accept.massage,
+          acceptingPhone: accept.phone,
+        })
+      : true,
+  );
 
   const loadSlots = useCallback(async (date: string, serviceId: string) => {
     setSlotsLoading(true);
@@ -154,7 +180,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     );
   }
 
-  if (accepting === false) {
+  if (accept && bookableServices.length === 0) {
     return (
       <div className="mx-auto max-w-xl rounded-lg border border-[color:var(--border)] bg-paper-2 p-10 text-center shadow-sm">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -186,7 +212,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       {/* Step 1, Session */}
       <StepCard showHeader={false}>
         <div className="mx-auto grid max-w-[520px] gap-3.5">
-          {services.map((s) => {
+          {bookableServices.map((s) => {
             const active = service?.id === s.id;
             return (
               <button
