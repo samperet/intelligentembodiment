@@ -28,6 +28,10 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
     year: "numeric",
   });
 
+  // The next writing in the list (wraps back to the first at the end).
+  const idx = writings.findIndex((x) => x.slug === w.slug);
+  const next = writings[(idx + 1) % writings.length];
+
   return (
     <article className="px-6 pb-[clamp(56px,8vw,96px)]">
       <header className="relative overflow-hidden pb-[clamp(28px,4vw,44px)] pt-[clamp(56px,8vw,96px)] text-center">
@@ -95,11 +99,21 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
             <Link href="/writings" className="btn btn-secondary btn-md">
               ← All writings
             </Link>
-            {w.related && (
-              <Link href={w.related.href} className="btn btn-ghost btn-md">
-                {w.related.label} →
-              </Link>
-            )}
+            <div className="flex flex-wrap items-center gap-3">
+              {w.related && (
+                <Link href={w.related.href} className="btn btn-ghost btn-md">
+                  {w.related.label} →
+                </Link>
+              )}
+              {next && next.slug !== w.slug && (
+                <Link
+                  href={`/writings/${next.slug}`}
+                  className="btn btn-primary btn-md"
+                >
+                  Next: {next.title} →
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
