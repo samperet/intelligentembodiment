@@ -154,9 +154,6 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                     ${s.price}
                   </span>
                 </div>
-                <p className="mt-2 font-sans text-[14px] leading-[1.6] text-ink-500">
-                  {s.blurb}
-                </p>
               </button>
             );
           })}

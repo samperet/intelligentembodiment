@@ -96,9 +96,6 @@ export default function HomePage() {
                     ${s.price}
                   </span>
                 </div>
-                <p className="mt-3 flex-1 font-sans text-[15px] leading-[1.65] text-ink-500">
-                  {s.blurb}
-                </p>
                 <Link
                   href={`/book?service=${s.id}`}
                   className="btn btn-primary btn-md mt-6 self-start"
