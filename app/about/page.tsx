@@ -15,6 +15,11 @@ export const metadata: Metadata = {
 // public/imagery, so a missing file never renders a broken box.
 const galleryCandidates: { file: string; alt: string; caption: string }[] = [
   {
+    file: "mackensie-grass.jpg",
+    alt: "Portrait of Mackensie Satya Priya Grant resting in the grass",
+    caption: "Mackensie",
+  },
+  {
     file: "yoga-class.jpg",
     alt: "Mackensie teaching a yoga class, guiding a student through a pose",
     caption: "In the teaching seat",
@@ -28,6 +33,12 @@ const galleryCandidates: { file: string; alt: string; caption: string }[] = [
 const gallery = galleryCandidates.filter((p) =>
   fs.existsSync(path.join(process.cwd(), "public", "imagery", p.file)),
 );
+const galleryCols =
+  gallery.length >= 3
+    ? "sm:grid-cols-3"
+    : gallery.length === 2
+      ? "sm:grid-cols-2"
+      : "mx-auto max-w-[760px]";
 
 export default function AboutPage() {
   return (
@@ -57,11 +68,7 @@ export default function AboutPage() {
       {gallery.length > 0 && (
         <section className="px-6 pb-[clamp(48px,7vw,80px)]">
           <div className="mx-auto max-w-container">
-            <div
-              className={`grid gap-5 ${
-                gallery.length > 1 ? "sm:grid-cols-2" : "mx-auto max-w-[760px]"
-              }`}
-            >
+            <div className={`grid gap-5 ${galleryCols}`}>
               {gallery.map((p) => (
                 <figure key={p.file} className="group">
                   <div className="overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)]">
