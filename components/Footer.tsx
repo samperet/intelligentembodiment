@@ -1,64 +1,82 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
-import { Mandala } from "./Mandala";
+import { Icon } from "./Icon";
+import { Eyebrow } from "./brand";
 
 export function Footer() {
   return (
-    <footer id="contact" className="mt-24 border-t border-copper-100 bg-sand-100">
-      <div className="container-tight grid gap-10 py-16 sm:grid-cols-2">
-        <div>
-          <div className="flex items-center gap-3 text-copper-500">
-            <Mandala className="h-10 w-10" />
-            <div>
-              <p className="font-serif text-xl text-clay">{site.name}</p>
-              <p className="text-sm text-copper-600">{site.tagline}</p>
-            </div>
-          </div>
-          <p className="mt-5 max-w-sm text-sm leading-relaxed text-clay/70">
-            {site.description}
-          </p>
-        </div>
-
-        <div className="sm:justify-self-end">
-          <h3 className="eyebrow mb-4">Visit &amp; Connect</h3>
-          <ul className="space-y-2 text-sm text-clay/80">
-            <li>
-              <a
-                href={site.addressMapUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="transition hover:text-copper-600"
-              >
-                {site.address}
-              </a>
-            </li>
-            <li>
-              <a
-                href={site.phoneHref}
-                className="transition hover:text-copper-600"
-              >
-                {site.phone}
-              </a>
-            </li>
-            <li>
-              <a
-                href={`mailto:${site.email}`}
-                className="transition hover:text-copper-600"
-              >
-                {site.email}
-              </a>
-            </li>
-          </ul>
-          <Link href="/book" className="btn-ghost mt-6 !px-5 !py-2 !text-xs">
-            Book a session
-          </Link>
-        </div>
-      </div>
-      <div className="border-t border-copper-100 py-6">
-        <p className="container-tight text-xs text-clay/50">
-          © {new Date().getFullYear()} {site.name}. With {site.practitioner}.
+    <footer id="contact" className="bg-paper px-6 pb-12 pt-[clamp(72px,12vw,128px)]">
+      <div className="mx-auto max-w-[760px] text-center">
+        <Eyebrow align="center">Begin</Eyebrow>
+        <h2
+          className="mt-4 font-serif text-ink-900"
+          style={{ fontSize: "clamp(34px,5vw,54px)", lineHeight: 1.05 }}
+        >
+          Come home to your body
+        </h2>
+        <p className="mx-auto mt-[18px] max-w-[46ch] font-sans text-[16px] leading-[1.7] text-ink-500">
+          Book online, or reach out directly to arrange a session,
+          consultation, or class. Additional slots are often available on
+          request.
         </p>
+        <div className="mt-[34px] flex flex-wrap justify-center gap-3.5">
+          <Link href="/book" className="btn btn-primary btn-lg">
+            Book Online
+          </Link>
+          <a href={site.phoneHref} className="btn btn-secondary btn-lg">
+            <Icon name="phone" size={16} />
+            {site.phone}
+          </a>
+        </div>
       </div>
+
+      <div className="mx-auto mt-[clamp(56px,8vw,96px)] flex max-w-container flex-wrap items-center justify-between gap-6 border-t border-[color:var(--border)] pt-[34px]">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/wordmark-copper.png"
+          alt="Intelligent Embodiment"
+          height={44}
+          className="h-[44px] w-auto"
+        />
+        <div className="flex flex-wrap gap-6 font-sans text-[13px] text-ink-500">
+          <a
+            href={`mailto:${site.email}`}
+            className="inline-flex items-center gap-2"
+          >
+            <span className="text-copper-800">
+              <Icon name="mail" size={15} />
+            </span>
+            {site.email}
+          </a>
+          <a
+            href={site.addressMapUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2"
+          >
+            <span className="text-copper-800">
+              <Icon name="map-pin" size={15} />
+            </span>
+            {site.address}
+          </a>
+        </div>
+        <div className="flex gap-3.5">
+          <a
+            href="https://www.paypal.com/paypalme/mackensiegrant"
+            target="_blank"
+            rel="noreferrer"
+            className="font-sans text-[12px] uppercase tracking-[0.14em] text-ink-700"
+          >
+            PayPal
+          </a>
+          <span className="font-sans text-[12px] uppercase tracking-[0.14em] text-ink-700">
+            Venmo
+          </span>
+        </div>
+      </div>
+      <p className="mx-auto mt-[18px] max-w-container font-sans text-[12px] text-ink-400">
+        © {new Date().getFullYear()} {site.name} · {site.tagline}
+      </p>
     </footer>
   );
 }

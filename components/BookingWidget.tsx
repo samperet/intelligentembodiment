@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import {
   services,
   AVAILABLE_WEEKDAYS,
@@ -8,7 +8,6 @@ import {
   site,
   type Service,
 } from "@/lib/site";
-import { Mandala } from "./Mandala";
 
 type Slot = { start: string; end: string; label: string };
 
@@ -49,35 +48,31 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     price: number;
   }>(null);
 
-  // Reset downstream selections when the session type changes.
+  const loadSlots = useCallback(async (date: string, serviceId: string) => {
+    setSlotsLoading(true);
+    setError(null);
+    setSelectedSlot(null);
+    try {
+      const res = await fetch(
+        `/api/availability?date=${date}&service=${serviceId}`,
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Could not load times.");
+      setSlots(data.slots ?? []);
+    } catch (e: any) {
+      setError(e.message);
+      setSlots([]);
+    } finally {
+      setSlotsLoading(false);
+    }
+  }, []);
+
   function chooseService(s: Service) {
     setService(s);
     setSelectedSlot(null);
     setSlots([]);
     if (selectedDate) void loadSlots(selectedDate, s.id);
   }
-
-  const loadSlots = useCallback(
-    async (date: string, serviceId: string) => {
-      setSlotsLoading(true);
-      setError(null);
-      setSelectedSlot(null);
-      try {
-        const res = await fetch(
-          `/api/availability?date=${date}&service=${serviceId}`,
-        );
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || "Could not load times.");
-        setSlots(data.slots ?? []);
-      } catch (e: any) {
-        setError(e.message);
-        setSlots([]);
-      } finally {
-        setSlotsLoading(false);
-      }
-    },
-    [],
-  );
 
   function chooseDate(date: string) {
     setSelectedDate(date);
@@ -101,11 +96,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Something went wrong.");
-      setConfirmation({
-        when: data.when,
-        service: data.service,
-        price: data.price,
-      });
+      setConfirmation({ when: data.when, service: data.service, price: data.price });
     } catch (e: any) {
       setError(e.message);
     } finally {
@@ -115,20 +106,22 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
 
   if (confirmation) {
     return (
-      <div className="mx-auto max-w-xl rounded-2xl border border-copper-100 bg-white/70 p-10 text-center">
-        <div className="mx-auto mb-6 w-fit text-copper-400">
-          <Mandala className="h-16 w-16" />
+      <div className="mx-auto max-w-xl rounded-lg border border-[color:var(--border)] bg-paper-2 p-10 text-center shadow-md">
+        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-bg text-sage">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M20 6 9 17l-5-5" />
+          </svg>
         </div>
-        <h2 className="text-3xl">You&apos;re booked</h2>
-        <p className="mt-4 text-clay/75">
+        <h2 className="mt-5 font-serif text-[30px] text-ink-900">You&apos;re booked</h2>
+        <p className="mt-3 font-sans text-[15px] leading-[1.65] text-ink-500">
           Your <strong>{confirmation.service}</strong> is confirmed for{" "}
           <strong>{confirmation.when}</strong>.
         </p>
-        <p className="mt-2 text-sm text-clay/60">
-          A confirmation with the details is on its way to{" "}
-          <strong>{form.email}</strong>. See you at {site.address}.
+        <p className="mt-2 font-sans text-[14px] text-ink-400">
+          A confirmation is on its way to <strong>{form.email}</strong>. See you
+          at {site.address}.
         </p>
-        <a href="/" className="btn-ghost mt-8">
+        <a href="/" className="btn btn-secondary btn-md mt-8">
           Return home
         </a>
       </div>
@@ -147,21 +140,23 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                 key={s.id}
                 type="button"
                 onClick={() => chooseService(s)}
-                className={`rounded-xl border p-5 text-left transition ${
+                className={`rounded-lg border p-5 text-left transition ${
                   active
-                    ? "border-copper-500 bg-copper-50 ring-1 ring-copper-300"
-                    : "border-copper-100 bg-white/50 hover:border-copper-300"
+                    ? "border-copper-700 bg-copper-50 ring-1 ring-copper-300"
+                    : "border-[color:var(--border)] bg-paper-2 hover:border-[color:var(--border-strong)]"
                 }`}
               >
                 <div className="flex items-baseline justify-between">
-                  <span className="font-serif text-xl text-clay">
+                  <span className="font-serif text-[22px] text-ink-900">
                     {s.durationMinutes} min
                   </span>
-                  <span className="font-serif text-xl text-copper-600">
+                  <span className="font-serif text-[20px] italic text-copper-800">
                     ${s.price}
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-clay/70">{s.blurb}</p>
+                <p className="mt-2 font-sans text-[14px] leading-[1.6] text-ink-500">
+                  {s.blurb}
+                </p>
               </button>
             );
           })}
@@ -172,23 +167,18 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       {service && (
         <StepCard step={2} title="Pick a date & time" done={!!selectedSlot}>
           <div className="grid gap-8 md:grid-cols-[auto_1fr]">
-            <MonthCalendar
-              selected={selectedDate}
-              onSelect={chooseDate}
-            />
+            <MonthCalendar selected={selectedDate} onSelect={chooseDate} />
             <div>
-              <p className="mb-3 text-sm font-medium text-clay/70">
-                {selectedDate
-                  ? "Available times"
-                  : "Select a date to see available times"}
+              <p className="mb-3 font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                {selectedDate ? "Available times" : "Select a date"}
               </p>
               {slotsLoading && (
-                <p className="text-sm text-clay/60">Loading times…</p>
+                <p className="font-sans text-[14px] text-ink-400">Loading times…</p>
               )}
               {!slotsLoading && selectedDate && slots.length === 0 && (
-                <p className="text-sm text-clay/60">
-                  No openings this day. Please try another date, or{" "}
-                  <a href={site.phoneHref} className="text-copper-600 underline">
+                <p className="font-sans text-[14px] text-ink-400">
+                  No openings this day. Try another date, or{" "}
+                  <a href={site.phoneHref} className="underline">
                     call to arrange
                   </a>
                   .
@@ -202,10 +192,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                       key={slot.start}
                       type="button"
                       onClick={() => setSelectedSlot(slot)}
-                      className={`rounded-lg border px-2 py-2.5 text-sm transition ${
+                      className={`rounded-lg border px-2 py-2.5 font-sans text-[13px] transition ${
                         active
-                          ? "border-copper-500 bg-copper-500 text-white"
-                          : "border-copper-200 bg-white/60 text-clay hover:border-copper-400"
+                          ? "border-copper-700 bg-copper-700 text-white"
+                          : "border-[color:var(--border-strong)] bg-paper-2 text-ink-700 hover:border-copper-700"
                       }`}
                     >
                       {slot.label}
@@ -223,40 +213,22 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         <StepCard step={3} title="Your details" done={false}>
           <form onSubmit={submit} className="grid gap-4">
             <div className="grid gap-4 sm:grid-cols-2">
-              <Field
-                label="Name"
-                required
-                value={form.name}
-                onChange={(v) => setForm({ ...form, name: v })}
-              />
-              <Field
-                label="Email"
-                type="email"
-                required
-                value={form.email}
-                onChange={(v) => setForm({ ...form, email: v })}
-              />
+              <Field label="Name" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
+              <Field label="Email" type="email" required value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
             </div>
-            <Field
-              label="Phone (optional)"
-              type="tel"
-              value={form.phone}
-              onChange={(v) => setForm({ ...form, phone: v })}
-            />
+            <Field label="Phone (optional)" type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
             <label className="block">
-              <span className="mb-1.5 block text-sm text-clay/70">
-                Anything you&apos;d like me to know (optional)
-              </span>
+              <span className="field-label">What brings you in? (optional)</span>
               <textarea
                 rows={3}
                 value={form.notes}
                 onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="w-full rounded-lg border border-copper-200 bg-white/70 px-3 py-2 text-sm outline-none focus:border-copper-400 focus:ring-1 focus:ring-copper-300"
+                className="field-input"
               />
             </label>
 
-            <div className="mt-2 rounded-lg bg-sand-100 p-4 text-sm text-clay/75">
-              <strong className="text-clay">{service.name}</strong> · $
+            <div className="mt-2 rounded-lg bg-sand p-4 font-sans text-[14px] text-ink-700">
+              <strong className="text-ink-900">{service.name}</strong> · $
               {service.price} · {selectedSlot.label},{" "}
               {new Date(selectedSlot.start).toLocaleDateString(undefined, {
                 weekday: "long",
@@ -266,16 +238,12 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
             </div>
 
             {error && (
-              <p className="rounded-lg bg-copper-50 px-4 py-3 text-sm text-copper-700">
+              <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
                 {error}
               </p>
             )}
 
-            <button
-              type="submit"
-              disabled={submitting}
-              className="btn-primary mt-1 w-full sm:w-auto sm:self-start"
-            >
+            <button type="submit" disabled={submitting} className="btn btn-primary btn-lg mt-1 w-full sm:w-auto sm:self-start">
               {submitting ? "Confirming…" : "Confirm booking"}
             </button>
           </form>
@@ -297,18 +265,16 @@ function StepCard({
   children: React.ReactNode;
 }) {
   return (
-    <section className="rounded-2xl border border-copper-100 bg-white/40 p-6 sm:p-8">
+    <section className="rounded-lg border border-[color:var(--border)] bg-paper-2 p-6 shadow-sm sm:p-8">
       <div className="mb-5 flex items-center gap-3">
         <span
-          className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-medium ${
-            done
-              ? "bg-copper-500 text-white"
-              : "bg-copper-100 text-copper-700"
+          className={`flex h-7 w-7 items-center justify-center rounded-full text-[12px] font-medium ${
+            done ? "bg-copper-700 text-white" : "bg-copper-100 text-copper-800"
           }`}
         >
           {done ? "✓" : step}
         </span>
-        <h2 className="text-xl">{title}</h2>
+        <h2 className="font-serif text-[22px] text-ink-900">{title}</h2>
       </div>
       {children}
     </section>
@@ -330,13 +296,13 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-sm text-clay/70">{label}</span>
+      <span className="field-label">{label}</span>
       <input
         type={type}
         required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-copper-200 bg-white/70 px-3 py-2 text-sm outline-none focus:border-copper-400 focus:ring-1 focus:ring-copper-300"
+        className="field-input"
       />
     </label>
   );
@@ -392,19 +358,19 @@ function MonthCalendar({
           type="button"
           onClick={() => shift(-1)}
           disabled={!canPrev}
-          className="rounded-md px-2 py-1 text-copper-600 transition hover:bg-copper-50 disabled:opacity-30"
+          className="rounded-md px-2 py-1 text-copper-800 transition hover:bg-copper-50 disabled:opacity-30"
           aria-label="Previous month"
         >
           ‹
         </button>
-        <span className="font-serif text-lg text-clay">
+        <span className="font-serif text-[19px] text-ink-900">
           {MONTHS[view.month]} {view.year}
         </span>
         <button
           type="button"
           onClick={() => shift(1)}
           disabled={!canNext}
-          className="rounded-md px-2 py-1 text-copper-600 transition hover:bg-copper-50 disabled:opacity-30"
+          className="rounded-md px-2 py-1 text-copper-800 transition hover:bg-copper-50 disabled:opacity-30"
           aria-label="Next month"
         >
           ›
@@ -412,7 +378,7 @@ function MonthCalendar({
       </div>
       <div className="grid grid-cols-7 gap-1 text-center">
         {WEEKDAY_LABELS.map((w) => (
-          <div key={w} className="py-1 text-xs font-medium text-clay/40">
+          <div key={w} className="py-1 font-sans text-[11px] font-medium uppercase tracking-[0.1em] text-ink-400">
             {w}
           </div>
         ))}
@@ -427,12 +393,12 @@ function MonthCalendar({
               type="button"
               disabled={!selectable}
               onClick={() => onSelect(key)}
-              className={`aspect-square rounded-lg text-sm transition ${
+              className={`aspect-square rounded-md font-sans text-[14px] transition ${
                 isSelected
-                  ? "bg-copper-500 text-white"
+                  ? "bg-copper-700 text-white"
                   : selectable
-                    ? "text-clay hover:bg-copper-100"
-                    : "cursor-default text-clay/25"
+                    ? "text-ink-700 hover:bg-copper-100"
+                    : "cursor-default text-ink-400/40"
               }`}
             >
               {d.getDate()}

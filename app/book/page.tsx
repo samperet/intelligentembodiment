@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { BookingWidget } from "@/components/BookingWidget";
+import { Eyebrow } from "@/components/brand";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -14,20 +15,31 @@ export default function BookPage({
   searchParams: { service?: string };
 }) {
   return (
-    <div className="py-14">
-      <div className="container-tight mb-10 text-center">
-        <p className="eyebrow">Booking</p>
-        <h1 className="mt-3 text-4xl sm:text-5xl">Reserve your session</h1>
-        <p className="mx-auto mt-4 max-w-xl text-clay/70">
+    <div className="px-6 py-16">
+      <div className="ie-container mb-10 text-center">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          width={72}
+          height={72}
+          className="mx-auto mb-6"
+        />
+        <Eyebrow align="center">Book a Session</Eyebrow>
+        <h1
+          className="mt-3 font-serif text-ink-900"
+          style={{ fontSize: "clamp(34px,5vw,54px)", lineHeight: 1.05 }}
+        >
+          Reserve your session
+        </h1>
+        <p className="mx-auto mt-4 max-w-xl font-sans text-[16px] leading-[1.7] text-ink-500">
           Choose a session, pick a time that suits you, and you&apos;ll receive
           a confirmation right away. All times shown in Eastern Time.
         </p>
       </div>
-      <div className="container-tight">
-        <Suspense>
-          <BookingWidget initialService={searchParams.service} />
-        </Suspense>
-      </div>
+      <Suspense>
+        <BookingWidget initialService={searchParams.service} />
+      </Suspense>
     </div>
   );
 }

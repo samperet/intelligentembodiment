@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Intelligent Embodiment — design tokens (from the design system) */
 :root {
-  --font-serif: "Cormorant Garamond", Georgia, serif;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Jost", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --focus-ring: rgba(192, 137, 109, 0.45);
+  --border: rgba(58, 54, 111, 0.14);
+  --border-strong: rgba(58, 54, 111, 0.28);
+  --border-warm: #cfc3b2;
 }
 
 @layer base {
@@ -12,36 +18,133 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-sand-50 text-clay antialiased;
-    font-family: var(--font-sans);
+    @apply bg-paper text-ink-900 font-sans;
+    font-weight: 400;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
   }
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-serif);
-    @apply font-medium tracking-tight text-clay;
+  h1, h2, h3, h4 {
+    @apply font-serif text-ink-900;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+    margin: 0;
   }
+  a {
+    color: #a66b4e;
+    text-decoration: none;
+    transition: color 140ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  a:hover {
+    color: #7e4e36;
+  }
+  strong { font-weight: 500; }
+  em { font-style: italic; }
 }
 
 @layer components {
-  .container-tight {
-    @apply mx-auto w-full max-w-5xl px-6;
+  .ie-container {
+    @apply mx-auto w-full max-w-container px-6;
   }
+  .ie-section {
+    padding-block: clamp(72px, 12vw, 128px);
+  }
+
+  /* Signature tracked eyebrow label */
+  .eyebrow {
+    @apply font-sans uppercase text-copper-800;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+  }
+  .eyebrow-paper {
+    @apply text-copper-500;
+  }
+  /* Italic serif lead line */
+  .lead {
+    @apply font-serif italic text-ink-500;
+    font-size: clamp(19px, 2.4vw, 24px);
+    line-height: 1.5;
+  }
+
+  /* Buttons — pill, tracked uppercase Jost */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full font-sans uppercase transition;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    transition-property: background-color, color, border-color;
+    transition-duration: 240ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .btn:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--focus-ring);
+  }
+  .btn-sm { padding: 8px 18px; font-size: 11px; }
+  .btn-md { padding: 12px 26px; font-size: 12px; }
+  .btn-lg { padding: 16px 34px; font-size: 13px; }
+
   .btn-primary {
-    @apply inline-flex items-center justify-center rounded-full bg-copper-500 px-7 py-3
-      text-sm font-medium uppercase tracking-[0.15em] text-sand-50 transition
-      hover:bg-copper-600 focus:outline-none focus-visible:ring-2
-      focus-visible:ring-copper-400 focus-visible:ring-offset-2
-      focus-visible:ring-offset-sand-50 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply bg-copper-700 text-white;
+    border: 1px solid #c0896d;
+  }
+  .btn-primary:hover {
+    @apply bg-copper-800;
+    border-color: #a66b4e;
+    color: #fff;
+  }
+  .btn-secondary {
+    @apply bg-transparent text-indigo-700;
+    border: 1px solid var(--border-strong);
+  }
+  .btn-secondary:hover {
+    @apply bg-indigo-700 text-paper-2;
+    border-color: #3a366f;
+  }
+  .btn-ink {
+    @apply bg-indigo-700 text-paper-2;
+    border: 1px solid #3a366f;
+  }
+  .btn-ink:hover {
+    @apply bg-indigo-800;
+    border-color: #2a2752;
   }
   .btn-ghost {
-    @apply inline-flex items-center justify-center rounded-full border border-copper-300
-      px-7 py-3 text-sm font-medium uppercase tracking-[0.15em] text-copper-700
-      transition hover:border-copper-500 hover:text-copper-800 focus:outline-none
-      focus-visible:ring-2 focus-visible:ring-copper-400;
+    @apply bg-transparent text-copper-800;
+    border: 1px solid transparent;
   }
-  .eyebrow {
-    @apply text-xs font-medium uppercase tracking-[0.3em] text-copper-500;
+  .btn-ghost:hover { @apply text-copper-900; }
+
+  /* Mandala divider */
+  .ie-rule {
+    @apply flex items-center;
+    gap: 18px;
+  }
+  .ie-rule::before,
+  .ie-rule::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--border-warm);
+  }
+
+  /* Form controls */
+  .field-label {
+    @apply mb-2 block font-sans uppercase text-ink-500;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+  }
+  .field-input {
+    @apply w-full rounded-lg bg-paper-2 px-4 py-3 font-sans text-ink-900 outline-none transition;
+    border: 1px solid var(--border-strong);
+    font-size: 15px;
+  }
+  .field-input::placeholder { @apply text-ink-400; }
+  .field-input:focus {
+    border-color: #c0896d;
+    box-shadow: 0 0 0 3px var(--focus-ring);
   }
 }

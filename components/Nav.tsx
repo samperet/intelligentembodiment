@@ -1,44 +1,93 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { site } from "@/lib/site";
-import { Mandala } from "./Mandala";
+import { Icon } from "./Icon";
 
 const links = [
-  { href: "/#services", label: "Sessions" },
-  { href: "/#about", label: "About" },
-  { href: "/#contact", label: "Contact" },
+  { label: "About", href: "/#about" },
+  { label: "Offerings", href: "/#offerings" },
+  { label: "Lineage", href: "/#lineage" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export function Nav() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
-    <header className="sticky top-0 z-40 border-b border-copper-100/70 bg-sand-50/80 backdrop-blur">
-      <nav className="container-tight flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2.5 text-clay">
-          <span className="text-copper-500">
-            <Mandala className="h-8 w-8" />
-          </span>
-          <span className="font-serif text-lg leading-none tracking-tight">
-            {site.name}
+    <header
+      className="sticky top-0 z-50 transition-[background,border-color] duration-[420ms]"
+      style={{
+        background: scrolled ? "rgba(248,243,235,0.86)" : "transparent",
+        backdropFilter: scrolled ? "blur(12px)" : "none",
+        borderBottom: `1px solid ${scrolled ? "var(--border)" : "transparent"}`,
+      }}
+    >
+      <div className="ie-container flex items-center justify-between py-[18px]">
+        <Link href="/#top" className="flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/mandala.png" alt="" width={38} height={38} />
+          <span className="font-serif uppercase leading-[1.05] text-indigo-700 tracking-[0.14em] text-[16px]">
+            Intelligent
+            <br />
+            Embodiment
           </span>
         </Link>
 
-        <div className="flex items-center gap-6">
-          <ul className="hidden items-center gap-7 text-sm text-clay/80 sm:flex">
-            {links.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="transition hover:text-copper-600"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <Link href="/book" className="btn-primary !px-5 !py-2 !text-xs">
+        <nav className="hidden items-center gap-[34px] md:flex">
+          {links.map((l) => (
+            <Link
+              key={l.label}
+              href={l.href}
+              className="font-sans text-[12px] font-medium uppercase tracking-[0.16em] text-ink-700 transition hover:text-copper-800"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <Link href="/book" className="btn btn-primary btn-sm">
             Book
           </Link>
+        </nav>
+
+        <button
+          type="button"
+          className="text-ink-700 md:hidden"
+          aria-label="Menu"
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <Icon name={menuOpen ? "x" : "menu"} size={22} />
+        </button>
+      </div>
+
+      {menuOpen && (
+        <div className="border-t border-[color:var(--border)] bg-paper-2 px-6 pb-6 pt-4 md:hidden">
+          {links.map((l) => (
+            <Link
+              key={l.label}
+              href={l.href}
+              onClick={() => setMenuOpen(false)}
+              className="block border-b border-[color:var(--border)] py-3 font-sans text-[14px] font-medium uppercase tracking-[0.14em] text-ink-700"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/book"
+            onClick={() => setMenuOpen(false)}
+            className="btn btn-primary btn-md mt-4 w-full"
+          >
+            Book a Session
+          </Link>
         </div>
-      </nav>
+      )}
     </header>
   );
 }

@@ -1,150 +1,252 @@
 import Link from "next/link";
-import { site, services } from "@/lib/site";
-import { Mandala } from "@/components/Mandala";
+import {
+  Eyebrow,
+  SectionHeading,
+  Stat,
+  Rule,
+  OfferingCard,
+  type Offering,
+} from "@/components/brand";
+
+const stats = [
+  { value: "28", label: "Years Teaching Yoga" },
+  { value: "30", label: "Years of Bodywork" },
+  { value: "5", label: "Teacher Trainings" },
+  { value: "7", label: "Vipassana Retreats" },
+];
+
+const offerings: Offering[] = [
+  {
+    eyebrow: "Bodywork",
+    title: "Massage Therapy",
+    price: "$120 / 60 min",
+    note: "$180 / 90 min",
+    description:
+      "Specializing with women, Mackensie brings experienced bodywork with intuitive insights — addressing physical tension while often revealing deeper emotional root causes.",
+    tone: "copper",
+    cta: "Book a Session",
+    href: "/book",
+  },
+  {
+    eyebrow: "Energy & Insight",
+    title: "Intuitive Consultation",
+    price: "By session",
+    note: "text or call to arrange",
+    description:
+      "Medical-intuitive sessions to address the full spectrum of your health and well-being, drawn from thirty years of somatic and energetic practice.",
+    tone: "indigo",
+    cta: "Enquire",
+    href: "/#contact",
+  },
+  {
+    eyebrow: "Practice",
+    title: "Yoga & Qi Gong",
+    price: "Private & group",
+    note: "instruction",
+    description:
+      "Embodied instruction in the Anusara lineage and Qi Gong — grounded in anatomy, opened toward the subtle body.",
+    tone: "sand",
+    cta: "Enquire",
+    href: "/#contact",
+  },
+];
+
+const teachers = [
+  "Richard Freeman", "John Friend", "Darren Rhodes", "Noah Maze",
+  "Neesha Zollinger", "Marc St. Pierre", "Myra Lewin", "Skeeter Tichnor",
+  "Caroline Myss", "Daisy Lee", "Christian Pankhurst", "Skylar Acemesis",
+  "Sufi Ruhaniat Order",
+];
 
 export default function HomePage() {
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -right-24 -top-16 text-copper-200/60 sm:-right-10">
-          <Mandala className="h-[36rem] w-[36rem]" spin />
-        </div>
-        <div className="container-tight relative grid min-h-[78vh] items-center py-20">
-          <div className="max-w-2xl animate-fade-up">
-            <p className="eyebrow">Somatic Bodywork · Burlington, VT</p>
-            <h1 className="mt-6 text-5xl leading-[1.05] sm:text-7xl">
-              {site.tagline}
-            </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-clay/75">
-              Integrative massage and intuitive bodywork with{" "}
-              {site.practitioner} — meeting physical tension and the deeper
-              emotional roots it protects, so the body can soften and return
-              home to itself.
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-4">
-              <Link href="/book" className="btn-primary">
-                Book a session
-              </Link>
-              <Link href="/#services" className="btn-ghost">
-                Explore sessions
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── Sessions / Services ──────────────────────────────────────────── */}
-      <section id="services" className="scroll-mt-20 py-16">
-        <div className="container-tight">
-          <p className="eyebrow">Sessions</p>
-          <h2 className="mt-3 text-4xl sm:text-5xl">
-            Two ways to be met on the table
-          </h2>
-          <p className="mt-4 max-w-2xl text-clay/70">
-            Each session weaves craniosacral therapy, polarity work, and
-            intuitive touch — thirty years of practice, tuned to what your
-            body is asking for that day.
+      <section
+        id="top"
+        className="relative overflow-hidden px-6 text-center"
+        style={{ padding: "clamp(80px,12vh,150px) 24px clamp(60px,8vh,110px)" }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-[-8%] w-[min(760px,120%)] -translate-x-1/2 select-none opacity-[0.05]"
+        />
+        <div className="relative mx-auto flex max-w-[860px] animate-fade-up flex-col items-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/mandala.png"
+            alt="Intelligent Embodiment"
+            width={116}
+            height={116}
+            className="mb-[30px]"
+          />
+          <Eyebrow align="center">Awake in the Body</Eyebrow>
+          <h1
+            className="mt-[18px] font-serif text-ink-900"
+            style={{ fontSize: "clamp(46px,8vw,88px)", lineHeight: 0.98 }}
+          >
+            Intelligent
+            <br />
+            Embodiment
+          </h1>
+          <p className="lead mt-[22px] max-w-[34ch]">
+            Three decades of devoted practice — bodywork, yoga, and intuitive
+            insight, with Mackensie Satya&nbsp;Priya.
           </p>
-
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            {services.map((s) => (
-              <div
-                key={s.id}
-                className="group flex flex-col rounded-2xl border border-copper-100 bg-white/60 p-8 transition hover:border-copper-300 hover:shadow-lg hover:shadow-copper-100/40"
-              >
-                <div className="flex items-baseline justify-between">
-                  <h3 className="text-2xl">{s.name}</h3>
-                  <span className="font-serif text-2xl text-copper-600">
-                    ${s.price}
-                  </span>
-                </div>
-                <p className="mt-1 text-sm uppercase tracking-[0.2em] text-copper-400">
-                  {s.durationMinutes} minutes
-                </p>
-                <p className="mt-5 flex-1 leading-relaxed text-clay/75">
-                  {s.blurb}
-                </p>
-                <Link
-                  href={`/book?service=${s.id}`}
-                  className="btn-ghost mt-7 self-start !px-5 !py-2 !text-xs"
-                >
-                  Book {s.durationMinutes} min
-                </Link>
-              </div>
-            ))}
+          <div className="mt-9 flex flex-wrap justify-center gap-3.5">
+            <Link href="/book" className="btn btn-primary btn-lg">
+              Book a Session
+            </Link>
+            <Link href="/#offerings" className="btn btn-secondary btn-lg">
+              Explore Offerings
+            </Link>
           </div>
-
-          <p className="mt-8 text-sm text-clay/60">
-            Also offered in person: health &amp; nutrition consultations,
-            women&apos;s heart circles, yoga and Qi Gong instruction, and
-            intuitive root-cause consulting. Reach out to arrange.
-          </p>
+          <div className="mt-[54px] w-[min(420px,80%)]">
+            <Rule ornament="dot" />
+          </div>
         </div>
       </section>
 
       {/* ── About ────────────────────────────────────────────────────────── */}
-      <section id="about" className="scroll-mt-20 bg-sand-100 py-20">
-        <div className="container-tight grid items-center gap-12 md:grid-cols-[1fr_1.2fr]">
-          <div className="relative mx-auto text-copper-400">
-            <Mandala className="h-72 w-72" />
-          </div>
+      <section id="about" className="ie-section px-6">
+        <div className="mx-auto grid max-w-container items-center gap-[clamp(40px,6vw,88px)] md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]">
           <div>
-            <p className="eyebrow">About</p>
-            <h2 className="mt-3 text-4xl sm:text-5xl">{site.practitioner}</h2>
-            <div className="mt-6 space-y-4 leading-relaxed text-clay/75">
+            <SectionHeading
+              eyebrow="About Mackensie Satya Priya"
+              bracketed
+              title="Three decades of devoted practice"
+            />
+            <div className="ie-prose mt-[26px] space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
               <p>
-                Mackensie brings thirty years of deep spiritual practice and
-                bodywork to the table — craniosacral therapy, polarity therapy,
-                and a listening, intuitive touch.
+                Mackensie has woven thirty years of deep spiritual practice into
+                an offering that addresses multiple layers of the human
+                experience. Her early studies in Craniosacral, Polarity therapy
+                and Temple Lomi built a foundation of somatic and energetic
+                principles.
               </p>
               <p>
-                Her work is shaped by twenty-eight years of teaching yoga, five
-                teacher trainings, and seven vipassana retreats. Sessions tend
-                to the whole person: the tight shoulder and the story it holds,
-                the physical symptom and its quieter root.
-              </p>
-              <p>
-                The invitation is simple — to become, more and more, awake in
-                the body.
+                Her years as an advanced Anusara yoga teacher honed an embodied
+                understanding of the body&apos;s physical and mechanical
+                aspects. Seeking to address her own pain, her practice evolved
+                toward Qi Gong and, eventually, the intuitive insights she now
+                channels into deeper wisdom — helping clients reach the root
+                causes of their own pain and suffering.
               </p>
             </div>
-            <div className="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-sm">
-              <Stat value="30 yrs" label="Bodywork" />
-              <Stat value="28 yrs" label="Teaching yoga" />
-              <Stat value="7" label="Vipassana retreats" />
-            </div>
+          </div>
+          <div className="overflow-hidden rounded-lg shadow-md">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/imagery/hands-oil.jpg"
+              alt="Intuitive bodywork"
+              className="block w-full object-cover"
+              style={{ height: "clamp(340px,46vw,520px)" }}
+            />
+          </div>
+        </div>
+
+        <div className="mx-auto mt-[clamp(48px,7vw,88px)] max-w-container">
+          <Rule ornament="mandala" />
+          <div className="mt-[clamp(40px,6vw,64px)] grid grid-cols-2 gap-6 md:grid-cols-4">
+            {stats.map((s) => (
+              <Stat key={s.label} value={s.value} label={s.label} />
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ── Closing CTA ──────────────────────────────────────────────────── */}
-      <section className="py-24">
-        <div className="container-tight text-center">
-          <div className="mx-auto mb-6 w-fit text-copper-400">
-            <Mandala className="h-16 w-16" />
+      {/* ── Offerings ────────────────────────────────────────────────────── */}
+      <section id="offerings" className="ie-section bg-sand px-6">
+        <div className="mx-auto max-w-container">
+          <SectionHeading
+            align="center"
+            eyebrow="Awake in the Body"
+            title="Ways to work together"
+            lead="Every session meets you where you are — body, energy, and insight woven into one."
+          />
+          <div className="mt-[clamp(40px,6vw,64px)] grid gap-6 md:grid-cols-3">
+            {offerings.map((o) => (
+              <OfferingCard key={o.title} o={o} />
+            ))}
           </div>
-          <h2 className="mx-auto max-w-2xl text-4xl leading-tight sm:text-5xl">
-            Give your body an hour to remember its ease.
-          </h2>
-          <p className="mx-auto mt-5 max-w-xl text-clay/70">
-            Choose a 60- or 90-minute session and pick a time that works for
-            you. Your appointment is confirmed to the calendar right away.
-          </p>
-          <Link href="/book" className="btn-primary mt-9">
-            Book a session
-          </Link>
+          <div className="mt-10 flex flex-wrap justify-center gap-2.5">
+            {[
+              "Health & Nutrition Consultations",
+              "Women's Group / Heart Circle",
+              "Yoga & Qi Gong Instruction",
+            ].map((b) => (
+              <span
+                key={b}
+                className="rounded-full border border-[color:var(--border)] bg-paper-2 px-4 py-2 font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-ink-500"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Lineage ──────────────────────────────────────────────────────── */}
+      <section
+        id="lineage"
+        className="ie-section relative overflow-hidden bg-indigo-700 px-6"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/mandala.png"
+          alt=""
+          aria-hidden="true"
+          className="pointer-events-none absolute bottom-[-20%] right-[-6%] w-[460px] opacity-[0.06]"
+          style={{ filter: "brightness(0) invert(1)" }}
+        />
+        <div className="relative mx-auto max-w-[900px] text-center">
+          <figure className="mx-auto max-w-[60ch]">
+            <div
+              className="font-serif text-copper-500"
+              style={{ fontSize: "64px", lineHeight: 0.6, height: "34px" }}
+              aria-hidden="true"
+            >
+              &ldquo;
+            </div>
+            <blockquote
+              className="font-serif italic text-paper-2"
+              style={{ fontSize: "clamp(21px,2.4vw,28px)", lineHeight: 1.45 }}
+            >
+              The body keeps its own intelligence. My work is simply to help you
+              listen.
+            </blockquote>
+            <figcaption className="mt-5">
+              <div className="font-sans text-[12px] font-semibold uppercase tracking-[0.16em] text-copper-500">
+                Mackensie Satya Priya
+              </div>
+              <div className="mt-[5px] font-sans text-[13px] text-white/60">
+                Intelligent Embodiment · Burlington, VT
+              </div>
+            </figcaption>
+          </figure>
+
+          <div className="mt-[clamp(48px,7vw,80px)]">
+            <Eyebrow align="center" paper>
+              Lineage Teachings
+            </Eyebrow>
+            <div className="mx-auto mt-[22px] flex max-w-[720px] flex-wrap justify-center gap-x-5 gap-y-2.5">
+              {teachers.map((t, i) => (
+                <span key={t} className="inline-flex items-center gap-5">
+                  <span className="font-serif text-[18px] text-white/80">
+                    {t}
+                  </span>
+                  {i < teachers.length - 1 && (
+                    <span className="text-copper-500">·</span>
+                  )}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     </>
-  );
-}
-
-function Stat({ value, label }: { value: string; label: string }) {
-  return (
-    <div>
-      <p className="font-serif text-3xl text-copper-600">{value}</p>
-      <p className="text-xs uppercase tracking-[0.2em] text-clay/60">{label}</p>
-    </div>
   );
 }
