@@ -5,12 +5,6 @@ import Link from "next/link";
 import { Icon } from "./Icon";
 import { site } from "@/lib/site";
 
-const links = [
-  { label: "Massage", href: "/massage" },
-  { label: "Recipes", href: "/recipes" },
-  { label: "About", href: "/about" },
-];
-
 export function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -43,38 +37,24 @@ export function Nav() {
         </Link>
 
         <nav className="hidden items-center gap-[28px] md:flex">
-          {links.map((l) => (
-            <Link
-              key={l.label}
-              href={l.href}
-              className="font-sans text-[12px] font-medium uppercase tracking-[0.16em] text-ink-700 transition hover:text-copper-800"
-            >
-              {l.label}
-            </Link>
-          ))}
-
-          {/* Contact */}
-          <span className="hidden items-center gap-5 border-l border-[color:var(--border)] pl-[28px] lg:flex">
-            <a
-              href={site.phoneHref}
-              className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
-            >
-              <span className="text-copper-800">
-                <Icon name="phone" size={14} />
-              </span>
-              {site.phone}
-            </a>
-            <a
-              href={`mailto:${site.email}`}
-              className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
-            >
-              <span className="text-copper-800">
-                <Icon name="mail" size={14} />
-              </span>
-              {site.email}
-            </a>
-          </span>
-
+          <a
+            href={site.phoneHref}
+            className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
+          >
+            <span className="text-copper-800">
+              <Icon name="phone" size={14} />
+            </span>
+            {site.phone}
+          </a>
+          <a
+            href={`mailto:${site.email}`}
+            className="inline-flex items-center gap-1.5 font-sans text-[12px] text-ink-700 transition hover:text-copper-800"
+          >
+            <span className="text-copper-800">
+              <Icon name="mail" size={14} />
+            </span>
+            {site.email}
+          </a>
           <Link href="/book" className="btn btn-primary btn-sm">
             Book
           </Link>
@@ -92,18 +72,6 @@ export function Nav() {
 
       {menuOpen && (
         <div className="border-t border-[color:var(--border)] bg-paper-2 px-6 pb-6 pt-4 md:hidden">
-          {links.map((l) => (
-            <Link
-              key={l.label}
-              href={l.href}
-              onClick={() => setMenuOpen(false)}
-              className="block border-b border-[color:var(--border)] py-3 font-sans text-[14px] font-medium uppercase tracking-[0.14em] text-ink-700"
-            >
-              {l.label}
-            </Link>
-          ))}
-
-          {/* Contact */}
           <a
             href={site.phoneHref}
             className="flex items-center gap-2.5 border-b border-[color:var(--border)] py-3 font-sans text-[14px] text-ink-700"
@@ -122,7 +90,6 @@ export function Nav() {
             </span>
             {site.email}
           </a>
-
           <Link
             href="/book"
             onClick={() => setMenuOpen(false)}
