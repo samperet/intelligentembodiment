@@ -2,7 +2,10 @@ import Link from "next/link";
 import { site } from "@/lib/site";
 import { Icon } from "./Icon";
 
-const explore = [{ label: "About", href: "/about" }];
+const explore = [
+  { label: "About", href: "/about" },
+  { label: "Share your experience", href: "/share" },
+];
 
 const library = [
   { label: "Recipes", href: "/recipes" },

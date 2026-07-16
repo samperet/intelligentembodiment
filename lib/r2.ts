@@ -15,8 +15,19 @@ import {
 const BASE = "https://api.cloudflare.com/client/v4";
 const SUBS_KEY = "newsletter/subscribers.json";
 const SETTINGS_KEY = "booking/settings.json";
+const TESTIMONIALS_KEY = "testimonials/submissions.json";
 
 export type Subscriber = { name: string; email: string; date: string };
+
+export type TestimonialStatus = "pending" | "approved" | "rejected";
+export type TestimonialSubmission = {
+  id: string;
+  name: string;
+  quote: string;
+  email?: string;
+  date: string;
+  status: TestimonialStatus;
+};
 
 function cfg() {
   return {
@@ -135,4 +146,78 @@ export async function saveBookingSettings(
     settings: normalizeBookingSettings(stored ?? clean),
     verified: stored !== null,
   };
+}
+
+// ── Testimonials (collected via the public share page, approved in admin) ─────
+
+function randomId(): string {
+  // Timestamp + random suffix; crypto.randomUUID isn't guaranteed on every
+  // runtime, so keep it dependency-free.
+  return `t_${Date.now().toString(36)}_${Math.round(
+    Math.random() * 1e9,
+  ).toString(36)}`;
+}
+
+/** Append a new testimonial submission (status: pending). Requires R2. */
+export async function addTestimonial(input: {
+  name: string;
+  quote: string;
+  email?: string;
+}): Promise<TestimonialSubmission> {
+  const list = (await getJson<TestimonialSubmission[]>(TESTIMONIALS_KEY)) || [];
+  const sub: TestimonialSubmission = {
+    id: randomId(),
+    name: input.name.trim().slice(0, 120),
+    quote: input.quote.trim().slice(0, 2000),
+    email: input.email?.trim().slice(0, 200) || undefined,
+    date: new Date().toISOString(),
+    status: "pending",
+  };
+  list.push(sub);
+  await putJson(TESTIMONIALS_KEY, list);
+  return sub;
+}
+
+/** All submissions, newest first. */
+export async function listTestimonials(): Promise<TestimonialSubmission[]> {
+  const list = (await getJson<TestimonialSubmission[]>(TESTIMONIALS_KEY)) || [];
+  return [...list].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/** Update one submission's status. Returns the updated list. Requires R2. */
+export async function setTestimonialStatus(
+  id: string,
+  status: TestimonialStatus,
+): Promise<TestimonialSubmission[]> {
+  const list = (await getJson<TestimonialSubmission[]>(TESTIMONIALS_KEY)) || [];
+  const next = list.map((t) => (t.id === id ? { ...t, status } : t));
+  await putJson(TESTIMONIALS_KEY, next);
+  return [...next].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/** Delete one submission. Returns the updated list. Requires R2. */
+export async function deleteTestimonial(
+  id: string,
+): Promise<TestimonialSubmission[]> {
+  const list = (await getJson<TestimonialSubmission[]>(TESTIMONIALS_KEY)) || [];
+  const next = list.filter((t) => t.id !== id);
+  await putJson(TESTIMONIALS_KEY, next);
+  return [...next].sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+/** Approved testimonials in display shape ({ quote, author }), newest first. */
+export async function listApprovedTestimonials(): Promise<
+  { quote: string; author: string }[]
+> {
+  if (!isR2Configured()) return [];
+  try {
+    const list =
+      (await getJson<TestimonialSubmission[]>(TESTIMONIALS_KEY)) || [];
+    return list
+      .filter((t) => t.status === "approved")
+      .sort((a, b) => (a.date < b.date ? 1 : -1))
+      .map((t) => ({ quote: t.quote, author: t.name }));
+  } catch {
+    return [];
+  }
 }

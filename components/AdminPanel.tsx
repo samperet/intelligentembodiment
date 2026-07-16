@@ -3,6 +3,15 @@
 import { useState, useEffect } from "react";
 
 type Subscriber = { name: string; email: string; date: string };
+type TestimonialStatus = "pending" | "approved" | "rejected";
+type TestimonialSub = {
+  id: string;
+  name: string;
+  quote: string;
+  email?: string;
+  date: string;
+  status: TestimonialStatus;
+};
 type BookingSettings = {
   acceptingMassage: boolean;
   acceptingPhone: boolean;
@@ -40,6 +49,9 @@ export function AdminPanel() {
 
   const [copied, setCopied] = useState(false);
   const [booting, setBooting] = useState(true);
+
+  const [testimonials, setTestimonials] = useState<TestimonialSub[]>([]);
+  const [tBusy, setTBusy] = useState<string | null>(null);
 
   // Auto-authenticate from the session cookie (set by the hidden type-anywhere
   // login or a previous sign-in) so no password prompt is needed.
@@ -91,11 +103,31 @@ export function AdminPanel() {
     setPassword("");
   }
 
+  async function testimonialAction(
+    id: string,
+    payload: { status?: TestimonialStatus; action?: "delete" },
+  ) {
+    setTBusy(id);
+    try {
+      const res = await fetch("/api/admin/testimonials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password, id, ...payload }),
+      });
+      const data = await res.json();
+      if (res.ok && Array.isArray(data.entries)) setTestimonials(data.entries);
+    } catch {
+      /* ignore */
+    } finally {
+      setTBusy(null);
+    }
+  }
+
   async function load(pw: string) {
     setLoading(true);
     setError(null);
     try {
-      const [subsRes, setRes] = await Promise.all([
+      const [subsRes, setRes, tRes] = await Promise.all([
         fetch("/api/admin/newsletter", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -106,14 +138,21 @@ export function AdminPanel() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ password: pw }),
         }),
+        fetch("/api/admin/testimonials", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ password: pw }),
+        }),
       ]);
       const subs = await subsRes.json();
       if (!subsRes.ok) throw new Error(subs.error || "Something went wrong.");
       const set = await setRes.json();
+      const tj = await tRes.json();
       setEntries(subs.entries || []);
       setNote(subs.error || subs.note || null);
       if (set?.settings) setSettings(set.settings);
       setPersisted(typeof set?.persisted === "boolean" ? set.persisted : null);
+      setTestimonials(Array.isArray(tj?.entries) ? tj.entries : []);
       setAuthed(true);
     } catch (e: any) {
       setError(e.message);
@@ -383,6 +422,125 @@ export function AdminPanel() {
               )}
             </div>
           </div>
+        )}
+      </section>
+
+      {/* ── Testimonials approval ────────────────────────────────────────── */}
+      <section className="mt-14">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 className="font-serif text-[28px] text-ink-900">Testimonials</h2>
+            <p className="mt-1 font-sans text-[15px] text-ink-500">
+              {testimonials.filter((t) => t.status === "pending").length} awaiting
+              review · {testimonials.filter((t) => t.status === "approved").length}{" "}
+              published
+            </p>
+          </div>
+        </div>
+
+        {testimonials.length === 0 ? (
+          <p className="mt-8 font-sans text-[16px] text-ink-500">
+            No testimonials submitted yet. Share the{" "}
+            <a href="/share" className="text-copper-800 underline">
+              /share
+            </a>{" "}
+            page to collect them.
+          </p>
+        ) : (
+          <ul className="mt-6 space-y-4">
+            {[...testimonials]
+              .sort((a, b) => {
+                const rank = { pending: 0, approved: 1, rejected: 2 } as const;
+                return rank[a.status] - rank[b.status];
+              })
+              .map((t) => (
+                <li
+                  key={t.id}
+                  className="rounded-lg border border-[color:var(--border)] bg-paper-2 p-5"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <span className="font-serif text-[19px] text-ink-900">
+                        {t.name}
+                      </span>
+                      {t.email && (
+                        <a
+                          href={`mailto:${t.email}`}
+                          className="ml-2 font-sans text-[14px] text-copper-800 underline"
+                        >
+                          {t.email}
+                        </a>
+                      )}
+                    </div>
+                    <span
+                      className={`rounded-full px-3 py-1 font-sans text-[12px] font-medium uppercase tracking-[0.12em] ${
+                        t.status === "approved"
+                          ? "bg-sage-bg text-sage"
+                          : t.status === "rejected"
+                            ? "bg-ink-900/10 text-ink-500"
+                            : "bg-copper-100 text-copper-900"
+                      }`}
+                    >
+                      {t.status}
+                    </span>
+                  </div>
+                  <blockquote className="mt-3 font-serif text-[19px] italic leading-[1.6] text-ink-700">
+                    “{t.quote}”
+                  </blockquote>
+                  <div className="mt-4 flex flex-wrap items-center gap-2.5">
+                    {t.status !== "approved" && (
+                      <button
+                        type="button"
+                        disabled={tBusy === t.id}
+                        onClick={() =>
+                          testimonialAction(t.id, { status: "approved" })
+                        }
+                        className="btn btn-primary btn-sm"
+                      >
+                        Approve
+                      </button>
+                    )}
+                    {t.status === "approved" && (
+                      <button
+                        type="button"
+                        disabled={tBusy === t.id}
+                        onClick={() =>
+                          testimonialAction(t.id, { status: "pending" })
+                        }
+                        className="btn btn-secondary btn-sm"
+                      >
+                        Unpublish
+                      </button>
+                    )}
+                    {t.status !== "rejected" && (
+                      <button
+                        type="button"
+                        disabled={tBusy === t.id}
+                        onClick={() =>
+                          testimonialAction(t.id, { status: "rejected" })
+                        }
+                        className="btn btn-ghost btn-sm"
+                      >
+                        Reject
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      disabled={tBusy === t.id}
+                      onClick={() => testimonialAction(t.id, { action: "delete" })}
+                      className="font-sans text-[13px] text-ink-400 underline transition hover:text-copper-800"
+                    >
+                      Delete
+                    </button>
+                    <span className="ml-auto font-sans text-[13px] text-ink-400">
+                      {new Date(t.date).toLocaleDateString("en-US", {
+                        dateStyle: "medium",
+                      })}
+                    </span>
+                  </div>
+                </li>
+              ))}
+          </ul>
         )}
       </section>
 

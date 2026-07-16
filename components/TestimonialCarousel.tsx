@@ -1,16 +1,35 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { testimonials } from "@/lib/content";
+import { useEffect, useRef, useState } from "react";
+import { testimonials as builtIn } from "@/lib/content";
+
+type Item = { quote: string; author: string };
 
 export function TestimonialCarousel() {
   const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
+  const [items, setItems] = useState<Item[]>(builtIn);
+
+  // Append admin-approved testimonials submitted through /share.
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/testimonials")
+      .then((r) => r.json())
+      .then((d) => {
+        if (cancelled || !Array.isArray(d?.testimonials) || !d.testimonials.length)
+          return;
+        setItems([...builtIn, ...d.testimonials]);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   function goTo(i: number) {
     const track = trackRef.current;
     if (!track) return;
-    const clamped = Math.max(0, Math.min(testimonials.length - 1, i));
+    const clamped = Math.max(0, Math.min(items.length - 1, i));
     const el = track.children[clamped] as HTMLElement | undefined;
     if (!el) return;
     track.scrollTo({
@@ -45,7 +64,7 @@ export function TestimonialCarousel() {
         className="ie-swipe flex snap-x snap-mandatory gap-6 overflow-x-auto scroll-smooth"
         style={{ WebkitOverflowScrolling: "touch" }}
       >
-        {testimonials.map((t, i) => (
+        {items.map((t, i) => (
           <figure
             key={i}
             className="w-full flex-none snap-center px-1 text-center"
@@ -81,7 +100,7 @@ export function TestimonialCarousel() {
           ‹
         </button>
         <div className="flex gap-2.5">
-          {testimonials.map((_, i) => (
+          {items.map((_, i) => (
             <button
               key={i}
               type="button"
@@ -99,7 +118,7 @@ export function TestimonialCarousel() {
         <button
           type="button"
           onClick={() => goTo(index + 1)}
-          disabled={index === testimonials.length - 1}
+          disabled={index === items.length - 1}
           aria-label="Next testimonial"
           className="flex h-9 w-9 items-center justify-center rounded-full border border-[color:var(--border-strong)] text-[20px] text-ink-700 transition hover:border-copper-700 hover:text-copper-800 disabled:opacity-30 disabled:hover:border-[color:var(--border-strong)] disabled:hover:text-ink-700"
         >
