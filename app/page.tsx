@@ -156,12 +156,8 @@ export default function HomePage() {
           >
             Gatherings &amp; immersions
           </h2>
-          <p className="lead mx-auto mt-4 max-w-[44ch]">
-            There are no retreats currently scheduled.
-          </p>
-          <p className="mx-auto mt-3 max-w-[50ch] font-sans text-[15px] leading-[1.7] text-ink-500">
-            Leave your name and email to be among the first to hear about future
-            retreats, women&apos;s circles, and immersions.
+          <p className="lead mx-auto mt-4 max-w-[46ch]">
+            Hear about retreats, events, women&apos;s circles, and immersions.
           </p>
           <RetreatInterest />
         </div>
