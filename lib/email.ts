@@ -2,8 +2,14 @@
 // If RESEND_API_KEY is unset this is a no-op, Google Calendar already emails
 // the invite to both parties when the event is created.
 
+// The verified "from" address. Override with EMAIL_FROM if desired; the
+// domain must be verified in Resend.
+const FROM =
+  process.env.EMAIL_FROM ||
+  "Intelligent Embodiment <notifications@intelligentembodiment.com>";
+
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
+  return Boolean(process.env.RESEND_API_KEY);
 }
 
 type SendArgs = {
@@ -19,7 +25,7 @@ export async function sendEmail(args: SendArgs): Promise<boolean> {
   if (!isEmailConfigured()) return false;
 
   const body: Record<string, unknown> = {
-    from: process.env.EMAIL_FROM,
+    from: FROM,
     to: args.to,
     subject: args.subject,
     html: args.html,
