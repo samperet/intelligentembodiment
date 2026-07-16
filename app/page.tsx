@@ -60,13 +60,13 @@ export default function HomePage() {
           <div className="mt-6 space-y-4 font-sans text-[16px] leading-[1.75] text-ink-500">
             <p>
               Specializing with women, Mackensie brings a skilled understanding
-              of anatomy to every session, drawing on craniosacral therapy,
-              polarity therapy, and Temple Lomi.
+              of physical and energetic anatomy to every session, drawing on
+              craniosacral therapy, polarity therapy, Temple Lomi and her deep
+              intuition.
             </p>
             <p>
               Sessions address physical tension and pain, yet often lead to
-              insight around deeper emotional root causes. Nothing is rushed.
-              Each hour meets you exactly where you are that day.
+              insight around emotional root causes.
             </p>
           </div>
         </div>
