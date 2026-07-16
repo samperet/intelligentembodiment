@@ -119,9 +119,14 @@ export function Footer() {
               >
                 PayPal
               </a>
-              <span className="font-sans text-[12px] uppercase tracking-[0.14em] text-ink-500">
+              <a
+                href="https://venmo.com/u/mackensie-grant"
+                target="_blank"
+                rel="noreferrer"
+                className="font-sans text-[12px] uppercase tracking-[0.14em] text-ink-500 transition hover:text-copper-800"
+              >
                 Venmo
-              </span>
+              </a>
             </div>
           </div>
         </div>
