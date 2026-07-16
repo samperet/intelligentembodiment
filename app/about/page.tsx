@@ -89,6 +89,34 @@ export default function AboutPage() {
         </section>
       )}
 
+      {/* Her path — narrative bio */}
+      <section className="px-6 pb-[clamp(48px,7vw,80px)]">
+        <div className="mx-auto max-w-[760px]">
+          <Eyebrow align="center">Her Path</Eyebrow>
+          <div className="mt-6 space-y-5 font-sans text-[17px] leading-[1.8] text-ink-700">
+            <p>
+              Integrating credentials with lived wisdom, Mackensie has woven
+              thirty years of deep spiritual practice into an offering that
+              addresses multiple layers of the human experience. Her early
+              studies included Craniosacral, Polarity therapy and Temple Lomi,
+              building a foundation of somatic and energetic principles. Her
+              many years as an advanced Anusara yoga teacher honed her embodied
+              understanding of the physical and mechanical aspects of the body.
+            </p>
+            <p>
+              Looking for ways to address her own pain, her practice evolved
+              towards Qi Gong, where she could focus on more subtle aspects of
+              the energetic body. This eventually paved the way for her
+              introduction to Skylar Acemesis, Medical Intuitive, where she
+              learned tools and techniques to channel the intuitive insights
+              that were always present across her patient interactions into
+              deeper wisdom and clarity that often help her clients address the
+              actual root causes of their own pain and suffering.
+            </p>
+          </div>
+        </div>
+      </section>
+
       {/* Four pillars */}
       <section className="ie-section px-6">
         <div className="mx-auto max-w-container">

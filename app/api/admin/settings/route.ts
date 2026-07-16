@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   isR2Configured,
   getBookingSettings,
+  getStoredBookingSettings,
   saveBookingSettings,
 } from "@/lib/r2";
 
@@ -40,8 +41,19 @@ export async function POST(request: Request) {
       );
     }
     try {
-      const settings = await saveBookingSettings(body.settings);
-      return NextResponse.json({ ok: true, saved: true, settings });
+      const { settings, verified } = await saveBookingSettings(body.settings);
+      return NextResponse.json({
+        ok: true,
+        saved: true,
+        verified,
+        settings,
+        ...(verified
+          ? {}
+          : {
+              warning:
+                "R2 accepted the request but the value could not be read back, so it likely did not persist. The CLOUDFLARE_API token probably needs R2 Object Read & Write permission (not read-only) for this bucket.",
+            }),
+      });
     } catch (err: any) {
       return NextResponse.json(
         { error: `Could not save settings: ${String(err?.message || err)}` },
@@ -50,10 +62,12 @@ export async function POST(request: Request) {
     }
   }
 
+  const stored = await getStoredBookingSettings();
   const settings = await getBookingSettings();
   return NextResponse.json({
     ok: true,
     settings,
     r2Configured: isR2Configured(),
+    persisted: stored !== null,
   });
 }

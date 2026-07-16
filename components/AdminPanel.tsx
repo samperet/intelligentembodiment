@@ -33,6 +33,8 @@ export function AdminPanel() {
   const [settings, setSettings] = useState<BookingSettings | null>(null);
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsMsg, setSettingsMsg] = useState<string | null>(null);
+  const [settingsOk, setSettingsOk] = useState(false);
+  const [persisted, setPersisted] = useState<boolean | null>(null);
 
   const [copied, setCopied] = useState(false);
 
@@ -58,6 +60,7 @@ export function AdminPanel() {
       setEntries(subs.entries || []);
       setNote(subs.error || subs.note || null);
       if (set?.settings) setSettings(set.settings);
+      setPersisted(typeof set?.persisted === "boolean" ? set.persisted : null);
       setAuthed(true);
     } catch (e: any) {
       setError(e.message);
@@ -79,9 +82,23 @@ export function AdminPanel() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Could not save.");
-      setSettings(data.settings);
-      setSettingsMsg("Saved.");
+      // data.settings is the value read back from R2, so the editor now
+      // reflects exactly what persisted.
+      if (data.settings) setSettings(data.settings);
+      if (data.verified === false) {
+        setSettingsOk(false);
+        setPersisted(false);
+        setSettingsMsg(
+          data.warning ||
+            "Saved, but the value could not be read back — it may not have persisted.",
+        );
+      } else {
+        setSettingsOk(true);
+        setPersisted(true);
+        setSettingsMsg("Saved.");
+      }
     } catch (e: any) {
+      setSettingsOk(false);
       setSettingsMsg(e.message);
     } finally {
       setSavingSettings(false);
@@ -181,6 +198,13 @@ export function AdminPanel() {
           When clients are allowed to book. Times are in the practice timezone
           (Eastern).
         </p>
+        {persisted === false && (
+          <p className="mt-3 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
+            These are the built-in defaults, nothing is saved to R2 yet. If a
+            save doesn&apos;t stick, the CLOUDFLARE_API token likely needs R2
+            Object Read &amp; Write permission for this bucket.
+          </p>
+        )}
 
         {settings && (
           <div className="mt-6 space-y-6 rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
@@ -263,9 +287,7 @@ export function AdminPanel() {
               {settingsMsg && (
                 <span
                   className={`font-sans text-[14px] ${
-                    settingsMsg === "Saved."
-                      ? "text-sage"
-                      : "text-copper-900"
+                    settingsOk ? "text-sage" : "text-copper-900"
                   }`}
                 >
                   {settingsMsg}

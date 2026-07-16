@@ -107,11 +107,32 @@ export async function getBookingSettings(): Promise<BookingSettings> {
   }
 }
 
-/** Persist booking settings (validated/clamped). Requires R2. */
+/**
+ * The raw stored settings, or null when nothing has been persisted yet
+ * (or R2 is unset). Lets callers distinguish "saved overrides" from
+ * "falling back to code defaults".
+ */
+export async function getStoredBookingSettings(): Promise<Partial<BookingSettings> | null> {
+  if (!isR2Configured()) return null;
+  return getJson<Partial<BookingSettings>>(SETTINGS_KEY);
+}
+
+/**
+ * Persist booking settings (validated/clamped), then read the object back
+ * to confirm the write actually landed. R2 is strongly consistent for
+ * read-after-write, so a missing read-back means the write did not persist
+ * — almost always a token without R2 *write* permission. We return that
+ * `verified` flag rather than throwing, so a genuinely-working save never
+ * breaks on a transient hiccup. Requires R2.
+ */
 export async function saveBookingSettings(
   input: Partial<BookingSettings>,
-): Promise<BookingSettings> {
+): Promise<{ settings: BookingSettings; verified: boolean }> {
   const clean = normalizeBookingSettings(input);
   await putJson(SETTINGS_KEY, clean);
-  return clean;
+  const stored = await getJson<Partial<BookingSettings>>(SETTINGS_KEY);
+  return {
+    settings: normalizeBookingSettings(stored ?? clean),
+    verified: stored !== null,
+  };
 }
