@@ -6,7 +6,12 @@ export const dynamic = "force-dynamic";
 // present and what Resend returns for a send from the configured address.
 // Uses Resend's test sink so no real inbox is emailed.
 export async function GET() {
-  const key = process.env.RESEND_API_KEY;
+  const key = process.env.RESEND_API_KEY || process.env.RESEND_API;
+  const keyVar = process.env.RESEND_API_KEY
+    ? "RESEND_API_KEY"
+    : process.env.RESEND_API
+      ? "RESEND_API"
+      : null;
   const from =
     process.env.EMAIL_FROM ||
     "Intelligent Embodiment <notifications@intelligentembodiment.com>";
@@ -15,9 +20,10 @@ export async function GET() {
   if (!key) {
     return NextResponse.json({
       hasKey: false,
+      keyVar,
       from,
       ownerSet,
-      note: "RESEND_API_KEY is not set in this deployment.",
+      note: "Neither RESEND_API_KEY nor RESEND_API is set in this deployment.",
     });
   }
 
@@ -39,6 +45,7 @@ export async function GET() {
     const detail = await res.text();
     return NextResponse.json({
       hasKey: true,
+      keyVar,
       from,
       ownerSet,
       status: res.status,

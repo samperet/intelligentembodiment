@@ -8,8 +8,13 @@ const FROM =
   process.env.EMAIL_FROM ||
   "Intelligent Embodiment <notifications@intelligentembodiment.com>";
 
+// Accept either RESEND_API_KEY (standard) or RESEND_API (fallback).
+function resendKey(): string | undefined {
+  return process.env.RESEND_API_KEY || process.env.RESEND_API;
+}
+
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY);
+  return Boolean(resendKey());
 }
 
 type SendArgs = {
@@ -46,7 +51,7 @@ export async function sendEmail(args: SendArgs): Promise<boolean> {
     const res = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        Authorization: `Bearer ${resendKey()}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(body),
