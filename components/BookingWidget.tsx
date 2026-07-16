@@ -146,14 +146,17 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                     : "border-[color:var(--border)] bg-paper-2 hover:border-[color:var(--border-strong)]"
                 }`}
               >
-                <div className="flex items-baseline justify-between">
-                  <span className="font-serif text-[22px] text-ink-900">
-                    {s.durationMinutes} min
+                <div className="flex items-baseline justify-between gap-3">
+                  <span className="font-serif text-[20px] text-ink-900">
+                    {s.name}
                   </span>
                   <span className="font-serif text-[20px] italic text-copper-800">
                     ${s.price}
                   </span>
                 </div>
+                <p className="mt-1 font-sans text-[12px] uppercase tracking-[0.14em] text-ink-400">
+                  {s.durationMinutes} minutes
+                </p>
               </button>
             );
           })}

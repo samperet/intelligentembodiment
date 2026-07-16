@@ -25,11 +25,11 @@ export type Service = {
   blurb: string;
 };
 
-// The two bookable massage sessions. Add more here if desired.
+// Bookable sessions. Add more here if desired.
 export const services: Service[] = [
   {
     id: "massage-60",
-    name: "60-Minute Massage",
+    name: "60 Min Massage",
     durationMinutes: 60,
     price: 120,
     blurb:
@@ -37,11 +37,19 @@ export const services: Service[] = [
   },
   {
     id: "massage-90",
-    name: "90-Minute Massage",
+    name: "90 Min Massage",
     durationMinutes: 90,
     price: 180,
     blurb:
       "A spacious ninety minutes for whole-body release and deep nervous-system rest, working with both physical holding and its emotional roots.",
+  },
+  {
+    id: "phone-consultation",
+    name: "Phone Consultation",
+    durationMinutes: 30,
+    price: 75,
+    blurb:
+      "A focused conversation by phone to explore your health, discuss what you're navigating, and find the right next step.",
   },
 ];
 

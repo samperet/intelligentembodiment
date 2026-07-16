@@ -82,35 +82,32 @@ export default function HomePage() {
           >
             Choose your time on the table
           </h2>
-          <div className="mx-auto mt-[clamp(32px,4vw,48px)] grid max-w-3xl gap-6 sm:grid-cols-2">
-            {services.map((s) => (
-              <div
-                key={s.id}
-                className="flex flex-col rounded-xl border border-[color:var(--border)] bg-paper-2 p-8 text-left shadow-sm"
-              >
-                <div className="flex items-baseline justify-between">
-                  <span className="font-serif text-[30px] text-ink-900">
-                    {s.durationMinutes} minutes
+          <div className="mx-auto mt-[clamp(32px,4vw,48px)] max-w-md">
+            <ul className="divide-y divide-[color:var(--border)]">
+              {services.map((s) => (
+                <li
+                  key={s.id}
+                  className="flex items-baseline justify-between gap-4 py-4"
+                >
+                  <span className="font-serif text-[22px] text-ink-900">
+                    {s.name}
                   </span>
-                  <span className="font-serif text-[24px] italic text-copper-800">
+                  <span className="font-serif text-[22px] italic text-copper-800">
                     ${s.price}
                   </span>
-                </div>
-                <Link
-                  href={`/book?service=${s.id}`}
-                  className="btn btn-primary btn-md mt-6 self-start"
-                >
-                  Book {s.durationMinutes} min
-                </Link>
-              </div>
-            ))}
+                </li>
+              ))}
+            </ul>
           </div>
-          <p className="mt-8 font-sans text-[14px] text-ink-500">
+          <Link href="/book" className="btn btn-primary btn-lg mt-9">
+            Book a Session
+          </Link>
+          <p className="mt-6 font-sans text-[14px] text-ink-500">
             Additional slots often available. Text or call{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}
             </a>
-            . Sessions held at {site.address}.
+            .
           </p>
         </div>
       </section>
