@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 import { ConditionalFooter } from "@/components/ConditionalFooter";
 import { AdminHotkey } from "@/components/AdminHotkey";
+import { PhoneChoice } from "@/components/PhoneChoice";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -60,6 +61,7 @@ export default function RootLayout({
       </head>
       <body>
         <AdminHotkey />
+        <PhoneChoice />
         <Nav />
         <main>{children}</main>
         <ConditionalFooter>
