@@ -101,20 +101,22 @@ export default function AboutPage() {
               Integrating credentials with lived wisdom, Mackensie has woven
               thirty years of deep spiritual practice into an offering that
               addresses multiple layers of the human experience. Her early
-              studies included Craniosacral, Polarity therapy and Temple Lomi,
-              building a foundation of somatic and energetic principles. Her
-              many years as an advanced Anusara yoga teacher honed her embodied
-              understanding of the physical and mechanical aspects of the body.
+              studies included Craniosacral and Polarity therapy at the
+              Heartwood Institute, and Temple Lomi, in Hawai&apos;i, building a
+              foundation of somatic and energetic principles. Her many years as
+              an advanced Anusara yoga teacher honed her embodied understanding
+              of the physical and mechanical aspects of the physical, mental and
+              energetic bodies.
             </p>
             <p>
               Looking for ways to address her own pain, her practice evolved
-              towards Qi Gong, where she could focus on more subtle aspects of
-              the energetic body. This eventually paved the way for her
-              introduction to Skylar Acamesis, Medical Intuitive, where she
-              learned tools and techniques to channel the intuitive insights
-              that were always present across her patient interactions into
-              deeper wisdom and clarity that often help her clients address the
-              actual root causes of their own pain and suffering.
+              towards Qi Gong, where she could expand her knowledge of the
+              energetic body. This eventually paved the way for her introduction
+              to Skylar Acamesis, Medical Intuitive, where she learned tools and
+              techniques to channel the intuitive insights that were always
+              present across her patient interactions into deeper wisdom and
+              clarity that often help her clients address the actual root causes
+              of their own illness, pain and suffering.
             </p>
           </div>
         </div>
