@@ -10,11 +10,11 @@ export const site = {
   phone: "808.463.9195",
   phoneHref: "tel:+18084639195",
   email: "mackensie@intelligentembodiment.com",
-  address: "33 Main St, Burlington, VT",
-  addressMapUrl: "https://maps.google.com/?q=33+Main+St+Burlington+VT",
+  address: "Charlotte, VT",
+  addressMapUrl: "https://maps.google.com/?q=Charlotte+VT",
   url: "https://intelligentembodiment.com",
   description:
-    "Intuitive massage therapy with Mackensie Grant in Burlington, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
+    "Intuitive massage therapy with Mackensie Grant in Charlotte, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
 };
 
 export type ServiceCategory = "massage" | "phone";

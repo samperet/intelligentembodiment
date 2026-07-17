@@ -60,7 +60,7 @@ export function KaleidoscopeMandala({
 
     const MAX_VEL = 0.05;
     const IMPULSE_K = 0.00004; // spin added per px of horizontal motion
-    const FRICTION = 0.965; // per-frame decay → gentle glide-down
+    const FRICTION = 0.985; // per-frame decay → ~3s glide-down at 60fps
 
     const addImpulse = (dx: number) => {
       vel += dx * IMPULSE_K;

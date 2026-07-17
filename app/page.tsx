@@ -124,11 +124,9 @@ export default function HomePage() {
                 Specializing with women, Mackensie brings a skilled
                 understanding of physical and energetic anatomy to every
                 session, drawing on craniosacral therapy, polarity therapy,
-                Temple Lomi and her deep intuition.
-              </p>
-              <p>
-                Sessions address physical tension and pain, yet often lead to
-                insight around emotional root causes.
+                Temple Lomi and her deep intuition. Sessions address physical
+                tension and pain, yet often lead to insight around emotional
+                root causes.
               </p>
             </div>
           </div>

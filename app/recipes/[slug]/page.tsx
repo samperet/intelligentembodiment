@@ -10,10 +10,17 @@ export function generateStaticParams() {
   return recipes.map((r) => ({ slug: r.slug }));
 }
 
-// A recipe photo shows when public/imagery/recipe-<slug>.jpg is present.
-function recipePhoto(slug: string): string | null {
-  const rel = `/imagery/recipe-${slug}.jpg`;
-  return fs.existsSync(path.join(process.cwd(), "public", rel)) ? rel : null;
+// A recipe photo: an explicit `image` from the content if present, otherwise
+// the public/imagery/recipe-<slug>.jpg convention. Verified on disk so a
+// missing file never renders a broken box.
+function recipePhoto(slug: string, explicit?: string): string | null {
+  const candidates = [explicit, `/imagery/recipe-${slug}.jpg`].filter(
+    Boolean,
+  ) as string[];
+  for (const rel of candidates) {
+    if (fs.existsSync(path.join(process.cwd(), "public", rel))) return rel;
+  }
+  return null;
 }
 
 export function generateMetadata({
@@ -32,7 +39,7 @@ export function generateMetadata({
 export default function RecipePage({ params }: { params: { slug: string } }) {
   const r = getRecipe(params.slug);
   if (!r) notFound();
-  const photo = recipePhoto(r.slug);
+  const photo = recipePhoto(r.slug, r.image);
 
   return (
     <article className="px-6 pb-[clamp(56px,8vw,96px)]">

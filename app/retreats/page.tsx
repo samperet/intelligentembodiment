@@ -10,18 +10,38 @@ export const metadata: Metadata = {
     "A look back at past retreats, gatherings, women's circles, and immersions with Mackensie Satya Priya.",
 };
 
-// Every image dropped in public/imagery/retreats is shown, newest name last.
-function retreatPosters(): string[] {
+// Curated event posters (in intended order), plus anything later dropped into
+// public/imagery/retreats. Each is verified on disk so nothing renders broken.
+const CURATED_POSTERS: { file: string; alt: string }[] = [
+  { file: "Ignite-Your-Heart_Facebook.jpg", alt: "Ignite Your Heart — Maui Yoga Retreat" },
+  { file: "desire.jpg", alt: "Exploring the Sacred Art of Desire" },
+  { file: "OTL2.jpg", alt: "Opening to Love — a HeartIQ event" },
+  { file: "Opening-to-Love-Dec-16-2018_HeartIQ.jpg", alt: "Opening to Love — day-long immersion" },
+  { file: "Screen-Shot-2019-08-11-at-7.38.37-PM.png", alt: "she — a women's weekend" },
+  { file: "Yoga-Poster-Binder-Clips.png", alt: "Yoga with Mackensie" },
+];
+
+function exists(rel: string): boolean {
+  return fs.existsSync(path.join(process.cwd(), "public", rel));
+}
+
+function retreatPosters(): { src: string; alt: string }[] {
+  const out = CURATED_POSTERS.map((p) => ({
+    src: `/imagery/${p.file}`,
+    alt: p.alt,
+  })).filter((p) => exists(p.src));
+
+  // Append any extra posters added later under /imagery/retreats.
   try {
     const dir = path.join(process.cwd(), "public", "imagery", "retreats");
-    return fs
-      .readdirSync(dir)
-      .filter((f) => /\.(jpe?g|png|webp)$/i.test(f))
-      .sort()
-      .map((f) => `/imagery/retreats/${f}`);
+    for (const f of fs.readdirSync(dir).sort()) {
+      if (/\.(jpe?g|png|webp)$/i.test(f))
+        out.push({ src: `/imagery/retreats/${f}`, alt: "Retreat poster" });
+    }
   } catch {
-    return [];
+    /* no extra folder */
   }
+  return out;
 }
 
 export default function RetreatsPage() {
@@ -52,18 +72,13 @@ export default function RetreatsPage() {
             </p>
           ) : (
             <div className="[column-gap:1.5rem] sm:columns-2 lg:columns-3">
-              {posters.map((src) => (
+              {posters.map((p) => (
                 <div
-                  key={src}
+                  key={p.src}
                   className="mb-6 overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)] [break-inside:avoid]"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={src}
-                    alt="Retreat poster"
-                    className="w-full"
-                    loading="lazy"
-                  />
+                  <img src={p.src} alt={p.alt} className="w-full" loading="lazy" />
                 </div>
               ))}
             </div>

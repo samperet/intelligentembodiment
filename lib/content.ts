@@ -9,6 +9,7 @@ export type Recipe = {
   slug: string;
   title: string;
   tag: string;
+  image?: string;
   intro: string[];
   meta?: { servings?: string; servingSize?: string; prepTime?: string };
   ingredients?: string[];
@@ -22,6 +23,7 @@ export const recipes: Recipe[] = [
     slug: "kitchari",
     title: "Kitchari",
     tag: "Nourishing one-pot cleanse",
+    image: "/imagery/kitchari.jpg",
     intro: [
       "An Ayurvedic soup of split mung beans, basmati rice, and warming spices, designed to nourish and heal. The most-loved recipe on this site.",
       "Keep the vibe high when you cook. Sing, repeat a mantra, or play nice music.",
@@ -56,6 +58,7 @@ export const recipes: Recipe[] = [
     slug: "agni-nectar",
     title: "Agni Nectar",
     tag: "Digestive tonic",
+    image: "/imagery/AgniHoney-1.png",
     intro: [
       "A gentle, comforting digestive tonic made from lemon, honey, and fresh ginger, crafted to help keep your natural digestive fire steady and strong.",
       "Many find that a small sip before meals brings a sense of balance and ease, especially as the body's rhythms change with age. Warmth, brightness, and support from simple, familiar ingredients, a soothing daily ritual for anyone who wants to care for their digestion in a natural, nurturing way.",

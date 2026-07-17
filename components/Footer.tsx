@@ -59,7 +59,7 @@ export function Footer() {
               />
             </Link>
             <p className="mt-5 max-w-[30ch] font-serif text-[20px] italic leading-[1.5] text-ink-500">
-              {site.tagline}. Intuitive massage therapy in Burlington, VT.
+              {site.tagline}. Intuitive massage therapy in Charlotte, VT.
             </p>
           </div>
 
