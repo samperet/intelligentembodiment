@@ -219,7 +219,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
             <a href="/about#newsletter" className="text-copper-800 underline">
               sign up for the newsletter
             </a>
-            . Phone consultations are available below.
+. Initial consults are available below.
           </p>
         )}
         <div className="mx-auto grid max-w-[520px] gap-3.5">

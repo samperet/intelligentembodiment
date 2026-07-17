@@ -327,10 +327,10 @@ export function AdminPanel() {
                 onToggle={() => set("acceptingMassage", !settings.acceptingMassage)}
               />
               <Toggle
-                label="Accepting phone consultations"
+                label="Accepting initial consults"
                 on={settings.acceptingPhone}
-                onText="Phone consultations are bookable online."
-                offText="Phone consultations are paused — visitors are asked to call."
+                onText="Initial consults are bookable online."
+                offText="Initial consults are paused — visitors are asked to call."
                 onToggle={() => set("acceptingPhone", !settings.acceptingPhone)}
               />
             </div>

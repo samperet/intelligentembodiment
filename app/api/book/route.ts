@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       {
         error:
           service.category === "phone"
-            ? "Phone consultations aren’t being booked online right now. Please call or text to arrange one."
+            ? "Initial consults aren’t being booked online right now. Please call or text to arrange one."
             : "New massage appointments aren’t being booked online right now. Please call or text to arrange one.",
       },
       { status: 403 },

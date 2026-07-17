@@ -50,7 +50,7 @@ export const services: Service[] = [
   },
   {
     id: "phone-consultation",
-    name: "Phone Consultation",
+    name: "Initial Consult",
     durationMinutes: 60,
     price: 75,
     category: "phone",
