@@ -110,7 +110,7 @@ export default function AboutPage() {
               Looking for ways to address her own pain, her practice evolved
               towards Qi Gong, where she could focus on more subtle aspects of
               the energetic body. This eventually paved the way for her
-              introduction to Skylar Acemesis, Medical Intuitive, where she
+              introduction to Skylar Acamesis, Medical Intuitive, where she
               learned tools and techniques to channel the intuitive insights
               that were always present across her patient interactions into
               deeper wisdom and clarity that often help her clients address the
@@ -192,10 +192,21 @@ export default function AboutPage() {
           </Eyebrow>
           <div className="mx-auto mt-6 flex max-w-[760px] flex-wrap items-center justify-center gap-x-5 gap-y-2.5">
             {lineageTeachers.map((t, i) => (
-              <span key={t} className="inline-flex items-center gap-5">
-                <span className="font-serif text-[22px] text-white/90">
-                  {t}
-                </span>
+              <span key={t.name} className="inline-flex items-center gap-5">
+                {t.url ? (
+                  <a
+                    href={t.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-serif text-[22px] text-white/90 no-underline hover:text-white/90"
+                  >
+                    {t.name}
+                  </a>
+                ) : (
+                  <span className="font-serif text-[22px] text-white/90">
+                    {t.name}
+                  </span>
+                )}
                 {i < lineageTeachers.length - 1 && (
                   <span className="text-copper-500">·</span>
                 )}

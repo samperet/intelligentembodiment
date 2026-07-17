@@ -290,11 +290,20 @@ export const aboutPillars = [
   },
 ];
 
-export const lineageTeachers = [
-  "Richard Freeman", "John Friend", "Darren Rhodes", "Noah Maze",
-  "Neesha Zollinger", "Marc St. Pierre", "Myra Lewin", "Skeeter Tichnor",
-  "Caroline Myss", "Daisy Lee", "Christian Pankhurst", "Skylar Acemesis",
-  "Sufi Ruhaniat Order",
+export const lineageTeachers: { name: string; url?: string }[] = [
+  { name: "Richard Freeman", url: "https://www.richardfreemanyoga.com" },
+  { name: "John Friend", url: "https://bowspring.com" },
+  { name: "Darren Rhodes", url: "https://www.darrenrhodesyoga.com" },
+  { name: "Noah Maze", url: "https://themazemethod.com" },
+  { name: "Neesha Zollinger", url: "https://neeshayoga.com" },
+  { name: "Marc St. Pierre" },
+  { name: "Myra Lewin", url: "https://halepule.com" },
+  { name: "Skeeter Tichnor", url: "https://opentolifeyoga.com" },
+  { name: "Caroline Myss", url: "https://myss.com" },
+  { name: "Daisy Lee", url: "https://www.radiantlotusqigong.com" },
+  { name: "Christian Pankhurst", url: "https://heartiq.org" },
+  { name: "Skylar Acamesis", url: "https://skylaracamesis.com" },
+  { name: "Sufi Ruhaniat Order", url: "https://www.ruhaniat.org" },
 ];
 
 // Practice milestones. The two year figures auto-increment — they're computed
