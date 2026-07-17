@@ -53,22 +53,47 @@ export function KaleidoscopeMandala({
     ro.observe(parent);
 
     // Angular position + velocity (momentum model). Impulses are only added
-    // from mousemove over the header, so leaving simply stops the input and
-    // friction glides the spin to rest.
+    // while a pointer (mouse or finger) moves over the header, so leaving or
+    // lifting simply stops the input and friction glides the spin to rest.
     let angle = 0;
     let vel = 0;
 
     const MAX_VEL = 0.05;
-    const IMPULSE_K = 0.00004; // spin added per px of horizontal mouse motion
+    const IMPULSE_K = 0.00004; // spin added per px of horizontal motion
     const FRICTION = 0.965; // per-frame decay → gentle glide-down
 
-    const onMove = (e: MouseEvent) => {
+    // Pointer Events cover mouse, touch, and pen. Touch pointers don't report
+    // movementX, so track the previous x per pointer and derive the delta.
+    let lastX: number | null = null;
+    let lastId: number | null = null;
+
+    const onPointerMove = (e: PointerEvent) => {
       if (reduce) return;
-      vel += e.movementX * IMPULSE_K;
+      if (e.pointerId !== lastId) {
+        lastId = e.pointerId;
+        lastX = e.clientX;
+        return;
+      }
+      if (lastX === null) {
+        lastX = e.clientX;
+        return;
+      }
+      const dx = e.clientX - lastX;
+      lastX = e.clientX;
+      vel += dx * IMPULSE_K;
       if (vel > MAX_VEL) vel = MAX_VEL;
       else if (vel < -MAX_VEL) vel = -MAX_VEL;
     };
-    parent.addEventListener("mousemove", onMove, { passive: true });
+    const onPointerEnd = () => {
+      lastX = null;
+      lastId = null;
+    };
+    // Passive listeners: we never preventDefault, so vertical scrolling on
+    // touch is unaffected — only the horizontal component spins the mandala.
+    parent.addEventListener("pointermove", onPointerMove, { passive: true });
+    parent.addEventListener("pointerleave", onPointerEnd);
+    parent.addEventListener("pointerup", onPointerEnd);
+    parent.addEventListener("pointercancel", onPointerEnd);
 
     const seg = Math.max(2, Math.round(petals) * 2);
     const ang = (Math.PI * 2) / seg;
@@ -117,7 +142,10 @@ export function KaleidoscopeMandala({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      parent.removeEventListener("mousemove", onMove);
+      parent.removeEventListener("pointermove", onPointerMove);
+      parent.removeEventListener("pointerleave", onPointerEnd);
+      parent.removeEventListener("pointerup", onPointerEnd);
+      parent.removeEventListener("pointercancel", onPointerEnd);
     };
   }, [petals]);
 
