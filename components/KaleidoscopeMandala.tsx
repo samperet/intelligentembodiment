@@ -62,13 +62,24 @@ export function KaleidoscopeMandala({
     const IMPULSE_K = 0.00004; // spin added per px of horizontal motion
     const FRICTION = 0.965; // per-frame decay → gentle glide-down
 
-    // Pointer Events cover mouse, touch, and pen. Touch pointers don't report
-    // movementX, so track the previous x per pointer and derive the delta.
+    const addImpulse = (dx: number) => {
+      vel += dx * IMPULSE_K;
+      if (vel > MAX_VEL) vel = MAX_VEL;
+      else if (vel < -MAX_VEL) vel = -MAX_VEL;
+    };
+
+    // `touch-action: pan-y` lets iOS keep vertical scrolling while streaming
+    // horizontal drags to JS instead of cancelling the gesture as a scroll.
+    const prevTouchAction = parent.style.touchAction;
+    parent.style.touchAction = "pan-y";
+
+    // Mouse / pen via pointer events. Skip touch here — iOS fires both pointer
+    // and touch events, and touch is handled separately below to avoid
+    // double-counting. Track the previous x per pointer to derive the delta.
     let lastX: number | null = null;
     let lastId: number | null = null;
-
     const onPointerMove = (e: PointerEvent) => {
-      if (reduce) return;
+      if (reduce || e.pointerType === "touch") return;
       if (e.pointerId !== lastId) {
         lastId = e.pointerId;
         lastX = e.clientX;
@@ -80,20 +91,43 @@ export function KaleidoscopeMandala({
       }
       const dx = e.clientX - lastX;
       lastX = e.clientX;
-      vel += dx * IMPULSE_K;
-      if (vel > MAX_VEL) vel = MAX_VEL;
-      else if (vel < -MAX_VEL) vel = -MAX_VEL;
+      addImpulse(dx);
     };
     const onPointerEnd = () => {
       lastX = null;
       lastId = null;
     };
-    // Passive listeners: we never preventDefault, so vertical scrolling on
-    // touch is unaffected — only the horizontal component spins the mandala.
+
+    // Touch, handled natively for reliable iOS support.
+    let touchX: number | null = null;
+    const onTouchStart = (e: TouchEvent) => {
+      touchX = e.touches[0]?.clientX ?? null;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (reduce) return;
+      const x = e.touches[0]?.clientX;
+      if (x == null) return;
+      if (touchX == null) {
+        touchX = x;
+        return;
+      }
+      addImpulse(x - touchX);
+      touchX = x;
+    };
+    const onTouchEnd = () => {
+      touchX = null;
+    };
+
+    // Passive throughout: we never preventDefault, so vertical scroll is
+    // unaffected — only the horizontal component spins the mandala.
     parent.addEventListener("pointermove", onPointerMove, { passive: true });
     parent.addEventListener("pointerleave", onPointerEnd);
     parent.addEventListener("pointerup", onPointerEnd);
     parent.addEventListener("pointercancel", onPointerEnd);
+    parent.addEventListener("touchstart", onTouchStart, { passive: true });
+    parent.addEventListener("touchmove", onTouchMove, { passive: true });
+    parent.addEventListener("touchend", onTouchEnd, { passive: true });
+    parent.addEventListener("touchcancel", onTouchEnd, { passive: true });
 
     const seg = Math.max(2, Math.round(petals) * 2);
     const ang = (Math.PI * 2) / seg;
@@ -142,10 +176,15 @@ export function KaleidoscopeMandala({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      parent.style.touchAction = prevTouchAction;
       parent.removeEventListener("pointermove", onPointerMove);
       parent.removeEventListener("pointerleave", onPointerEnd);
       parent.removeEventListener("pointerup", onPointerEnd);
       parent.removeEventListener("pointercancel", onPointerEnd);
+      parent.removeEventListener("touchstart", onTouchStart);
+      parent.removeEventListener("touchmove", onTouchMove);
+      parent.removeEventListener("touchend", onTouchEnd);
+      parent.removeEventListener("touchcancel", onTouchEnd);
     };
   }, [petals]);
 
