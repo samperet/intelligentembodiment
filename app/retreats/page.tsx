@@ -17,7 +17,7 @@ const CURATED_POSTERS: { file: string; alt: string }[] = [
   { file: "desire.jpg", alt: "Exploring the Sacred Art of Desire" },
   { file: "OTL2.jpg", alt: "Opening to Love — a HeartIQ event" },
   { file: "Opening-to-Love-Dec-16-2018_HeartIQ.jpg", alt: "Opening to Love — day-long immersion" },
-  { file: "Screen-Shot-2019-08-11-at-7.38.37-PM.png", alt: "she — a women's weekend" },
+  { file: "she-womens-weekend.jpg", alt: "she — a women's weekend" },
   { file: "Yoga-Poster-Binder-Clips.png", alt: "Yoga with Mackensie" },
 ];
 

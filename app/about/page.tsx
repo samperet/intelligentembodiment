@@ -42,6 +42,12 @@ const galleryCols =
       ? "sm:grid-cols-2"
       : "mx-auto max-w-[760px]";
 
+// Featured wide photo (a retreat river crossing).
+const RIVER = "/imagery/DSC01452.jpg";
+const river = fs.existsSync(path.join(process.cwd(), "public", RIVER))
+  ? RIVER
+  : null;
+
 export default function AboutPage() {
   return (
     <>
@@ -66,27 +72,18 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Candid photos */}
-      {gallery.length > 0 && (
+      {/* Featured photo */}
+      {river && (
         <section className="px-6 pb-[clamp(48px,7vw,80px)]">
-          <div className="mx-auto max-w-container">
-            <div className={`grid gap-5 ${galleryCols}`}>
-              {gallery.map((p) => (
-                <figure key={p.file} className="group">
-                  <div className="overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)]">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/imagery/${p.file}`}
-                      alt={p.alt}
-                      className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
-                    />
-                  </div>
-                  <figcaption className="mt-3 text-center font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
-                    {p.caption}
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
+          <div className="mx-auto max-w-[1040px]">
+            <figure className="overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)]">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={river}
+                alt="Mackensie leading a river crossing on retreat"
+                className="aspect-[16/9] w-full object-cover"
+              />
+            </figure>
           </div>
         </section>
       )}
@@ -151,6 +148,27 @@ export default function AboutPage() {
               </div>
             ))}
           </div>
+
+          {/* Candid photos */}
+          {gallery.length > 0 && (
+            <div className={`mt-[clamp(36px,5vw,56px)] grid gap-5 ${galleryCols}`}>
+              {gallery.map((p) => (
+                <figure key={p.file} className="group">
+                  <div className="overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={`/imagery/${p.file}`}
+                      alt={p.alt}
+                      className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
+                    />
+                  </div>
+                  <figcaption className="mt-3 text-center font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                    {p.caption}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 

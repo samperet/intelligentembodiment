@@ -58,7 +58,7 @@ export const recipes: Recipe[] = [
     slug: "agni-nectar",
     title: "Agni Nectar",
     tag: "Digestive tonic",
-    image: "/imagery/AgniHoney-1.png",
+    image: "/imagery/AgniHoney-1.jpg",
     intro: [
       "A gentle, comforting digestive tonic made from lemon, honey, and fresh ginger, crafted to help keep your natural digestive fire steady and strong.",
       "Many find that a small sip before meals brings a sense of balance and ease, especially as the body's rhythms change with age. Warmth, brightness, and support from simple, familiar ingredients, a soothing daily ritual for anyone who wants to care for their digestion in a natural, nurturing way.",
