@@ -298,7 +298,7 @@ export const lineageTeachers: { name: string; url?: string }[] = [
   { name: "Neesha Zollinger", url: "https://neeshayoga.com" },
   { name: "Marc St. Pierre" },
   { name: "Myra Lewin", url: "https://halepule.com" },
-  { name: "Skeeter Tichnor", url: "https://opentolifeyoga.com" },
+  { name: "Skeeter Tichnor", url: "https://www.linkedin.com/in/skeeter-tichnor-047ba251/" },
   { name: "Caroline Myss", url: "https://myss.com" },
   { name: "Daisy Lee", url: "https://www.radiantlotusqigong.com" },
   { name: "Christian Pankhurst", url: "https://heartiq.org" },
