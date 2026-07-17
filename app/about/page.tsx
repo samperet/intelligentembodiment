@@ -135,7 +135,7 @@ export default function AboutPage() {
             {aboutPillars.map((p) => (
               <div
                 key={p.title}
-                className="rounded-xl border border-[color:var(--border)] bg-paper-2 p-8"
+                className="group rounded-xl border border-[color:var(--border)] bg-paper-2 p-8 text-center"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -143,7 +143,7 @@ export default function AboutPage() {
                   alt=""
                   width={30}
                   height={30}
-                  className="opacity-50"
+                  className="mx-auto opacity-50 transition-transform duration-[600ms] ease-out group-hover:rotate-90"
                 />
                 <h3 className="mt-4 font-serif text-[26px] text-ink-900">
                   {p.title}

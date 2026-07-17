@@ -286,7 +286,7 @@ export const aboutPillars = [
   },
   {
     title: "Medical Intuition",
-    body: "Training with Skylar Acemesis. Exploring the hidden patterns, emotional, energetic, physical, that live at the root of illness.",
+    body: "Training with Skylar Acamesis. Exploring the hidden patterns, emotional, energetic, physical, that live at the root of illness.",
   },
 ];
 
