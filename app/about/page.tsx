@@ -5,13 +5,16 @@ import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow, Stat } from "@/components/brand";
 import { RetreatInterest } from "@/components/RetreatInterest";
-import { aboutPillars, lineageTeachers, stats } from "@/lib/content";
+import { aboutPillars, lineageTeachers, getStats } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Mackensie Satya Priya, nearly three decades of devoted practice in yoga, bodywork, and the art of healing.",
+    "Mackensie Satya Priya, three decades of devoted practice in yoga, bodywork, and the art of healing.",
 };
+
+// Regenerate at most daily so the auto-calculated year figures stay current.
+export const revalidate = 86400;
 
 // Candid photos surfaced only when the file is actually present in
 // public/imagery, so a missing file never renders a broken box.
@@ -49,13 +52,14 @@ const river = fs.existsSync(path.join(process.cwd(), "public", RIVER))
   : null;
 
 export default function AboutPage() {
+  const stats = getStats();
   return (
     <>
       <PageHero
         eyebrow="Healer · Teacher · Guide"
         title={
           <>
-            Nearly three decades of{" "}
+            Three decades of{" "}
             <em className="text-copper-800">devoted practice</em>
           </>
         }

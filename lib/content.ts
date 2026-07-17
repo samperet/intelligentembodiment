@@ -297,9 +297,17 @@ export const lineageTeachers = [
   "Sufi Ruhaniat Order",
 ];
 
-export const stats = [
-  { value: "30", label: "Years of Bodywork" },
-  { value: "28", label: "Years Teaching Yoga" },
-  { value: "5", label: "Teacher Trainings" },
-  { value: "7+", label: "Silent Retreats" },
-];
+// Practice milestones. The two year figures auto-increment — they're computed
+// from the current year, so they go up by one each year with no manual edit.
+const BODYWORK_SINCE = 1996; // 30 years as of 2026
+const YOGA_TEACHING_SINCE = 1998; // 28 years as of 2026
+
+export function getStats() {
+  const year = new Date().getFullYear();
+  return [
+    { value: `${year - BODYWORK_SINCE}`, label: "Years of Bodywork" },
+    { value: `${year - YOGA_TEACHING_SINCE}`, label: "Years Teaching Yoga" },
+    { value: "5", label: "Teacher Trainings" },
+    { value: "7+", label: "Silent Retreats" },
+  ];
+}

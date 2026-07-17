@@ -9,6 +9,7 @@ import {
   site,
   type Service,
 } from "@/lib/site";
+import { WhatToExpect } from "./WhatToExpect";
 
 type Slot = { start: string; end: string; label: string };
 
@@ -211,6 +212,15 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     <div className="mx-auto grid max-w-4xl gap-6">
       {/* Step 1, Session */}
       <StepCard showHeader={false}>
+        {accept && !accept.massage && accept.phone && (
+          <p className="mx-auto mb-5 max-w-[520px] rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[15px] leading-[1.6] text-ink-600">
+            Massage sessions aren&apos;t being booked online right now. Please{" "}
+            <a href={site.phoneHref} className="text-copper-800 underline">
+              call or text
+            </a>{" "}
+            to arrange one. Phone consultations are available below.
+          </p>
+        )}
         <div className="mx-auto grid max-w-[520px] gap-3.5">
           {bookableServices.map((s) => {
             const active = service?.id === s.id;
@@ -234,6 +244,9 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
               </button>
             );
           })}
+        </div>
+        <div className="mt-6 text-center">
+          <WhatToExpect />
         </div>
       </StepCard>
 

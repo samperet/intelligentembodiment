@@ -6,7 +6,10 @@ import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { Suspense } from "react";
 import { BookingWidget } from "@/components/BookingWidget";
 import { site } from "@/lib/site";
-import { stats } from "@/lib/content";
+import { getStats } from "@/lib/content";
+
+// Regenerate at most daily so the auto-calculated year figures stay current.
+export const revalidate = 86400;
 
 // Resolve Mackensie's portrait at build time so we never render a broken
 // image. Drop a file at one of these paths in public/imagery to have it
@@ -23,6 +26,7 @@ const portrait =
     .find((p) => fs.existsSync(path.join(process.cwd(), "public", p))) ?? null;
 
 export default function HomePage() {
+  const stats = getStats();
   return (
     <>
       {/* ── Hero ─────────────────────────────────────────────────────────── */}
@@ -158,7 +162,7 @@ export default function HomePage() {
                   className="mt-3 font-serif text-ink-900"
                   style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
                 >
-                  Nearly three decades of devoted practice
+                  Three decades of devoted practice
                 </h2>
                 <p className="mt-5 font-sans text-[18px] leading-[1.75] text-ink-500">
                   Some practitioners accumulate credentials. Others accumulate
@@ -177,7 +181,7 @@ export default function HomePage() {
                 className="mt-3 font-serif text-ink-900"
                 style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
               >
-                Nearly three decades of devoted practice
+                Three decades of devoted practice
               </h2>
               <p className="mt-5 font-sans text-[18px] leading-[1.75] text-ink-500">
                 Some practitioners accumulate credentials. Others accumulate
@@ -210,7 +214,7 @@ export default function HomePage() {
           className="pointer-events-none absolute bottom-[-24%] right-[-8%] w-[440px] opacity-[0.05]"
         />
         <div className="relative mx-auto max-w-container">
-          <Eyebrow align="center">In Their Words</Eyebrow>
+          <Eyebrow align="center">Testimonials from previous work</Eyebrow>
           <div className="mt-[clamp(32px,5vw,56px)]">
             <TestimonialCarousel />
           </div>
