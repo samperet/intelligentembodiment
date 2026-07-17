@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -6,6 +8,12 @@ import { recipes, getRecipe } from "@/lib/content";
 
 export function generateStaticParams() {
   return recipes.map((r) => ({ slug: r.slug }));
+}
+
+// A recipe photo shows when public/imagery/recipe-<slug>.jpg is present.
+function recipePhoto(slug: string): string | null {
+  const rel = `/imagery/recipe-${slug}.jpg`;
+  return fs.existsSync(path.join(process.cwd(), "public", rel)) ? rel : null;
 }
 
 export function generateMetadata({
@@ -24,6 +32,7 @@ export function generateMetadata({
 export default function RecipePage({ params }: { params: { slug: string } }) {
   const r = getRecipe(params.slug);
   if (!r) notFound();
+  const photo = recipePhoto(r.slug);
 
   return (
     <article className="px-6 pb-[clamp(56px,8vw,96px)]">
@@ -48,6 +57,16 @@ export default function RecipePage({ params }: { params: { slug: string } }) {
       </header>
 
       <div className="mx-auto max-w-[720px]">
+        {photo && (
+          <div className="mb-[clamp(28px,4vw,44px)] overflow-hidden rounded-2xl shadow-md ring-1 ring-[color:var(--border)]">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photo}
+              alt={r.title}
+              className="aspect-[3/2] w-full object-cover"
+            />
+          </div>
+        )}
         {/* Intro */}
         <div className="space-y-4">
           {r.intro.map((p, i) => (

@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
 import { Eyebrow, Stat } from "@/components/brand";
 import { RetreatInterest } from "@/components/RetreatInterest";
@@ -196,6 +197,11 @@ export default function AboutPage() {
             Hear about retreats, events, women&apos;s circles, and immersions.
           </p>
           <RetreatInterest />
+          <div className="mt-8">
+            <Link href="/retreats" className="btn btn-secondary btn-md">
+              See previous retreats
+            </Link>
+          </div>
         </div>
       </section>
     </>
