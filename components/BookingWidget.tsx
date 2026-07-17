@@ -214,11 +214,12 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       <StepCard showHeader={false}>
         {accept && !accept.massage && accept.phone && (
           <p className="mx-auto mb-5 max-w-[520px] rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[15px] leading-[1.6] text-ink-600">
-            Massage sessions aren&apos;t being booked online right now. Please{" "}
-            <a href={site.phoneHref} className="text-copper-800 underline">
-              call or text
-            </a>{" "}
-            to arrange one. Phone consultations are available below.
+            Massages are not currently being scheduled. If you&apos;d like to be
+            informed when they return,{" "}
+            <a href="/about#newsletter" className="text-copper-800 underline">
+              sign up for the newsletter
+            </a>
+            . Phone consultations are available below.
           </p>
         )}
         <div className="mx-auto grid max-w-[520px] gap-3.5">
