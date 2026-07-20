@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { AdminNotifications } from "./AdminNotifications";
 
 type Subscriber = { name: string; email: string; date: string };
 type TestimonialStatus = "pending" | "approved" | "rejected";
@@ -424,6 +425,9 @@ export function AdminPanel() {
           </div>
         )}
       </section>
+
+      {/* ── Appointment notifications ────────────────────────────────────── */}
+      <AdminNotifications />
 
       {/* ── Testimonials approval ────────────────────────────────────────── */}
       <section className="mt-14">

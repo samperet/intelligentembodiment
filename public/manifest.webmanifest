@@ -1,0 +1,21 @@
+{
+  "name": "Intelligent Embodiment Admin",
+  "short_name": "IE Admin",
+  "description": "Manage bookings, testimonials, writings, recipes, and appointment notifications for Intelligent Embodiment.",
+  "start_url": "/admin",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F6EFE4",
+  "theme_color": "#3A366F",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    {
+      "src": "/icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

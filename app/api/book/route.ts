@@ -6,6 +6,7 @@ import {
 } from "@/lib/google";
 import { isSlotStillOpen } from "@/lib/availability";
 import { getBookingSettings } from "@/lib/r2";
+import { sendPushToAdmins } from "@/lib/push";
 import { buildICS } from "@/lib/ics";
 import { sendEmail } from "@/lib/email";
 import { bookingClientEmail, bookingOwnerEmail } from "@/lib/emails";
@@ -176,6 +177,18 @@ export async function POST(request: Request) {
       icsContent: ics,
       replyTo: email,
     });
+
+    // Push notification to the practitioner's installed admin app.
+    try {
+      await sendPushToAdmins({
+        title: `New booking · ${service.name}`,
+        body: `${name.trim()} — ${whenLabel}`,
+        url: "/admin",
+        tag: `booking-${startDate.getTime()}`,
+      });
+    } catch {
+      /* never block the booking on a push failure */
+    }
 
     return NextResponse.json({
       ok: true,

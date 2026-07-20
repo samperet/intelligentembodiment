@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { site } from "@/lib/site";
 import { Nav } from "@/components/Nav";
@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { ConditionalFooter } from "@/components/ConditionalFooter";
 import { AdminHotkey } from "@/components/AdminHotkey";
 import { PhoneChoice } from "@/components/PhoneChoice";
+import { PwaRegister } from "@/components/PwaRegister";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -37,7 +38,18 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/mandala.png",
+    apple: "/icons/apple-touch-icon.png",
   },
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "IE Admin",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#3A366F",
 };
 
 export default function RootLayout({
@@ -60,6 +72,7 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <PwaRegister />
         <AdminHotkey />
         <PhoneChoice />
         <Nav />

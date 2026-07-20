@@ -16,6 +16,9 @@ const BASE = "https://api.cloudflare.com/client/v4";
 const SUBS_KEY = "newsletter/subscribers.json";
 const SETTINGS_KEY = "booking/settings.json";
 const TESTIMONIALS_KEY = "testimonials/submissions.json";
+const PUSH_KEY = "push/subscriptions.json";
+const CONTENT_RECIPES_KEY = "content/recipes.json";
+const CONTENT_WRITINGS_KEY = "content/writings.json";
 
 export type Subscriber = { name: string; email: string; date: string };
 
@@ -220,4 +223,60 @@ export async function listApprovedTestimonials(): Promise<
   } catch {
     return [];
   }
+}
+
+// ── Web-push subscriptions ────────────────────────────────────────────────────
+export type PushSub = {
+  endpoint: string;
+  keys: { p256dh: string; auth: string };
+  expirationTime?: number | null;
+};
+
+export async function addPushSubscription(sub: PushSub): Promise<void> {
+  if (!isR2Configured()) return;
+  const list = (await getJson<PushSub[]>(PUSH_KEY)) || [];
+  if (!list.some((s) => s.endpoint === sub.endpoint)) {
+    list.push(sub);
+    await putJson(PUSH_KEY, list);
+  }
+}
+
+export async function listPushSubscriptions(): Promise<PushSub[]> {
+  if (!isR2Configured()) return [];
+  try {
+    return (await getJson<PushSub[]>(PUSH_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function removePushSubscription(endpoint: string): Promise<void> {
+  if (!isR2Configured()) return;
+  const list = (await getJson<PushSub[]>(PUSH_KEY)) || [];
+  const next = list.filter((s) => s.endpoint !== endpoint);
+  if (next.length !== list.length) await putJson(PUSH_KEY, next);
+}
+
+// ── Custom content (writings & recipes added via the admin editor) ────────────
+export async function listCustomRecipes<T>(): Promise<T[]> {
+  if (!isR2Configured()) return [];
+  try {
+    return (await getJson<T[]>(CONTENT_RECIPES_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+export async function saveCustomRecipes<T>(items: T[]): Promise<void> {
+  await putJson(CONTENT_RECIPES_KEY, items);
+}
+export async function listCustomWritings<T>(): Promise<T[]> {
+  if (!isR2Configured()) return [];
+  try {
+    return (await getJson<T[]>(CONTENT_WRITINGS_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+export async function saveCustomWritings<T>(items: T[]): Promise<void> {
+  await putJson(CONTENT_WRITINGS_KEY, items);
 }
