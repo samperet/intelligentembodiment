@@ -4,16 +4,22 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Eyebrow, Rule } from "@/components/brand";
-import { recipes, getRecipe } from "@/lib/content";
+import { recipes } from "@/lib/content";
+import { getRecipeMerged } from "@/lib/contentStore";
+
+// Built-in recipes are prerendered; admin-added slugs render on demand.
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return recipes.map((r) => ({ slug: r.slug }));
 }
 
 // A recipe photo: an explicit `image` from the content if present, otherwise
-// the public/imagery/recipe-<slug>.jpg convention. Verified on disk so a
-// missing file never renders a broken box.
+// the public/imagery/recipe-<slug>.jpg convention. Absolute URLs are used as
+// is; local paths are verified on disk so a missing file never renders broken.
 function recipePhoto(slug: string, explicit?: string): string | null {
+  if (explicit && /^https?:\/\//.test(explicit)) return explicit;
   const candidates = [explicit, `/imagery/recipe-${slug}.jpg`].filter(
     Boolean,
   ) as string[];
@@ -23,12 +29,12 @@ function recipePhoto(slug: string, explicit?: string): string | null {
   return null;
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
-  const r = getRecipe(params.slug);
+}): Promise<Metadata> {
+  const r = await getRecipeMerged(params.slug);
   if (!r) return {};
   return {
     title: `${r.title} · Recipes`,
@@ -36,8 +42,12 @@ export function generateMetadata({
   };
 }
 
-export default function RecipePage({ params }: { params: { slug: string } }) {
-  const r = getRecipe(params.slug);
+export default async function RecipePage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const r = await getRecipeMerged(params.slug);
   if (!r) notFound();
   const photo = recipePhoto(r.slug, r.image);
 

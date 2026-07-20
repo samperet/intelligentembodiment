@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
-import { writings } from "@/lib/content";
+import { getAllWritings } from "@/lib/contentStore";
 
 export const metadata: Metadata = {
   title: "Writings",
@@ -9,7 +9,11 @@ export const metadata: Metadata = {
     "Essays and poems by Mackensie Satya Priya, on embodiment, vulnerability, motherhood, and the path of the heart.",
 };
 
-export default function WritingsPage() {
+// Include admin-added writings; refresh at most hourly.
+export const revalidate = 3600;
+
+export default async function WritingsPage() {
+  const writings = await getAllWritings();
   return (
     <>
       <PageHero

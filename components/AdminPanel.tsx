@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { AdminNotifications } from "./AdminNotifications";
+import { AdminContent } from "./AdminContent";
 
 type Subscriber = { name: string; email: string; date: string };
 type TestimonialStatus = "pending" | "approved" | "rejected";
@@ -428,6 +429,9 @@ export function AdminPanel() {
 
       {/* ── Appointment notifications ────────────────────────────────────── */}
       <AdminNotifications />
+
+      {/* ── Writings & recipes editor ────────────────────────────────────── */}
+      <AdminContent />
 
       {/* ── Testimonials approval ────────────────────────────────────────── */}
       <section className="mt-14">

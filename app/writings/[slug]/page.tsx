@@ -2,24 +2,33 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Eyebrow, Rule } from "@/components/brand";
-import { writings, getWriting } from "@/lib/content";
+import { writings } from "@/lib/content";
+import { getAllWritings, getWritingMerged } from "@/lib/contentStore";
+
+// Built-in writings are prerendered; admin-added slugs render on demand.
+export const dynamicParams = true;
+export const revalidate = 3600;
 
 export function generateStaticParams() {
   return writings.map((w) => ({ slug: w.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
-  const w = getWriting(params.slug);
+}): Promise<Metadata> {
+  const w = await getWritingMerged(params.slug);
   if (!w) return {};
   return { title: `${w.title} · Writings`, description: w.excerpt };
 }
 
-export default function WritingPage({ params }: { params: { slug: string } }) {
-  const w = getWriting(params.slug);
+export default async function WritingPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const w = await getWritingMerged(params.slug);
   if (!w) notFound();
 
   const date = new Date(w.date + "T12:00:00").toLocaleDateString("en-US", {
@@ -29,8 +38,9 @@ export default function WritingPage({ params }: { params: { slug: string } }) {
   });
 
   // The next writing in the list (wraps back to the first at the end).
-  const idx = writings.findIndex((x) => x.slug === w.slug);
-  const next = writings[(idx + 1) % writings.length];
+  const all = await getAllWritings();
+  const idx = all.findIndex((x) => x.slug === w.slug);
+  const next = all[(idx + 1) % all.length];
 
   return (
     <article className="px-6 pb-[clamp(56px,8vw,96px)]">

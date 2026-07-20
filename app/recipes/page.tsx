@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { PageHero } from "@/components/PageHero";
-import { recipes } from "@/lib/content";
+import { getAllRecipes } from "@/lib/contentStore";
 
 export const metadata: Metadata = {
   title: "Recipes",
@@ -9,7 +9,11 @@ export const metadata: Metadata = {
     "Nourishing Ayurvedic recipes and rituals from Mackensie Satya Priya: Kitchari, Agni Nectar, Ghee-Soaked Dates, Digestive Teas, and Abhyanga.",
 };
 
-export default function RecipesPage() {
+// Include admin-added recipes; refresh at most hourly.
+export const revalidate = 3600;
+
+export default async function RecipesPage() {
+  const recipes = await getAllRecipes();
   return (
     <>
       <PageHero
