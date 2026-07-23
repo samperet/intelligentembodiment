@@ -10,6 +10,7 @@ import {
   type Service,
 } from "@/lib/site";
 import { WhatToExpect } from "./WhatToExpect";
+import { readUtmSource } from "./UtmCapture";
 
 type Slot = { start: string; end: string; label: string };
 
@@ -145,6 +146,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
           serviceId: service.id,
           start: selectedSlot.start,
           ...form,
+          source: readUtmSource(),
         }),
       });
       const data = await res.json();

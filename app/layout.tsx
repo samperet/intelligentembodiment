@@ -7,6 +7,8 @@ import { ConditionalFooter } from "@/components/ConditionalFooter";
 import { AdminHotkey } from "@/components/AdminHotkey";
 import { PhoneChoice } from "@/components/PhoneChoice";
 import { PwaRegister } from "@/components/PwaRegister";
+import { UtmCapture } from "@/components/UtmCapture";
+import { Suspense } from "react";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -73,6 +75,9 @@ export default function RootLayout({
       </head>
       <body>
         <PwaRegister />
+        <Suspense>
+          <UtmCapture />
+        </Suspense>
         <AdminHotkey />
         <PhoneChoice />
         <Nav />

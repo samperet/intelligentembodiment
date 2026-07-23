@@ -25,6 +25,11 @@ export async function POST(request: Request) {
   }
 
   const { serviceId, start, name, email, phone, notes } = payload ?? {};
+  // Campaign attribution (utm tags captured on the client). Optional.
+  const source =
+    typeof payload?.source === "string" && payload.source.trim()
+      ? payload.source.trim().slice(0, 200)
+      : null;
 
   // ── Validation ──────────────────────────────────────────────────────────
   const service = getService(serviceId);
@@ -90,6 +95,7 @@ export async function POST(request: Request) {
     `Email: ${email}`,
     phone ? `Phone: ${phone}` : null,
     notes ? `Notes: ${notes}` : null,
+    source ? `Source: ${source}` : null,
   ].filter(Boolean);
   const description = descriptionLines.join("\n");
 
@@ -167,7 +173,7 @@ export async function POST(request: Request) {
       service: service.name,
       price: service.price,
       when: whenLabel,
-      notes,
+      notes: source ? `${notes ? `${notes}\n` : ""}Source: ${source}` : notes,
     });
     await sendEmail({
       to: [process.env.OWNER_EMAIL || site.email],
@@ -182,7 +188,7 @@ export async function POST(request: Request) {
     try {
       await sendPushToAdmins({
         title: `New booking · ${service.name}`,
-        body: `${name.trim()} — ${whenLabel}`,
+        body: `${name.trim()} — ${whenLabel}${source ? ` (via ${source})` : ""}`,
         url: "/admin",
         tag: `booking-${startDate.getTime()}`,
       });
