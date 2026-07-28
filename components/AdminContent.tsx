@@ -9,6 +9,7 @@ type WritingRow = {
   date: string;
   kind: string;
   status: "original" | "edited" | "yours";
+  draft: boolean;
 };
 
 const emptyRecipe = {
@@ -83,12 +84,22 @@ export function AdminContent() {
     }
   }
 
-  return (
-    <section className="mt-14">
-      <h2 className="font-serif text-[28px] text-ink-900">
-        Writings &amp; Recipes
-      </h2>
+  async function toggleDraft(w: WritingRow) {
+    setBusy(true);
+    setMsg(null);
+    try {
+      await post({ action: "set-draft", slug: w.slug, draft: !w.draft });
+      await refresh();
+    } catch (err: any) {
+      setOk(false);
+      setMsg(err.message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
+  return (
+    <div>
       {r2 === false && (
         <p className="mt-4 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
           R2 isn’t configured, so edits can’t be saved. Set{" "}
@@ -130,7 +141,9 @@ export function AdminContent() {
                     href={`/writings/${w.slug}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="truncate font-serif text-[17px] text-ink-900 hover:text-copper-800"
+                    className={`truncate font-serif text-[17px] hover:text-copper-800 ${
+                      w.draft ? "text-ink-400" : "text-ink-900"
+                    }`}
                   >
                     {w.title}
                   </a>
@@ -147,6 +160,23 @@ export function AdminContent() {
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    disabled={busy}
+                    onClick={() => toggleDraft(w)}
+                    title={
+                      w.draft
+                        ? "Hidden from the site — click to publish"
+                        : "Visible on the site — click to unpublish"
+                    }
+                    className={`rounded-full border px-3 py-1 font-sans text-[12px] font-medium uppercase tracking-[0.1em] transition ${
+                      w.draft
+                        ? "border-[color:var(--border-strong)] bg-sand text-ink-500 hover:border-copper-700"
+                        : "border-copper-800 bg-copper-700 text-white hover:bg-copper-800"
+                    }`}
+                  >
+                    {w.draft ? "Draft" : "Live"}
+                  </button>
                   <a
                     href={`/admin/write?slug=${w.slug}`}
                     className="font-sans text-[13px] font-medium text-copper-800 underline"
@@ -236,7 +266,7 @@ export function AdminContent() {
           </div>
         )}
       </div>
-    </section>
+    </div>
   );
 }
 

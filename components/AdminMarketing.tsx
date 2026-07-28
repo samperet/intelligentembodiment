@@ -79,15 +79,9 @@ export function AdminMarketing() {
   }
 
   return (
-    <section className="mt-14">
-      <h2 className="font-serif text-[28px] text-ink-900">Marketing Studio</h2>
-      <p className="mt-1 font-sans text-[15px] text-ink-500">
-        Campaign links and ready-to-paste ad copy. Bookings that arrive through
-        a tagged link show their source on the appointment.
-      </p>
-
+    <div>
       {/* UTM link builder */}
-      <div className="mt-6 rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
+      <div className="rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
         <h3 className="font-serif text-[21px] text-ink-900">Campaign link builder</h3>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block">
@@ -162,6 +156,6 @@ export function AdminMarketing() {
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 }

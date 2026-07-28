@@ -44,16 +44,24 @@ export function recipeSlugsTaken(custom: Recipe[]): string[] {
 export async function getCustomWritings(): Promise<Writing[]> {
   return listCustomWritings<Writing>();
 }
+// A custom entry owns its slug (overriding any built-in original). A custom
+// entry marked draft:true unpublishes that slug from the public site.
 export async function getAllWritings(): Promise<Writing[]> {
   const custom = await getCustomWritings();
-  const overridden = new Set(custom.map((w) => w.slug));
-  return [...custom, ...builtinWritings.filter((w) => !overridden.has(w.slug))].sort(
-    (a, b) => (a.date < b.date ? 1 : -1),
-  );
+  const owned = new Set(custom.map((w) => w.slug));
+  return [
+    ...custom.filter((w) => !w.draft),
+    ...builtinWritings.filter((w) => !owned.has(w.slug)),
+  ].sort((a, b) => (a.date < b.date ? 1 : -1));
 }
-export async function getWritingMerged(slug: string): Promise<Writing | undefined> {
+export async function getWritingMerged(
+  slug: string,
+  opts?: { includeDrafts?: boolean },
+): Promise<Writing | undefined> {
   const custom = await getCustomWritings();
-  return custom.find((w) => w.slug === slug) ?? getBuiltinWriting(slug);
+  const own = custom.find((w) => w.slug === slug);
+  if (own) return own.draft && !opts?.includeDrafts ? undefined : own;
+  return getBuiltinWriting(slug);
 }
 export async function addCustomWriting(w: Writing): Promise<void> {
   const custom = await getCustomWritings();

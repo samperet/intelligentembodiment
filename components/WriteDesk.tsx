@@ -16,6 +16,7 @@ type Draft = {
   date: string;
   excerpt: string;
   body: string;
+  draft: boolean;
 };
 
 const fresh = (): Draft => ({
@@ -25,6 +26,8 @@ const fresh = (): Draft => ({
   date: new Date().toISOString().slice(0, 10),
   excerpt: "",
   body: "",
+  // New pieces start as drafts; flip the toggle to publish.
+  draft: true,
 });
 
 const draftKey = (slug: string | null) => `ie_desk_${slug ?? "new"}`;
@@ -74,6 +77,7 @@ export function WriteDesk() {
               date: data.writing.date || fresh().date,
               excerpt: data.writing.excerpt || "",
               body: data.writing.body || "",
+              draft: !!data.writing.draft,
             });
           }
         }
@@ -186,13 +190,36 @@ export function WriteDesk() {
                 </button>
               ))}
             </div>
+            <div className="flex rounded-full border border-[color:var(--border-strong)] p-0.5">
+              {(
+                [
+                  ["draft", true],
+                  ["live", false],
+                ] as const
+              ).map(([label, isDraft]) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => set("draft", isDraft)}
+                  className={`rounded-full px-4 py-1.5 font-sans text-[13px] capitalize transition ${
+                    d.draft === isDraft
+                      ? isDraft
+                        ? "bg-sand text-ink-700"
+                        : "bg-copper-700 text-white"
+                      : "text-ink-500 hover:text-ink-900"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
             <button
               type="button"
               onClick={publish}
               disabled={publishing || !d.title.trim()}
               className="btn btn-primary btn-sm"
             >
-              {publishing ? "Publishing…" : "Publish"}
+              {publishing ? "Saving…" : d.draft ? "Save draft" : "Publish"}
             </button>
           </div>
         </div>
@@ -210,16 +237,22 @@ export function WriteDesk() {
           )}
           {published && (
             <p className="rounded-lg bg-sand px-4 py-2.5 font-sans text-[13px] text-ink-600">
-              Live on the site.{" "}
-              <a
-                href={`/writings/${published}`}
-                target="_blank"
-                rel="noreferrer"
-                className="text-copper-800 underline"
-              >
-                View it →
-              </a>{" "}
-              (updates may take up to an hour to appear)
+              {d.draft ? (
+                <>Saved as a draft — not visible on the site.</>
+              ) : (
+                <>
+                  Live on the site.{" "}
+                  <a
+                    href={`/writings/${published}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-copper-800 underline"
+                  >
+                    View it →
+                  </a>{" "}
+                  (updates may take up to an hour to appear)
+                </>
+              )}
             </p>
           )}
           {error && (

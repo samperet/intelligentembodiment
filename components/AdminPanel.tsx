@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { AdminNotifications } from "./AdminNotifications";
 import { AdminContent } from "./AdminContent";
 import { AdminMarketing } from "./AdminMarketing";
+import { AdminSection } from "./AdminSection";
 
 type Subscriber = { name: string; email: string; date: string };
 type TestimonialStatus = "pending" | "approved" | "rejected";
@@ -293,7 +294,8 @@ export function AdminPanel() {
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-16">
-      <div className="mb-6 flex justify-end">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="font-serif text-[34px] text-ink-900">Admin</h1>
         <button
           type="button"
           onClick={signOut}
@@ -303,14 +305,10 @@ export function AdminPanel() {
         </button>
       </div>
       {/* ── Booking availability ─────────────────────────────────────────── */}
-      <section>
-        <h1 className="font-serif text-[34px] text-ink-900">
-          Booking Availability
-        </h1>
-        <p className="mt-1 font-sans text-[16px] text-ink-500">
-          When clients are allowed to book. Times are in the practice timezone
-          (Eastern).
-        </p>
+      <AdminSection
+        title="Booking Availability"
+        subtitle="When clients are allowed to book (Eastern time)."
+      >
         {persisted === false && (
           <p className="mt-3 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
             These are the built-in defaults, nothing is saved to R2 yet. If a
@@ -426,32 +424,39 @@ export function AdminPanel() {
             </div>
           </div>
         )}
-      </section>
+      </AdminSection>
 
       {/* ── Appointment notifications ────────────────────────────────────── */}
-      <AdminNotifications />
+      <AdminSection
+        title="Appointment Notifications"
+        subtitle="Push alerts to this device when a session is booked."
+      >
+        <AdminNotifications />
+      </AdminSection>
 
       {/* ── Writings & recipes editor ────────────────────────────────────── */}
-      <AdminContent />
+      <AdminSection
+        title="Writings & Recipes"
+        subtitle="The writing desk, drafts, and recipe publishing."
+      >
+        <AdminContent />
+      </AdminSection>
 
       {/* ── Marketing studio ─────────────────────────────────────────────── */}
-      <AdminMarketing />
+      <AdminSection
+        title="Marketing Studio"
+        subtitle="Campaign links and ready-to-paste ad copy."
+      >
+        <AdminMarketing />
+      </AdminSection>
 
       {/* ── Testimonials approval ────────────────────────────────────────── */}
-      <section className="mt-14">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="font-serif text-[28px] text-ink-900">Testimonials</h2>
-            <p className="mt-1 font-sans text-[15px] text-ink-500">
-              {testimonials.filter((t) => t.status === "pending").length} awaiting
-              review · {testimonials.filter((t) => t.status === "approved").length}{" "}
-              published
-            </p>
-          </div>
-        </div>
-
+      <AdminSection
+        title="Testimonials"
+        subtitle={`${testimonials.filter((t) => t.status === "pending").length} awaiting review · ${testimonials.filter((t) => t.status === "approved").length} published`}
+      >
         {testimonials.length === 0 ? (
-          <p className="mt-8 font-sans text-[16px] text-ink-500">
+          <p className="font-sans text-[16px] text-ink-500">
             No testimonials submitted yet. Share the{" "}
             <a href="/share" className="text-copper-800 underline">
               /share
@@ -554,20 +559,14 @@ export function AdminPanel() {
               ))}
           </ul>
         )}
-      </section>
+      </AdminSection>
 
       {/* ── Newsletter subscribers ───────────────────────────────────────── */}
-      <section className="mt-14">
+      <AdminSection
+        title="Newsletter Subscribers"
+        subtitle={`${entries.length} ${entries.length === 1 ? "subscriber" : "subscribers"}`}
+      >
         <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <h2 className="font-serif text-[30px] text-ink-900">
-              Newsletter Subscribers
-            </h2>
-            <p className="mt-1 font-sans text-[16px] text-ink-500">
-              {entries.length}{" "}
-              {entries.length === 1 ? "subscriber" : "subscribers"}
-            </p>
-          </div>
           <div className="flex gap-3">
             <button
               type="button"
@@ -646,7 +645,7 @@ export function AdminPanel() {
             </table>
           </div>
         )}
-      </section>
+      </AdminSection>
     </div>
   );
 }

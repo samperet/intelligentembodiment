@@ -65,6 +65,7 @@ export async function POST(request: Request) {
         kind: w.kind,
         // "edited" = overrides a built-in original; "yours" = brand new.
         status: builtinSlugs.has(w.slug) ? "edited" : "yours",
+        draft: !!w.draft,
       })),
       ...builtinWritings
         .filter((w) => !customSlugs.has(w.slug))
@@ -74,6 +75,7 @@ export async function POST(request: Request) {
           date: w.date,
           kind: w.kind,
           status: "original",
+          draft: false,
         })),
     ].sort((a, b) => (a.date < b.date ? 1 : -1));
     return NextResponse.json({
@@ -85,15 +87,20 @@ export async function POST(request: Request) {
     });
   }
 
-  // Load one writing (built-in or custom) into the editor.
+  // Load one writing (built-in, custom, or draft) into the editor.
   if (action === "get-writing") {
-    const w = await getWritingMerged(String(body.slug || ""));
+    const w = await getWritingMerged(String(body.slug || ""), {
+      includeDrafts: true,
+    });
     if (!w) return NextResponse.json({ error: "Not found." }, { status: 404 });
     const text =
       w.kind === "poem" && w.stanzas
         ? w.stanzas.map((st) => st.join("\n")).join("\n\n")
         : (w.paragraphs || []).join("\n\n");
-    return NextResponse.json({ ok: true, writing: { ...w, body: text } });
+    return NextResponse.json({
+      ok: true,
+      writing: { ...w, draft: !!w.draft, body: text },
+    });
   }
 
   if (!isR2Configured()) {
@@ -167,6 +174,7 @@ export async function POST(request: Request) {
         date,
         kind,
         excerpt,
+        ...(f.draft ? { draft: true } : {}),
         // Preserve a built-in original's related link across edits.
         ...(original?.related ? { related: original.related } : {}),
         ...(kind === "poem"
@@ -221,6 +229,25 @@ export async function POST(request: Request) {
     if (action === "delete-writing") {
       await deleteCustomWriting(String(body.slug || ""));
       return NextResponse.json({ ok: true, writings: await getCustomWritings() });
+    }
+
+    // Publish/unpublish from the list. Drafting a built-in original creates a
+    // draft override (hiding it from the site); publishing restores it.
+    if (action === "set-draft") {
+      const slug = String(body.slug || "");
+      const draft = !!body.draft;
+      const custom = await getCustomWritings();
+      const own = custom.find((w) => w.slug === slug);
+      if (own) {
+        const { draft: _prev, ...rest } = own;
+        await addCustomWriting({ ...rest, ...(draft ? { draft: true } : {}) });
+      } else if (draft) {
+        const w = await getWritingMerged(slug, { includeDrafts: true });
+        if (!w)
+          return NextResponse.json({ error: "Not found." }, { status: 404 });
+        await addCustomWriting({ ...w, draft: true });
+      }
+      return NextResponse.json({ ok: true });
     }
   } catch (err: any) {
     return NextResponse.json(

@@ -102,17 +102,9 @@ export function AdminNotifications() {
   }
 
   return (
-    <section className="mt-14">
-      <h2 className="font-serif text-[28px] text-ink-900">
-        Appointment Notifications
-      </h2>
-      <p className="mt-1 font-sans text-[15px] text-ink-500">
-        Get a push notification the moment a session is booked. Install this
-        page to your home screen first, then enable it here.
-      </p>
-
+    <div>
       {configured === false && (
-        <p className="mt-4 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
+        <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
           Notifications aren’t configured yet. Set{" "}
           <code>VAPID_PUBLIC_KEY</code>, <code>VAPID_PRIVATE_KEY</code>, and{" "}
           <code>VAPID_SUBJECT</code> in the environment (and R2 to store
@@ -154,6 +146,6 @@ export function AdminNotifications() {
           </span>
         )}
       </div>
-    </section>
+    </div>
   );
 }

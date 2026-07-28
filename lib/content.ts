@@ -109,6 +109,7 @@ export type Writing = {
   date: string; // ISO
   kind: "essay" | "poem";
   excerpt: string;
+  draft?: boolean; // drafts are hidden from the public site
   paragraphs?: string[]; // essays
   stanzas?: string[][]; // poems: stanza -> lines
   related?: { label: string; href: string };
