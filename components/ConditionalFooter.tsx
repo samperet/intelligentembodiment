@@ -2,11 +2,16 @@
 
 import { usePathname } from "next/navigation";
 
-// Hide the site footer on specific routes (e.g. the focused /share page).
-const HIDE_ON = ["/share"];
-
-export function ConditionalFooter({ children }: { children: React.ReactNode }) {
+// Hide site chrome (nav/footer) on focused routes like /share or the
+// distraction-free writing desk.
+export function ConditionalFooter({
+  children,
+  hideOn = ["/share"],
+}: {
+  children: React.ReactNode;
+  hideOn?: string[];
+}) {
   const pathname = usePathname();
-  if (pathname && HIDE_ON.includes(pathname)) return null;
+  if (pathname && hideOn.includes(pathname)) return null;
   return <>{children}</>;
 }

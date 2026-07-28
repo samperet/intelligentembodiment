@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isAuthorized } from "@/lib/adminAuth";
 import { isR2Configured } from "@/lib/r2";
-import type { Recipe, Writing } from "@/lib/content";
+import { writings as builtinWritings, type Recipe, type Writing } from "@/lib/content";
 import {
   getCustomRecipes,
   getCustomWritings,
@@ -9,6 +9,7 @@ import {
   deleteCustomRecipe,
   addCustomWriting,
   deleteCustomWriting,
+  getWritingMerged,
   recipeSlugsTaken,
   writingSlugsTaken,
   slugify,
@@ -54,12 +55,45 @@ export async function POST(request: Request) {
       getCustomRecipes(),
       getCustomWritings(),
     ]);
+    const customSlugs = new Set(writings.map((w) => w.slug));
+    const builtinSlugs = new Set(builtinWritings.map((w) => w.slug));
+    const allWritings = [
+      ...writings.map((w) => ({
+        slug: w.slug,
+        title: w.title,
+        date: w.date,
+        kind: w.kind,
+        // "edited" = overrides a built-in original; "yours" = brand new.
+        status: builtinSlugs.has(w.slug) ? "edited" : "yours",
+      })),
+      ...builtinWritings
+        .filter((w) => !customSlugs.has(w.slug))
+        .map((w) => ({
+          slug: w.slug,
+          title: w.title,
+          date: w.date,
+          kind: w.kind,
+          status: "original",
+        })),
+    ].sort((a, b) => (a.date < b.date ? 1 : -1));
     return NextResponse.json({
       ok: true,
       r2Configured: isR2Configured(),
       recipes,
       writings,
+      allWritings,
     });
+  }
+
+  // Load one writing (built-in or custom) into the editor.
+  if (action === "get-writing") {
+    const w = await getWritingMerged(String(body.slug || ""));
+    if (!w) return NextResponse.json({ error: "Not found." }, { status: 404 });
+    const text =
+      w.kind === "poem" && w.stanzas
+        ? w.stanzas.map((st) => st.join("\n")).join("\n\n")
+        : (w.paragraphs || []).join("\n\n");
+    return NextResponse.json({ ok: true, writing: { ...w, body: text } });
   }
 
   if (!isR2Configured()) {
@@ -101,6 +135,51 @@ export async function POST(request: Request) {
     if (action === "delete-recipe") {
       await deleteCustomRecipe(String(body.slug || ""));
       return NextResponse.json({ ok: true, recipes: await getCustomRecipes() });
+    }
+
+    // Save from the writing desk. An explicit slug keeps its identity —
+    // matching a built-in slug overrides that original on the site.
+    if (action === "save-writing") {
+      const f = body.writing || {};
+      const title = String(f.title || "").trim();
+      if (title.length < 2)
+        return NextResponse.json({ error: "A title is required." }, { status: 400 });
+      const kind: Writing["kind"] = f.kind === "poem" ? "poem" : "essay";
+      const custom = await getCustomWritings();
+      const explicit =
+        typeof f.slug === "string" && /^[a-z0-9-]{2,80}$/.test(f.slug)
+          ? f.slug
+          : null;
+      const slug =
+        explicit ?? uniqueSlug(slugify(title), writingSlugsTaken(custom));
+      const bodyText = String(f.body || "");
+      const paragraphs = paras(bodyText);
+      const excerpt =
+        String(f.excerpt || "").trim() || (paragraphs[0] || "").slice(0, 180);
+      const date =
+        typeof f.date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(f.date)
+          ? f.date
+          : new Date().toISOString().slice(0, 10);
+      const original = builtinWritings.find((w) => w.slug === slug);
+      const writing: Writing = {
+        slug,
+        title,
+        date,
+        kind,
+        excerpt,
+        // Preserve a built-in original's related link across edits.
+        ...(original?.related ? { related: original.related } : {}),
+        ...(kind === "poem"
+          ? {
+              stanzas: bodyText
+                .split(/\n\s*\n/)
+                .map((st) => st.split("\n").map((l) => l.trim()).filter(Boolean))
+                .filter((st) => st.length),
+            }
+          : { paragraphs: paragraphs.length ? paragraphs : [""] }),
+      };
+      await addCustomWriting(writing);
+      return NextResponse.json({ ok: true, slug });
     }
 
     if (action === "add-writing") {

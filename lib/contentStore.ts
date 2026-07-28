@@ -21,7 +21,8 @@ export async function getCustomRecipes(): Promise<Recipe[]> {
 }
 export async function getAllRecipes(): Promise<Recipe[]> {
   const custom = await getCustomRecipes();
-  return [...custom, ...builtinRecipes];
+  const overridden = new Set(custom.map((r) => r.slug));
+  return [...custom, ...builtinRecipes.filter((r) => !overridden.has(r.slug))];
 }
 export async function getRecipeMerged(slug: string): Promise<Recipe | undefined> {
   const custom = await getCustomRecipes();
@@ -45,8 +46,9 @@ export async function getCustomWritings(): Promise<Writing[]> {
 }
 export async function getAllWritings(): Promise<Writing[]> {
   const custom = await getCustomWritings();
-  return [...custom, ...builtinWritings].sort((a, b) =>
-    a.date < b.date ? 1 : -1,
+  const overridden = new Set(custom.map((w) => w.slug));
+  return [...custom, ...builtinWritings.filter((w) => !overridden.has(w.slug))].sort(
+    (a, b) => (a.date < b.date ? 1 : -1),
   );
 }
 export async function getWritingMerged(slug: string): Promise<Writing | undefined> {
