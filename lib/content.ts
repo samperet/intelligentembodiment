@@ -116,6 +116,24 @@ export type Writing = {
 
 export const writings: Writing[] = [
   {
+    slug: "nine-times-out-of-ten",
+    title: "Nine Times Out of Ten",
+    date: "2026-07-28",
+    kind: "essay",
+    excerpt:
+      "Nine times out of ten, something happened. Not a nice-shoulders something. A real something.",
+    paragraphs: [
+      "This past season I've been doing chair massage at WhistlePig's retreat center. Chair massage. Let me say that again in case you missed it. Chair massage. Clothes on, face in the cradle, fifteen minutes, next please. The fast food of bodywork. Nobody sits down in a massage chair expecting to meet themselves.",
+      "And yet. Nine times out of ten, something happened. Not a nice-shoulders something. A real something. A catch in the breath. A trembling that started in the ribs and didn't ask permission. Tears on the floorboards before either of us had said one true sentence out loud. Nine times out of ten. I counted, because I couldn't quite believe me either.",
+      "So of course I've been asking. Was it the whiskey? (It's a whiskey farm. It's very good whiskey. I had to ask.) Was it the surprise of it, no expectations, no candle-lit intake form, nothing to brace against, the heart slipping out the side door while the mind was busy being casual? Was it the guides, who had started saying things, go see Mackensie, something happens over there, until the chair itself had a reputation and everyone who sat down had already half-agreed to be met?",
+      "Maybe. Maybe maybe. Probably some of all of it, honestly. But here is what I keep circling back to, on my braver days.",
+      "For thirty years my hands have been listening. First they learned anatomy, this attaches here, this rotates so. Then they learned stories, the grief a shoulder holds, the old fear living quiet in a gut. And somewhere along the way the listening turned into hearing. Touch became insight. I would find myself asking a question I had no business knowing to ask, and the person in front of me would go very quiet, and then very not-quiet.",
+      "And I think about what got tuned. Decades of kitchari and ghee, settling the static so the signal could come through. Yoga before dawn, mostly because I loved it, sometimes only because I said I would. A marriage lovingly unmade. Babies. Circles of women saying the unsayable until it was just the sayable. None of it was training for this, and all of it was training for this. You spend thirty years tuning an instrument and then act surprised when it plays.",
+      "Because here is the thing I actually believe. There is a place in each of us that knows. It doesn't shout. It waits. And when something true gets close to it, a hand, a question, fifteen unguarded minutes, we tremble. We tremble to tears in the face of truth. Not because it hurts. Because it's finally, finally accurate.",
+      "So. Was it the whiskey? I'll keep researching. (For science.) But I don't think the whiskey knows your grandmother's name. Loving y'all… m",
+    ],
+  },
+  {
     slug: "deep-bad-bad",
     title: "Deep Bad Bad",
     date: "2017-12-06",
