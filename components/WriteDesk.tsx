@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * The writing desk — a distraction-free, Medium-inspired editor at
@@ -40,15 +40,7 @@ export function WriteDesk() {
   const [error, setError] = useState<string | null>(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  const titleRef = useRef<HTMLTextAreaElement>(null);
-  const bodyRef = useRef<HTMLTextAreaElement>(null);
   const loadedSlug = useRef<string | null>(null);
-
-  const grow = useCallback((el: HTMLTextAreaElement | null) => {
-    if (!el) return;
-    el.style.height = "auto";
-    el.style.height = `${el.scrollHeight}px`;
-  }, []);
 
   // Auth check + load the piece (or a local draft).
   useEffect(() => {
@@ -91,12 +83,6 @@ export function WriteDesk() {
       setState("ready");
     })();
   }, []);
-
-  // Keep the textareas sized to their content.
-  useEffect(() => {
-    grow(titleRef.current);
-    grow(bodyRef.current);
-  }, [d.title, d.body, mode, state, grow]);
 
   // Autosave the draft locally (debounced).
   useEffect(() => {
@@ -247,15 +233,19 @@ export function WriteDesk() {
       {mode === "write" ? (
         /* ── Write ──────────────────────────────────────────────────────── */
         <div className="mx-auto max-w-[720px] px-6 pb-32 pt-[clamp(32px,6vw,64px)]">
-          <textarea
-            ref={titleRef}
-            rows={1}
-            value={d.title}
-            onChange={(e) => set("title", e.target.value.replace(/\n/g, " "))}
-            placeholder="Title"
-            className="w-full resize-none overflow-hidden border-0 bg-transparent font-serif text-ink-900 outline-none placeholder:text-ink-900/25"
+          <div
+            className="ie-grow font-serif"
             style={{ fontSize: "clamp(34px,5vw,46px)", lineHeight: 1.15 }}
-          />
+            data-replica={d.title}
+          >
+            <textarea
+              rows={1}
+              value={d.title}
+              onChange={(e) => set("title", e.target.value.replace(/\n/g, " "))}
+              placeholder="Title"
+              className="w-full border-0 bg-transparent text-ink-900 outline-none placeholder:text-ink-900/25"
+            />
+          </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 font-sans text-[13px] text-ink-400">
             <select
@@ -291,15 +281,19 @@ export function WriteDesk() {
             />
           )}
 
-          <textarea
-            ref={bodyRef}
-            rows={8}
-            value={d.body}
-            onChange={(e) => set("body", e.target.value)}
-            placeholder={d.kind === "poem" ? "Let it fall in lines…" : "Tell the story…"}
-            className="mt-8 w-full resize-none overflow-hidden border-0 bg-transparent font-serif text-ink-800 outline-none placeholder:text-ink-900/25"
+          <div
+            className="ie-grow mt-8 font-serif"
             style={{ fontSize: "20px", lineHeight: 1.8 }}
-          />
+            data-replica={d.body}
+          >
+            <textarea
+              rows={8}
+              value={d.body}
+              onChange={(e) => set("body", e.target.value)}
+              placeholder={d.kind === "poem" ? "Let it fall in lines…" : "Tell the story…"}
+              className="w-full border-0 bg-transparent text-ink-800 outline-none placeholder:text-ink-900/25"
+            />
+          </div>
           <p className="mt-6 font-sans text-[12px] uppercase tracking-[0.14em] text-ink-400/70">
             {d.kind === "poem"
               ? "A blank line begins a new stanza"

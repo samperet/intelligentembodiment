@@ -158,3 +158,26 @@
     box-shadow: 0 0 0 3px var(--focus-ring);
   }
 }
+
+/* ── Auto-growing textareas (writing desk) ────────────────────────────────
+   A hidden replica of the text sizes the grid cell; the textarea fills it.
+   No JS measurement, no height collapse, no scroll jumping. */
+.ie-grow {
+  display: grid;
+}
+.ie-grow::after {
+  content: attr(data-replica) " ";
+  visibility: hidden;
+  white-space: pre-wrap;
+  word-break: break-word;
+  grid-area: 1 / 1;
+  font: inherit;
+  letter-spacing: inherit;
+}
+.ie-grow > textarea {
+  grid-area: 1 / 1;
+  overflow: hidden;
+  resize: none;
+  font: inherit;
+  letter-spacing: inherit;
+}
