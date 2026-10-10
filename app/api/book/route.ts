@@ -96,6 +96,7 @@ export async function POST(request: Request) {
     phone ? `Phone: ${phone}` : null,
     notes ? `Notes: ${notes}` : null,
     source ? `Source: ${source}` : null,
+    `Policy: ${site.cancellationPolicy}`,
   ].filter(Boolean);
   const description = descriptionLines.join("\n");
 

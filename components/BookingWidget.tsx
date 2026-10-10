@@ -338,6 +338,13 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
               </p>
             )}
 
+            <p className="rounded-lg bg-sand px-4 py-3 font-sans text-[14px] leading-[1.6] text-ink-600">
+              <span className="font-semibold text-ink-700">
+                Cancellation policy:
+              </span>{" "}
+              {site.cancellationPolicy}
+            </p>
+
             <button type="submit" disabled={submitting} className="btn btn-primary btn-lg mt-1 w-full sm:w-auto sm:self-start">
               {submitting ? "Confirming…" : "Confirm booking"}
             </button>

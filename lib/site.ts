@@ -15,6 +15,9 @@ export const site = {
   url: "https://intelligentembodiment.com",
   description:
     "Intuitive massage therapy with Mackensie Grant in Charlotte, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
+  // Shown in the booking flow, confirmation email, and calendar invite.
+  cancellationPolicy:
+    "Please give at least 24 hours' notice to cancel or reschedule. Sessions canceled with less than 24 hours' notice are charged in full.",
 };
 
 export type ServiceCategory = "massage" | "phone";

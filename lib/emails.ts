@@ -110,7 +110,8 @@ export function bookingClientEmail(o: {
       ${detailRow("When", esc(o.when))}
       ${detailRow("Where", esc(site.address))}
     </table>
-    <p style="${P}text-align:center;font-size:13px;margin:0;">A calendar invitation is attached. Need to change your time? Simply reply to this email or call ${site.phone}.</p>
+    <p style="${P}text-align:center;font-size:13px;margin:0 0 14px;">A calendar invitation is attached. Need to change your time? Simply reply to this email or call ${site.phone}.</p>
+    <p style="${P}text-align:center;font-size:13px;margin:0;color:#8a8494;">${esc(site.cancellationPolicy)}</p>
     ${signature()}`;
   return {
     subject: `Confirmed: ${o.service} on ${o.when}`,
@@ -125,6 +126,8 @@ export function bookingClientEmail(o: {
 Thank you for booking. Your ${o.service} ($${o.price}) is confirmed for ${o.when} at ${site.address}.
 
 A calendar invitation is attached. To reschedule, reply to this email or call ${site.phone}.
+
+${site.cancellationPolicy}
 
 With care,
 Mackensie Satya Priya

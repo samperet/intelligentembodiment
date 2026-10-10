@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { site } from "@/lib/site";
 
 export function WhatToExpect({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
@@ -81,6 +82,9 @@ export function WhatToExpect({ className }: { className?: string }) {
                   Every session comes with a money-back guarantee.
                 </strong>{" "}
                 If it doesn&apos;t serve you, you don&apos;t pay.
+              </p>
+              <p className="text-[15px] text-ink-500">
+                {site.cancellationPolicy}
               </p>
             </div>
             <button
