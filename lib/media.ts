@@ -12,18 +12,28 @@ const COOKIE_NAME = "ie_media";
 // Forgiving match: "Awake in the Body" works as well as "awakeinthebody".
 const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
 
+// MEDIA_PASSWORD is canonical; MEDIA_KEY is also accepted, in any casing
+// (e.g. "Media_Key"), since env var names are case-sensitive.
+function mediaPassword(): string | undefined {
+  if (process.env.MEDIA_PASSWORD) return process.env.MEDIA_PASSWORD;
+  const key = Object.keys(process.env).find((k) =>
+    ["MEDIA_PASSWORD", "MEDIA_KEY"].includes(k.toUpperCase()),
+  );
+  return key ? process.env[key] || undefined : undefined;
+}
+
 export function mediaConfigured(): boolean {
-  return Boolean(process.env.MEDIA_PASSWORD);
+  return Boolean(mediaPassword());
 }
 
 function mediaToken(): string | null {
-  const pw = process.env.MEDIA_PASSWORD;
+  const pw = mediaPassword();
   if (!pw) return null;
   return createHash("sha256").update(`ie-media:${normalize(pw)}`).digest("hex");
 }
 
 export function mediaPasswordMatches(value: unknown): boolean {
-  const pw = process.env.MEDIA_PASSWORD;
+  const pw = mediaPassword();
   if (!pw || typeof value !== "string") return false;
   const v = normalize(value);
   return v.length > 0 && v === normalize(pw);

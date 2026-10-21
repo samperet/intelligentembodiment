@@ -213,7 +213,7 @@ export function AdminMedia() {
       )}
       {passwordSet === false && (
         <p className="mb-4 rounded-lg bg-copper-50 px-4 py-3 font-sans text-[14px] text-copper-900">
-          Listeners can’t sign in yet. Set <code>MEDIA_PASSWORD</code> in the
+          Listeners can’t sign in yet. Set <code>MEDIA_PASSWORD</code> (or <code>MEDIA_KEY</code>) in the
           site’s environment variables.
         </p>
       )}
