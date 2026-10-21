@@ -280,3 +280,58 @@ export async function listCustomWritings<T>(): Promise<T[]> {
 export async function saveCustomWritings<T>(items: T[]): Promise<void> {
   await putJson(CONTENT_WRITINGS_KEY, items);
 }
+
+// ── Binary objects (media library audio) ──────────────────────────────────────
+const MEDIA_LIBRARY_KEY = "media/library.json";
+
+export async function putObject(
+  key: string,
+  body: ArrayBuffer,
+  contentType: string,
+): Promise<void> {
+  const res = await fetch(objectUrl(key), {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${cfg().token}`,
+      "Content-Type": contentType,
+    },
+    body,
+  });
+  if (!res.ok) {
+    const t = await res.text().catch(() => "");
+    throw new Error(`R2 PUT ${res.status}: ${t.slice(0, 300)}`);
+  }
+}
+
+export async function getObject(key: string): Promise<ArrayBuffer | null> {
+  const res = await fetch(objectUrl(key), {
+    headers: { Authorization: `Bearer ${cfg().token}` },
+    cache: "no-store",
+  });
+  if (res.status === 404) return null;
+  if (!res.ok) {
+    const t = await res.text().catch(() => "");
+    throw new Error(`R2 GET ${res.status}: ${t.slice(0, 300)}`);
+  }
+  return res.arrayBuffer();
+}
+
+export async function deleteObject(key: string): Promise<void> {
+  const res = await fetch(objectUrl(key), {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${cfg().token}` },
+  });
+  if (!res.ok && res.status !== 404) {
+    const t = await res.text().catch(() => "");
+    throw new Error(`R2 DELETE ${res.status}: ${t.slice(0, 300)}`);
+  }
+}
+
+export async function getMediaLibrary<T>(): Promise<T[]> {
+  if (!isR2Configured()) return [];
+  return (await getJson<T[]>(MEDIA_LIBRARY_KEY)) || [];
+}
+
+export async function saveMediaLibrary<T>(items: T[]): Promise<void> {
+  await putJson(MEDIA_LIBRARY_KEY, items);
+}

@@ -1,0 +1,82 @@
+// Server-only: access control and catalog for the password-protected /media
+// listening room. The password lives in MEDIA_PASSWORD (never in the repo);
+// the session cookie holds a hash of it, so changing the password signs
+// everyone out.
+import { createHash } from "crypto";
+import { adminToken } from "./adminAuth";
+import { getMediaLibrary } from "./r2";
+import type { MediaTrack } from "./mediaShared";
+
+const COOKIE_NAME = "ie_media";
+
+// Forgiving match: "Awake in the Body" works as well as "awakeinthebody".
+const normalize = (s: string) => s.toLowerCase().replace(/\s+/g, "");
+
+export function mediaConfigured(): boolean {
+  return Boolean(process.env.MEDIA_PASSWORD);
+}
+
+function mediaToken(): string | null {
+  const pw = process.env.MEDIA_PASSWORD;
+  if (!pw) return null;
+  return createHash("sha256").update(`ie-media:${normalize(pw)}`).digest("hex");
+}
+
+export function mediaPasswordMatches(value: unknown): boolean {
+  const pw = process.env.MEDIA_PASSWORD;
+  if (!pw || typeof value !== "string") return false;
+  const v = normalize(value);
+  return v.length > 0 && v === normalize(pw);
+}
+
+/** Listeners with the media cookie, or a signed-in admin, may listen. */
+export function canAccessMedia(getCookie: (name: string) => string | undefined): boolean {
+  const m = mediaToken();
+  if (m && getCookie(COOKIE_NAME) === m) return true;
+  const a = adminToken();
+  return Boolean(a && getCookie("ie_admin") === a);
+}
+
+export function cookieReader(request: Request) {
+  const header = request.headers.get("cookie") || "";
+  return (name: string) =>
+    header.match(new RegExp(`(?:^|;\\s*)${name}=([^;]+)`))?.[1];
+}
+
+function cookie(value: string, maxAge: number): string {
+  const parts = [
+    `${COOKIE_NAME}=${value}`,
+    "Path=/",
+    "HttpOnly",
+    "SameSite=Lax",
+    `Max-Age=${maxAge}`,
+  ];
+  if (process.env.NODE_ENV === "production") parts.push("Secure");
+  return parts.join("; ");
+}
+
+export function mediaSetCookie(): string {
+  const token = mediaToken();
+  return token ? cookie(token, 60 * 60 * 24 * 90) : "";
+}
+
+export function mediaClearCookie(): string {
+  return cookie("", 0);
+}
+
+export function sortTracks(items: MediaTrack[]): MediaTrack[] {
+  return [...items].sort(
+    (a, b) =>
+      (a.album || "").localeCompare(b.album || "") ||
+      (a.track ?? 999) - (b.track ?? 999) ||
+      a.added.localeCompare(b.added),
+  );
+}
+
+export async function listMediaTracks(): Promise<MediaTrack[]> {
+  try {
+    return sortTracks(await getMediaLibrary<MediaTrack>());
+  } catch {
+    return [];
+  }
+}

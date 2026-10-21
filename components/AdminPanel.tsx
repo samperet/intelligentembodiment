@@ -5,6 +5,7 @@ import { AdminNotifications } from "./AdminNotifications";
 import { AdminContent } from "./AdminContent";
 import { AdminMarketing } from "./AdminMarketing";
 import { AdminSection } from "./AdminSection";
+import { AdminMedia } from "./AdminMedia";
 
 type Subscriber = { name: string; email: string; date: string };
 type TestimonialStatus = "pending" | "approved" | "rejected";
@@ -440,6 +441,14 @@ export function AdminPanel() {
         subtitle="The writing desk, drafts, and recipe publishing."
       >
         <AdminContent />
+      </AdminSection>
+
+      {/* ── Media library (/media listening room) ────────────────────────── */}
+      <AdminSection
+        title="Media Library"
+        subtitle="Recordings for the password-protected listening room."
+      >
+        <AdminMedia />
       </AdminSection>
 
       {/* ── Marketing studio ─────────────────────────────────────────────── */}
