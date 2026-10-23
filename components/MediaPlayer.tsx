@@ -6,6 +6,8 @@ import { formatDuration, type MediaTrack } from "@/lib/mediaShared";
 
 const POS_KEY = "ie_media_pos";
 
+const programKey = (t: MediaTrack) => `${t.artist || ""}\u0000${t.album || ""}`;
+
 export function MediaPlayer({ tracks }: { tracks: MediaTrack[] }) {
   const router = useRouter();
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -19,6 +21,20 @@ export function MediaPlayer({ tracks }: { tracks: MediaTrack[] }) {
   const resumeAt = useRef<number | null>(null);
 
   const current = tracks[index];
+  const [open, setOpen] = useState<Set<string>>(() => new Set());
+
+  // Keep the program that's playing expanded.
+  useEffect(() => {
+    if (current) setOpen((o) => (o.has(programKey(current)) ? o : new Set(o).add(programKey(current))));
+  }, [current]);
+
+  const toggleProgram = (key: string) =>
+    setOpen((o) => {
+      const n = new Set(o);
+      if (n.has(key)) n.delete(key);
+      else n.add(key);
+      return n;
+    });
 
   // Resume where this listener left off (per device).
   useEffect(() => {
@@ -138,13 +154,18 @@ export function MediaPlayer({ tracks }: { tracks: MediaTrack[] }) {
   const shown = scrub ?? time;
   const pct = duration ? Math.min(100, (shown / duration) * 100) : 0;
 
-  // Group the list by album, keeping the catalog order.
-  const groups: { album: string; artist?: string; items: { t: MediaTrack; i: number }[] }[] = [];
+  // Artist → program → tracks, keeping the catalog order.
+  type Program = { key: string; name: string; duration: number; items: { t: MediaTrack; i: number }[] };
+  const artists: { name: string; programs: Program[] }[] = [];
   tracks.forEach((t, i) => {
-    const album = t.album || "Recordings";
-    const g = groups.find((x) => x.album === album);
-    if (g) g.items.push({ t, i });
-    else groups.push({ album, artist: t.artist, items: [{ t, i }] });
+    const name = t.artist || "";
+    let a = artists.find((x) => x.name === name);
+    if (!a) artists.push((a = { name, programs: [] }));
+    const key = programKey(t);
+    let p = a.programs.find((x) => x.key === key);
+    if (!p) a.programs.push((p = { key, name: t.album || "Recordings", duration: 0, items: [] }));
+    p.items.push({ t, i });
+    p.duration += t.duration ?? 0;
   });
 
   return (
@@ -173,7 +194,9 @@ export function MediaPlayer({ tracks }: { tracks: MediaTrack[] }) {
         }}
         onEnded={() => {
           savePosition(0);
-          if (index < tracks.length - 1) go(index + 1, true);
+          // Play on through a program, but stop at its end.
+          const following = tracks[index + 1];
+          if (following && programKey(following) === programKey(current)) go(index + 1, true);
           else setPlaying(false);
         }}
         onError={(e) => {
@@ -270,57 +293,82 @@ export function MediaPlayer({ tracks }: { tracks: MediaTrack[] }) {
         </div>
       </div>
 
-      {/* ── Track list ─────────────────────────────────────────────────── */}
-      {groups.map((g) => (
-        <div key={g.album} className="mt-10">
-          <div className="border-b border-[color:var(--border)] pb-3">
-            <h3 className="font-serif text-[22px] text-ink-900">{g.album}</h3>
-            {g.artist && (
-              <p className="font-sans text-[13px] uppercase tracking-[0.14em] text-ink-400">
-                {g.artist}
-              </p>
-            )}
-          </div>
-          <ol className="mt-2">
-            {g.items.map(({ t, i }) => {
-              const active = i === index;
+      {/* ── Library: artist → program → tracks ───────────────────────── */}
+      {artists.map((a) => (
+        <section key={a.name || "-"} className="mt-12">
+          {a.name && (
+            <h2 className="border-b border-[color:var(--border)] pb-3 font-serif text-[30px] leading-tight text-ink-900">
+              {a.name}
+            </h2>
+          )}
+          <div className="mt-3 space-y-3">
+            {a.programs.map((p) => {
+              const isOpen = open.has(p.key);
+              const panel = `program-${p.items[0].t.slug}`;
               return (
-                <li key={t.slug}>
+                <div key={p.key} className="rounded-xl border border-[color:var(--border)] bg-paper-2/60">
                   <button
                     type="button"
-                    onClick={() => (active ? toggle() : go(i, true))}
-                    aria-current={active ? "true" : undefined}
-                    className={`grid w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 rounded-lg px-3 py-3.5 text-left transition ${
-                      active ? "bg-white shadow-sm" : "hover:bg-white/60"
-                    }`}
+                    onClick={() => toggleProgram(p.key)}
+                    aria-expanded={isOpen}
+                    aria-controls={panel}
+                    className="flex w-full items-center justify-between gap-4 rounded-xl px-4 py-4 text-left transition hover:bg-white/60 sm:px-5"
                   >
-                    <span className="flex justify-center font-sans text-[14px] tabular-nums text-ink-400">
-                      {active && playing ? (
-                        <span className="ie-eq" aria-hidden="true">
-                          <span />
-                          <span />
-                          <span />
-                        </span>
-                      ) : (
-                        t.track ?? i + 1
-                      )}
+                    <span className="min-w-0">
+                      <span className="block font-serif text-[21px] leading-snug text-ink-900">{p.name}</span>
+                      <span className="mt-0.5 block font-sans text-[13px] text-ink-400">
+                        {p.items.length} recording{p.items.length === 1 ? "" : "s"}
+                        {p.duration > 0 && ` · ${formatTotal(p.duration)}`}
+                      </span>
                     </span>
-                    <span
-                      className={`font-serif text-[19px] leading-snug ${
-                        active ? "text-copper-800" : "text-ink-900"
-                      }`}
-                    >
-                      {t.title}
-                    </span>
-                    <span className="font-sans text-[13px] tabular-nums text-ink-400">
-                      {formatDuration(t.duration)}
-                    </span>
+                    <Chevron open={isOpen} />
                   </button>
-                </li>
+                  {isOpen && (
+                    <ol id={panel} className="px-1.5 pb-2 sm:px-2">
+                      {p.items.map(({ t, i }) => {
+                        const active = i === index;
+                        return (
+                          <li key={t.slug}>
+                            <button
+                              type="button"
+                              onClick={() => (active ? toggle() : go(i, true))}
+                              aria-current={active ? "true" : undefined}
+                              className={`grid w-full grid-cols-[2.25rem_1fr_auto] items-center gap-3 rounded-lg px-3 py-3.5 text-left transition ${
+                                active ? "bg-white shadow-sm" : "hover:bg-white/60"
+                              }`}
+                            >
+                              <span className="flex justify-center font-sans text-[14px] tabular-nums text-ink-400">
+                                {active && playing ? (
+                                  <span className="ie-eq" aria-hidden="true">
+                                    <span />
+                                    <span />
+                                    <span />
+                                  </span>
+                                ) : (
+                                  t.track ?? i + 1
+                                )}
+                              </span>
+                              <span
+                                className={`font-serif text-[19px] leading-snug ${
+                                  active ? "text-copper-800" : "text-ink-900"
+                                }`}
+                              >
+                                {t.title}
+                              </span>
+                              <span className="font-sans text-[13px] tabular-nums text-ink-400">
+                                {formatDuration(t.duration)}
+                              </span>
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ol>
+                  )}
+                </div>
               );
             })}
-          </ol>
-        </div>
+          </div>
+        </section>
       ))}
 
       <div className="mt-12 flex flex-col items-center gap-4 text-center">
@@ -362,6 +410,31 @@ function IconButton({
     >
       {children}
     </button>
+  );
+}
+
+/** "4 hr 12 min" / "38 min" */
+function formatTotal(seconds: number): string {
+  const m = Math.round(seconds / 60);
+  return m >= 60 ? `${Math.floor(m / 60)} hr ${m % 60} min` : `${m} min`;
+}
+
+function Chevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      width={20}
+      height={20}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.8}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className={`flex-none text-ink-400 transition-transform ${open ? "rotate-180" : ""}`}
+    >
+      <path d="m6 9 6 6 6-6" />
+    </svg>
   );
 }
 

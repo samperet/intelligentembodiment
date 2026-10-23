@@ -74,11 +74,14 @@ export function mediaClearCookie(): string {
   return cookie("", 0);
 }
 
+/** Catalog order: artist, then program (album), then track number. */
 export function sortTracks(items: MediaTrack[]): MediaTrack[] {
   return [...items].sort(
     (a, b) =>
+      (a.artist || "").localeCompare(b.artist || "") ||
       (a.album || "").localeCompare(b.album || "") ||
       (a.track ?? 999) - (b.track ?? 999) ||
+      a.title.localeCompare(b.title, undefined, { numeric: true }) ||
       a.added.localeCompare(b.added),
   );
 }

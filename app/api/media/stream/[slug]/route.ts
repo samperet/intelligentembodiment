@@ -1,4 +1,5 @@
 import { canAccessMedia, cookieReader } from "@/lib/media";
+import { driveRange } from "@/lib/drive";
 import { getMediaLibrary, getObject, isR2Configured } from "@/lib/r2";
 import { MEDIA_CHUNK_BYTES, MEDIA_SLUG, type MediaTrack } from "@/lib/mediaShared";
 
@@ -81,6 +82,31 @@ export async function GET(request: Request, { params }: { params: { slug: string
   // Serve at most one stored part per response; the player asks for the next
   // range as it plays, so long tracks stream in 3 MB steps.
   const [start, requestedEnd] = range;
+
+  if (track.drive) {
+    const end = Math.min(requestedEnd, start + MEDIA_CHUNK_BYTES - 1);
+    let res: Response;
+    try {
+      res = await driveRange(track.drive, start, end);
+    } catch {
+      return new Response("Drive unavailable", { status: 502 });
+    }
+    // Anything but the exact range asked for (an HTML quota or sign-in page,
+    // or the whole file) is not passed through.
+    if (res.status !== 206 || !res.headers.get("content-range")?.startsWith(`bytes ${start}-${end}/`)) {
+      res.body?.cancel().catch(() => {});
+      return new Response("Drive unavailable", { status: 502 });
+    }
+    return new Response(res.body, {
+      status: 206,
+      headers: {
+        ...baseHeaders(track),
+        "Content-Length": String(end - start + 1),
+        "Content-Range": `bytes ${start}-${end}/${track.size}`,
+      },
+    });
+  }
+
   const part = Math.floor(start / MEDIA_CHUNK_BYTES);
   const partStart = part * MEDIA_CHUNK_BYTES;
   const partEnd = Math.min(partStart + MEDIA_CHUNK_BYTES, track.size) - 1;

@@ -5,6 +5,7 @@ import {
   MEDIA_CHUNK_BYTES,
   formatDuration,
   mediaMimeType,
+  mp4Duration,
   parseTrackFilename,
   type MediaTrack,
 } from "@/lib/mediaShared";
@@ -26,30 +27,12 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, "")
     .slice(0, 60) || "track"}-${Math.random().toString(36).slice(2, 6)}`;
 
-/** Duration from an MP4/M4A file's `mvhd` header, independent of codec support. */
-async function mp4Duration(file: File): Promise<number | undefined> {
-  const v = new DataView(await file.arrayBuffer());
-  for (let i = 4; i + 32 < v.byteLength; i++) {
-    // "mvhd", preceded by its box size (108 bytes for v0, 120 for v1).
-    if (v.getUint32(i) !== 0x6d766864) continue;
-    const size = v.getUint32(i - 4);
-    if (size !== 108 && size !== 120) continue;
-    const version = v.getUint8(i + 4);
-    const timescale = v.getUint32(i + (version === 1 ? 24 : 16));
-    const units =
-      version === 1
-        ? v.getUint32(i + 28) * 2 ** 32 + v.getUint32(i + 32)
-        : v.getUint32(i + 20);
-    return timescale ? units / timescale : undefined;
-  }
-  return undefined;
-}
-
 /** Read a file's duration in the browser (best effort). */
 async function readDuration(file: File): Promise<number | undefined> {
   const fromAudio = await audioDuration(file);
   if (fromAudio) return fromAudio;
-  return /\.(m4a|mp4)$/i.test(file.name) ? mp4Duration(file).catch(() => undefined) : undefined;
+  if (!/\.(m4a|mp4)$/i.test(file.name)) return undefined;
+  return mp4Duration(new DataView(await file.arrayBuffer()));
 }
 
 function audioDuration(file: File): Promise<number | undefined> {
@@ -89,6 +72,8 @@ export function AdminMedia() {
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [editing, setEditing] = useState<MediaTrack | null>(null);
+  const [drive, setDrive] = useState({ link: "", artist: "", album: "" });
+  const [driveMsg, setDriveMsg] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const apply = (d: any) => {
@@ -175,6 +160,24 @@ export function AdminMedia() {
     setBusy(false);
   }
 
+  async function importDrive() {
+    setBusy(true);
+    setDriveMsg("Reading the Drive folder…");
+    try {
+      const d = await api({ action: "drive", ...drive });
+      apply(d);
+      const parts = [`Added ${d.added} recording${d.added === 1 ? "" : "s"}.`];
+      if (d.skipped) parts.push(`${d.skipped} already in the library.`);
+      if (d.failed?.length) parts.push(`Couldn’t read: ${d.failed.join(", ")}.`);
+      setDriveMsg(parts.join(" "));
+      if (d.added) setDrive({ link: "", artist: "", album: "" });
+    } catch (e: any) {
+      setDriveMsg(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function remove(t: MediaTrack) {
     if (!window.confirm(`Remove “${t.title}” from the listening room?`)) return;
     setBusy(true);
@@ -237,8 +240,15 @@ export function AdminMedia() {
           <p className="mt-3 font-sans text-[14px] text-ink-400">No recordings yet.</p>
         ) : (
           <ul className="mt-3 space-y-2">
-            {tracks.map((t) =>
-              editing?.slug === t.slug ? (
+            {tracks.map((t, i) => {
+              const group = [t.artist, t.album].filter(Boolean).join(" · ");
+              const prevGroup = i > 0 ? [tracks[i - 1].artist, tracks[i - 1].album].filter(Boolean).join(" · ") : null;
+              const heading = group !== prevGroup && (
+                <li key={`h-${t.slug}`} className="pt-3 font-sans text-[12px] font-medium uppercase tracking-[0.14em] text-ink-500">
+                  {group || "Recordings"}
+                </li>
+              );
+              const row = editing?.slug === t.slug ? (
                 <li
                   key={t.slug}
                   className="grid gap-3 rounded-lg border border-copper-300 bg-white p-4 sm:grid-cols-[4.5rem_1fr]"
@@ -266,8 +276,8 @@ export function AdminMedia() {
                     className="field-input sm:col-start-2"
                   />
                   <input
-                    aria-label="Album"
-                    placeholder="Album"
+                    aria-label="Program"
+                    placeholder="Program"
                     value={editing.album || ""}
                     onChange={(e) => setEditing({ ...editing, album: e.target.value })}
                     className="field-input sm:col-start-2"
@@ -292,7 +302,11 @@ export function AdminMedia() {
                       {t.title}
                     </p>
                     <p className="font-sans text-[12px] text-ink-400">
-                      {[t.album, formatDuration(t.duration), `${(t.size / 1048576).toFixed(1)} MB`]
+                      {[
+                        formatDuration(t.duration),
+                        `${(t.size / 1048576).toFixed(1)} MB`,
+                        t.drive ? "Google Drive" : null,
+                      ]
                         .filter(Boolean)
                         .join(" · ")}
                     </p>
@@ -315,15 +329,65 @@ export function AdminMedia() {
                     </button>
                   </div>
                 </li>
-              ),
-            )}
+              );
+              return [heading, row];
+            })}
           </ul>
         )}
       </div>
 
+      {/* Google Drive */}
+      <div className="mt-8 rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
+        <h3 className="font-serif text-[21px] text-ink-900">Add from Google Drive</h3>
+        <p className="mt-1 font-sans text-[14px] text-ink-500">
+          Paste a folder (or file) shared as “Anyone with the link”. Recordings
+          stream from Drive, so nothing is uploaded. Leave Artist blank to use
+          the folder’s name, and Program blank to use each subfolder’s name.
+          Importing the same folder again adds only new files.
+        </p>
+        <label className="mt-4 block">
+          <span className="field-label">Drive link</span>
+          <input
+            value={drive.link}
+            placeholder="https://drive.google.com/drive/folders/…"
+            onChange={(e) => setDrive({ ...drive, link: e.target.value })}
+            className="field-input"
+          />
+        </label>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <label className="block">
+            <span className="field-label">Artist</span>
+            <input
+              value={drive.artist}
+              onChange={(e) => setDrive({ ...drive, artist: e.target.value })}
+              className="field-input"
+            />
+          </label>
+          <label className="block">
+            <span className="field-label">Program</span>
+            <input
+              value={drive.album}
+              onChange={(e) => setDrive({ ...drive, album: e.target.value })}
+              className="field-input"
+            />
+          </label>
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            disabled={busy || !drive.link.trim() || r2 === false}
+            onClick={importDrive}
+            className="btn btn-primary btn-md"
+          >
+            Add from Drive
+          </button>
+          {driveMsg && <span className="font-sans text-[14px] text-ink-700">{driveMsg}</span>}
+        </div>
+      </div>
+
       {/* Upload */}
       <div className="mt-8 rounded-lg border border-[color:var(--border)] bg-paper-2 p-6">
-        <h3 className="font-serif text-[21px] text-ink-900">Add recordings</h3>
+        <h3 className="font-serif text-[21px] text-ink-900">Upload recordings</h3>
         <p className="mt-1 font-sans text-[14px] text-ink-500">
           MP3 or M4A. Titles and track numbers are read from the file names and
           can be adjusted before uploading.
@@ -335,7 +399,7 @@ export function AdminMedia() {
             <input value={artist} onChange={(e) => setArtist(e.target.value)} className="field-input" />
           </label>
           <label className="block">
-            <span className="field-label">Album</span>
+            <span className="field-label">Program</span>
             <input value={album} onChange={(e) => setAlbum(e.target.value)} className="field-input" />
           </label>
         </div>
