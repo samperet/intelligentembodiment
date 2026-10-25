@@ -1,7 +1,7 @@
 {
   "id": "/media",
-  "name": "Listening Room · Intelligent Embodiment",
-  "short_name": "Listening Room",
+  "name": "IE | media",
+  "short_name": "IE | media",
   "description": "Recordings to return to between sessions.",
   "start_url": "/media",
   "scope": "/media",
@@ -10,10 +10,18 @@
   "theme_color": "#F6EFE4",
   "orientation": "portrait",
   "icons": [
-    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
     {
-      "src": "/icons/icon-maskable-512.png",
+      "src": "/icons/media-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/media-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/media-maskable-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"

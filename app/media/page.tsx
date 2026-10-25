@@ -8,13 +8,21 @@ import { canAccessMedia, listMediaCovers, listMediaTracks, mediaConfigured } fro
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Listening Room",
+  title: { absolute: "IE | media" },
+  icons: {
+    icon: [
+      { url: "/icons/media-favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/media-favicon-48.png", sizes: "48x48", type: "image/png" },
+      { url: "/icons/media-192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: "/icons/media-apple-touch-icon.png",
+  },
   robots: { index: false, follow: false },
-  // Installs as its own app ("Listening Room"), separate from the admin app.
+  // Installs as its own app ("IE | media"), separate from the admin app.
   manifest: "/media.webmanifest",
   appleWebApp: {
     capable: true,
-    title: "Listening Room",
+    title: "IE | media",
     statusBarStyle: "default",
   },
 };
