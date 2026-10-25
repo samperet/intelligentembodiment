@@ -1,10 +1,9 @@
 import type { Metadata, Viewport } from "next";
 import { cookies } from "next/headers";
-import { PageHero } from "@/components/PageHero";
 import { MediaGate } from "@/components/MediaGate";
 import { MediaInstallQuiet } from "@/components/MediaInstallQuiet";
 import { MediaPlayer } from "@/components/MediaPlayer";
-import { canAccessMedia, listMediaTracks, mediaConfigured } from "@/lib/media";
+import { canAccessMedia, listMediaCovers, listMediaTracks, mediaConfigured } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -24,7 +23,11 @@ export const viewport: Viewport = {
   themeColor: "#F6EFE4",
 };
 
-export default async function MediaPage() {
+export default async function MediaPage({
+  searchParams,
+}: {
+  searchParams: { artist?: string };
+}) {
   const jar = cookies();
   if (!canAccessMedia((name) => jar.get(name)?.value)) {
     return (
@@ -35,23 +38,12 @@ export default async function MediaPage() {
     );
   }
 
-  const tracks = await listMediaTracks();
+  const [tracks, covers] = await Promise.all([listMediaTracks(), listMediaCovers()]);
 
   return (
     <div data-media-app>
       <MediaInstallQuiet />
-      <PageHero
-        eyebrow="Client Library"
-        title={
-          <>
-            The listening <em className="text-copper-800">room</em>
-          </>
-        }
-        lead="Prayers and teachings to return to between sessions."
-      />
-      <section className="px-6 pb-[clamp(64px,9vw,110px)]">
-        <MediaPlayer tracks={tracks} />
-      </section>
+      <MediaPlayer tracks={tracks} covers={covers} initialArtist={searchParams.artist} />
     </div>
   );
 }

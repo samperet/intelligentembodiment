@@ -21,6 +21,20 @@ export type MediaTrack = {
 
 export const MEDIA_SLUG = /^[a-z0-9-]{1,80}$/;
 
+/** "Marisa Peer" → "marisa-peer"; tracks without an artist group as "recordings". */
+export function artistSlug(name?: string): string {
+  return (
+    (name || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 80) || "recordings"
+  );
+}
+
+/** Largest cover image accepted (covers are resized in the browser first). */
+export const MEDIA_COVER_BYTES = 3 * 1024 * 1024;
+
 /** "1-03_Cleansing_Thru_Peacemaking.m4a" → { track: 3, title: "Cleansing Thru Peacemaking" } */
 export function parseTrackFilename(name: string): { track?: number; title: string } {
   const base = name.replace(/\.[a-z0-9]{2,4}$/i, "");

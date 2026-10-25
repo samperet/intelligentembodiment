@@ -283,6 +283,10 @@ export async function saveCustomWritings<T>(items: T[]): Promise<void> {
 
 // ── Binary objects (media library audio) ──────────────────────────────────────
 const MEDIA_LIBRARY_KEY = "media/library.json";
+const MEDIA_COVERS_KEY = "media/covers.json";
+
+/** One cover image per artist slug, stored at media/covers/<slug>. */
+export type MediaCoverIndex = Record<string, { type: string; v: string }>;
 
 export async function putObject(
   key: string,
@@ -334,4 +338,13 @@ export async function getMediaLibrary<T>(): Promise<T[]> {
 
 export async function saveMediaLibrary<T>(items: T[]): Promise<void> {
   await putJson(MEDIA_LIBRARY_KEY, items);
+}
+
+export async function getMediaCovers(): Promise<MediaCoverIndex> {
+  if (!isR2Configured()) return {};
+  return (await getJson<MediaCoverIndex>(MEDIA_COVERS_KEY)) || {};
+}
+
+export async function saveMediaCovers(index: MediaCoverIndex): Promise<void> {
+  await putJson(MEDIA_COVERS_KEY, index);
 }

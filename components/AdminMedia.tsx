@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import {
   MEDIA_CHUNK_BYTES,
+  MEDIA_COVER_BYTES,
+  artistSlug,
   formatDuration,
   mediaMimeType,
   mp4Duration,
@@ -51,6 +53,23 @@ function audioDuration(file: File): Promise<number | undefined> {
   });
 }
 
+/** Square-ish covers don't need to be large: scale to ≤1000px JPEG. */
+async function shrinkCover(file: File): Promise<Blob> {
+  try {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, 1000 / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.round(bmp.width * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/jpeg", 0.86));
+    if (blob) return blob;
+  } catch {
+    /* fall back to the original file */
+  }
+  return file;
+}
+
 async function api(payload: unknown) {
   const res = await fetch("/api/admin/media", {
     method: "POST",
@@ -74,13 +93,46 @@ export function AdminMedia() {
   const [editing, setEditing] = useState<MediaTrack | null>(null);
   const [drive, setDrive] = useState({ link: "", artist: "", album: "" });
   const [driveMsg, setDriveMsg] = useState<string | null>(null);
+  const [covers, setCovers] = useState<Record<string, string>>({});
   const fileRef = useRef<HTMLInputElement>(null);
 
   const apply = (d: any) => {
     if (Array.isArray(d.tracks)) setTracks(d.tracks);
     if (typeof d.r2Configured === "boolean") setR2(d.r2Configured);
     if (typeof d.passwordSet === "boolean") setPasswordSet(d.passwordSet);
+    if (d.covers) setCovers(d.covers);
   };
+
+  // One entry per artist, in catalog order.
+  const artists = tracks.reduce<{ slug: string; name: string }[]>((list, t) => {
+    const slug = artistSlug(t.artist);
+    if (!list.some((a) => a.slug === slug)) list.push({ slug, name: t.artist || "Recordings" });
+    return list;
+  }, []);
+
+  async function setCover(slug: string, file?: File) {
+    setBusy(true);
+    setMsg(null);
+    try {
+      let body: Blob | undefined;
+      if (file) {
+        body = await shrinkCover(file);
+        if (body.size > MEDIA_COVER_BYTES) throw new Error("That image is too large.");
+      }
+      const res = await fetch(`/api/admin/media/cover?artist=${slug}${file ? "" : "&remove=1"}`, {
+        method: "POST",
+        headers: body ? { "Content-Type": body.type || "image/jpeg" } : undefined,
+        body,
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(d.error || "Couldn’t save the cover.");
+      setCovers(d.covers || {});
+    } catch (e: any) {
+      setMsg(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   useEffect(() => {
     api({ action: "list" })
@@ -230,6 +282,62 @@ export function AdminMedia() {
           Open the room →
         </a>
       </div>
+
+      {/* Artist covers */}
+      {artists.length > 0 && (
+        <div className="mt-6">
+          <h3 className="font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
+            Artist covers
+          </h3>
+          <p className="mt-1 font-sans text-[13px] text-ink-400">
+            One image per artist, shown on the listening room’s first screen and on the lock screen.
+          </p>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+            {artists.map((a) => (
+              <li
+                key={a.slug}
+                className="flex items-center gap-4 rounded-lg border border-[color:var(--border)] bg-white p-3"
+              >
+                <span className="relative h-16 w-16 flex-none overflow-hidden rounded-lg bg-indigo-700">
+                  {covers[a.slug] && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={covers[a.slug]} alt="" className="h-full w-full object-cover" />
+                  )}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate font-serif text-[18px] text-ink-900">{a.name}</p>
+                  <div className="mt-1 flex items-center gap-3">
+                    <label className="cursor-pointer font-sans text-[13px] font-medium text-copper-800 underline">
+                      {covers[a.slug] ? "Replace" : "Add cover"}
+                      <input
+                        type="file"
+                        accept="image/jpeg,image/png,image/webp"
+                        disabled={busy}
+                        className="sr-only"
+                        onChange={(e) => {
+                          const f = e.target.files?.[0];
+                          e.target.value = "";
+                          if (f) setCover(a.slug, f);
+                        }}
+                      />
+                    </label>
+                    {covers[a.slug] && (
+                      <button
+                        type="button"
+                        disabled={busy}
+                        onClick={() => setCover(a.slug)}
+                        className="font-sans text-[13px] text-ink-400 underline transition hover:text-copper-800"
+                      >
+                        Remove
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Library */}
       <div className="mt-6">

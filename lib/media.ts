@@ -4,7 +4,7 @@
 // everyone out.
 import { createHash } from "crypto";
 import { adminToken } from "./adminAuth";
-import { getMediaLibrary } from "./r2";
+import { getMediaCovers, getMediaLibrary, type MediaCoverIndex } from "./r2";
 import type { MediaTrack } from "./mediaShared";
 
 const COOKIE_NAME = "ie_media";
@@ -91,5 +91,20 @@ export async function listMediaTracks(): Promise<MediaTrack[]> {
     return sortTracks(await getMediaLibrary<MediaTrack>());
   } catch {
     return [];
+  }
+}
+
+/** Artist slug → cover URL (versioned, so a new cover is never served stale). */
+export function coverUrls(index: MediaCoverIndex): Record<string, string> {
+  return Object.fromEntries(
+    Object.entries(index).map(([slug, c]) => [slug, `/api/media/cover/${slug}?v=${c.v}`]),
+  );
+}
+
+export async function listMediaCovers(): Promise<Record<string, string>> {
+  try {
+    return coverUrls(await getMediaCovers());
+  } catch {
+    return {};
   }
 }

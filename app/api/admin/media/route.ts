@@ -3,11 +3,12 @@ import { isAdminRequest } from "@/lib/adminAuth";
 import {
   isR2Configured,
   getMediaLibrary,
+  getMediaCovers,
   saveMediaLibrary,
   deleteObject,
 } from "@/lib/r2";
 import { listDriveAudio, parseDriveLink, probeDriveAudio, type DriveFile } from "@/lib/drive";
-import { mediaConfigured, sortTracks } from "@/lib/media";
+import { coverUrls, mediaConfigured, sortTracks } from "@/lib/media";
 import {
   MEDIA_CHUNK_BYTES,
   MEDIA_SLUG,
@@ -115,7 +116,8 @@ export async function POST(request: Request) {
     const tracks = status.r2Configured
       ? sortTracks(await getMediaLibrary<MediaTrack>().catch(() => []))
       : [];
-    return NextResponse.json({ ok: true, ...status, tracks });
+    const covers = status.r2Configured ? coverUrls(await getMediaCovers().catch(() => ({}))) : {};
+    return NextResponse.json({ ok: true, ...status, tracks, covers });
   }
 
   if (!status.r2Configured) {
