@@ -268,3 +268,14 @@
     animation: none;
   }
 }
+
+/* Installed listening room: an app of its own, without the site's nav and footer. */
+@media (display-mode: standalone) {
+  body:has([data-media-app]) > header,
+  body:has([data-media-app]) > footer {
+    display: none;
+  }
+  body:has([data-media-app]) {
+    padding-top: env(safe-area-inset-top);
+  }
+}
