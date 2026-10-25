@@ -70,10 +70,6 @@ export function mediaSetCookie(): string {
   return token ? cookie(token, 60 * 60 * 24 * 90) : "";
 }
 
-export function mediaClearCookie(): string {
-  return cookie("", 0);
-}
-
 /** Catalog order: artist, then program (album), then track number. */
 export function sortTracks(items: MediaTrack[]): MediaTrack[] {
   return [...items].sort(

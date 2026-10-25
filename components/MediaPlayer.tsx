@@ -1,7 +1,6 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import { PageHero } from "@/components/PageHero";
 import { artistSlug, formatDuration, type MediaTrack } from "@/lib/mediaShared";
 
@@ -21,7 +20,6 @@ export function MediaPlayer({
   covers: Record<string, string>; // artist slug → cover URL
   initialArtist?: string;
 }) {
-  const router = useRouter();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [index, setIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
@@ -233,15 +231,6 @@ export function MediaPlayer({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current, cover, index, prev, next, tracks.length]);
 
-  async function lock() {
-    await fetch("/api/media/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "logout" }),
-    }).catch(() => {});
-    router.refresh();
-  }
-
   if (!current) {
     return (
       <>
@@ -430,23 +419,8 @@ export function MediaPlayer({
         </section>
       )}
 
-      <div
-        className={`mt-12 flex flex-col items-center gap-4 px-6 text-center ${
-          started ? "pb-36" : "pb-[clamp(64px,9vw,110px)]"
-        }`}
-      >
-        <p className="max-w-[56ch] font-sans text-[13px] leading-[1.7] text-ink-400">
-          These recordings are shared for your personal practice. Please
-          don&apos;t copy or pass them along.
-        </p>
-        <button
-          type="button"
-          onClick={lock}
-          className="font-sans text-[13px] text-ink-400 underline transition hover:text-copper-800"
-        >
-          Lock the library on this device
-        </button>
-      </div>
+      {/* Room to scroll the last items clear of the mini player. */}
+      <div className={started ? "h-40" : "h-[clamp(64px,9vw,110px)]"} aria-hidden="true" />
 
       {/* ── Mini player ──────────────────────────────────────────────────── */}
       {started && !sheet && (

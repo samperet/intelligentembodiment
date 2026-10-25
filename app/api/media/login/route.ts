@@ -3,25 +3,17 @@ import {
   mediaConfigured,
   mediaPasswordMatches,
   mediaSetCookie,
-  mediaClearCookie,
 } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
-// POST { password }          → sign in to the listening room
-// POST { action: "logout" }  → sign out
+// POST { password } → sign in to the listening room
 export async function POST(request: Request) {
   let body: any;
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid request." }, { status: 400 });
-  }
-
-  if (body?.action === "logout") {
-    const res = NextResponse.json({ ok: true });
-    res.headers.set("Set-Cookie", mediaClearCookie());
-    return res;
   }
 
   if (!mediaConfigured()) {
