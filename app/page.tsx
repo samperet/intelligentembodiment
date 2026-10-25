@@ -5,6 +5,7 @@ import { Eyebrow, Rule, Stat } from "@/components/brand";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { Suspense } from "react";
 import { BookingWidget } from "@/components/BookingWidget";
+import { Friendship } from "@/components/Friendship";
 import { site } from "@/lib/site";
 import { getStats } from "@/lib/content";
 
@@ -220,6 +221,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Friendship ───────────────────────────────────────────────────── */}
+      <Friendship />
     </>
   );
 }

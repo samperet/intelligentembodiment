@@ -5,6 +5,7 @@ import { Icon } from "./Icon";
 const explore = [
   { label: "About", href: "/about" },
   { label: "Share your experience", href: "/share" },
+  { label: "Friendship", href: "/#friendship" },
 ];
 
 const library = [
