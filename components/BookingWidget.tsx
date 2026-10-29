@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import {
   services,
   isServiceBookable,
@@ -50,6 +50,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     service: string;
     price: number;
   }>(null);
+  // Choosing a session opens the calendar and details in a pop-up.
+  const [open, setOpen] = useState(false);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   // Which days are selectable / how far ahead — mirrors the server settings
   // (admin-editable). Starts from the code defaults, then refines on load.
@@ -122,11 +126,48 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
   }, []);
 
   function chooseService(s: Service) {
+    setOpen(true);
+    if (service?.id === s.id && !confirmation) return; // reopen where they left off
     setService(s);
+    setConfirmation(null);
     setSelectedSlot(null);
     setSlots([]);
     if (selectedDate) void loadSlots(selectedDate, s.id);
   }
+
+  const close = useCallback(() => {
+    setOpen(false);
+    // After a booking, start fresh next time.
+    if (confirmation) {
+      setConfirmation(null);
+      setService(null);
+      setSelectedDate(null);
+      setSelectedSlot(null);
+      setSlots([]);
+      setForm({ name: "", email: "", phone: "", notes: "" });
+    }
+  }, [confirmation]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      // The "What to expect" dialog handles its own Escape.
+      if (e.key === "Escape" && !document.querySelector('[aria-label="What to expect in a session"][role="dialog"]')) close();
+    };
+    const overflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", onKey);
+    closeRef.current?.focus();
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener("keydown", onKey);
+    };
+  }, [open, close]);
+
+  // Bring the details form into view once a time is picked.
+  useEffect(() => {
+    if (selectedSlot) detailsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [selectedSlot]);
 
   function chooseDate(date: string) {
     setSelectedDate(date);
@@ -157,32 +198,6 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     } finally {
       setSubmitting(false);
     }
-  }
-
-  if (confirmation) {
-    return (
-      <div className="mx-auto max-w-xl rounded-lg border border-[color:var(--border)] bg-paper-2 p-10 text-center shadow-md">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-bg text-sage">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M20 6 9 17l-5-5" />
-          </svg>
-        </div>
-        <h2 className="mt-5 font-serif text-[32px] text-ink-900">You&apos;re booked</h2>
-        <p className="mt-3 font-sans text-[17px] leading-[1.65] text-ink-500">
-          Your <strong>{confirmation.service}</strong> is confirmed for{" "}
-          <strong>{confirmation.when}</strong>.
-        </p>
-        <p className="mt-2 font-sans text-[16px] text-ink-400">
-          A confirmation is on its way to <strong>{form.email}</strong>.{" "}
-          {service?.category === "phone"
-            ? "This consult is by phone."
-            : `See you at ${site.address}.`}
-        </p>
-        <a href="/" className="btn btn-secondary btn-md mt-8">
-          Return home
-        </a>
-      </div>
-    );
   }
 
   if (accept && bookableServices.length === 0) {
@@ -276,103 +291,164 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         </div>
       </StepCard>
 
-      {/* Step 2, Date & time */}
-      {service && (
-        <StepCard title="Pick a date & time">
-          <div className="grid gap-8 md:grid-cols-[auto_1fr]">
-            <MonthCalendar
-              selected={selectedDate}
-              onSelect={chooseDate}
-              weekdays={weekdays}
-              windowDays={windowDays}
-            />
-            <div>
-              <p className="mb-3 font-sans text-[15px] font-medium uppercase tracking-[0.16em] text-ink-500">
-                {selectedDate ? "Available times" : "Select a date"}
-              </p>
-              {slotsLoading && (
-                <p className="font-sans text-[16px] text-ink-400">Loading times…</p>
-              )}
-              {!slotsLoading && selectedDate && slots.length === 0 && (
-                <p className="font-sans text-[16px] text-ink-400">
-                  No openings this day. Try another date, or{" "}
-                  <a href={site.phoneHref} className="underline">
-                    call to arrange
-                  </a>
-                  .
+      {/* Steps 2–3 and the confirmation, in a pop-up */}
+      {open && service && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Book: ${service.name}`}
+          className="fixed inset-0 z-[90] flex items-end justify-center sm:items-center sm:p-6"
+        >
+          <div
+            className="absolute inset-0 bg-ink-900/55 backdrop-blur-sm"
+            onClick={close}
+            aria-hidden="true"
+          />
+          <div className="relative z-10 flex max-h-[94vh] w-full max-w-3xl flex-col overflow-hidden rounded-t-2xl bg-paper-2 shadow-xl ring-1 ring-[color:var(--border)] sm:max-h-[90vh] sm:rounded-2xl">
+            <div className="flex items-start justify-between gap-4 border-b border-[color:var(--border)] px-6 py-4 sm:px-8">
+              <div className="min-w-0">
+                <p className="font-serif text-[24px] leading-tight text-ink-900">{service.name}</p>
+                <p className="mt-1 font-sans text-[14px] text-ink-400">
+                  {service.durationMinutes} min · ${service.price}
+                  {service.category === "phone" ? " · By phone" : ""}
                 </p>
-              )}
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
-                {slots.map((slot) => {
-                  const active = selectedSlot?.start === slot.start;
-                  return (
-                    <button
-                      key={slot.start}
-                      type="button"
-                      onClick={() => setSelectedSlot(slot)}
-                      className={`rounded-full border px-2 py-2.5 font-sans text-[15px] transition ${
-                        active
-                          ? "border-copper-800 bg-copper-700 text-white shadow-sm"
-                          : "border-copper-300 bg-copper-50 text-ink-700 hover:border-copper-700 hover:bg-copper-100"
-                      }`}
-                    >
-                      {slot.label}
-                    </button>
-                  );
-                })}
               </div>
+              <button
+                ref={closeRef}
+                type="button"
+                onClick={close}
+                aria-label="Close"
+                className="flex h-9 w-9 flex-none items-center justify-center rounded-full text-[24px] leading-none text-ink-400 transition hover:bg-copper-50 hover:text-copper-800"
+              >
+                ×
+              </button>
+            </div>
+            <div className="overflow-y-auto px-6 py-7 sm:px-8">
+              {confirmation ? (
+                <div className="py-4 text-center">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-sage-bg text-sage">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M20 6 9 17l-5-5" />
+                    </svg>
+                  </div>
+                  <h2 className="mt-5 font-serif text-[32px] text-ink-900">You&apos;re booked</h2>
+                  <p className="mt-3 font-sans text-[17px] leading-[1.65] text-ink-500">
+                    Your <strong>{confirmation.service}</strong> is confirmed for{" "}
+                    <strong>{confirmation.when}</strong>.
+                  </p>
+                  <p className="mt-2 font-sans text-[16px] text-ink-400">
+                    A confirmation is on its way to <strong>{form.email}</strong>.{" "}
+                    {service.category === "phone"
+                      ? "This consult is by phone."
+                      : `See you at ${site.address}.`}
+                  </p>
+                  <button type="button" onClick={close} className="btn btn-secondary btn-md mt-8">
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <div className="grid gap-10">
+                  <StepCard title="Pick a date & time">
+                    <div className="grid gap-8 md:grid-cols-[auto_1fr]">
+                      <MonthCalendar
+                        selected={selectedDate}
+                        onSelect={chooseDate}
+                        weekdays={weekdays}
+                        windowDays={windowDays}
+                      />
+                      <div>
+                        <p className="mb-3 font-sans text-[15px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                          {selectedDate ? "Available times" : "Select a date"}
+                        </p>
+                        {slotsLoading && (
+                          <p className="font-sans text-[16px] text-ink-400">Loading times…</p>
+                        )}
+                        {!slotsLoading && selectedDate && slots.length === 0 && (
+                          <p className="font-sans text-[16px] text-ink-400">
+                            No openings this day. Try another date, or{" "}
+                            <a href={site.phoneHref} className="underline">
+                              call to arrange
+                            </a>
+                            .
+                          </p>
+                        )}
+                        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
+                          {slots.map((slot) => {
+                            const active = selectedSlot?.start === slot.start;
+                            return (
+                              <button
+                                key={slot.start}
+                                type="button"
+                                onClick={() => setSelectedSlot(slot)}
+                                className={`rounded-full border px-2 py-2.5 font-sans text-[15px] transition ${
+                                  active
+                                    ? "border-copper-800 bg-copper-700 text-white shadow-sm"
+                                    : "border-copper-300 bg-copper-50 text-ink-700 hover:border-copper-700 hover:bg-copper-100"
+                                }`}
+                              >
+                                {slot.label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  </StepCard>
+
+                  {selectedSlot && (
+                    <div ref={detailsRef} className="scroll-mt-4">
+                      <StepCard title="Your details">
+                        <form onSubmit={submit} className="grid gap-4">
+                          <div className="grid gap-4 sm:grid-cols-2">
+                            <Field label="Name" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
+                            <Field label="Email" type="email" required value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
+                          </div>
+                          <Field label="Phone (optional)" type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+                          <label className="block">
+                            <span className="field-label">What brings you in? (optional)</span>
+                            <textarea
+                              rows={3}
+                              value={form.notes}
+                              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                              className="field-input"
+                            />
+                          </label>
+
+                          <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[16px] text-ink-700">
+                            <strong className="text-ink-900">{service.name}</strong> · $
+                            {service.price} · {selectedSlot.label},{" "}
+                            {new Date(selectedSlot.start).toLocaleDateString(undefined, {
+                              weekday: "long",
+                              month: "long",
+                              day: "numeric",
+                            })}
+                          </div>
+
+                          {error && (
+                            <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
+                              {error}
+                            </p>
+                          )}
+
+                          <p className="rounded-lg bg-sand px-4 py-3 font-sans text-[14px] leading-[1.6] text-ink-600">
+                            <span className="font-semibold text-ink-700">
+                              Cancellation policy:
+                            </span>{" "}
+                            {site.cancellationPolicy}
+                          </p>
+
+                          <button type="submit" disabled={submitting} className="btn btn-primary btn-lg mt-1 w-full sm:w-auto sm:self-start">
+                            {submitting ? "Confirming…" : "Confirm booking"}
+                          </button>
+                        </form>
+                      </StepCard>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
-        </StepCard>
-      )}
-
-      {/* Step 3, Details */}
-      {service && selectedSlot && (
-        <StepCard title="Your details">
-          <form onSubmit={submit} className="grid gap-4">
-            <div className="grid gap-4 sm:grid-cols-2">
-              <Field label="Name" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
-              <Field label="Email" type="email" required value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
-            </div>
-            <Field label="Phone (optional)" type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
-            <label className="block">
-              <span className="field-label">What brings you in? (optional)</span>
-              <textarea
-                rows={3}
-                value={form.notes}
-                onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="field-input"
-              />
-            </label>
-
-            <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[16px] text-ink-700">
-              <strong className="text-ink-900">{service.name}</strong> · $
-              {service.price} · {selectedSlot.label},{" "}
-              {new Date(selectedSlot.start).toLocaleDateString(undefined, {
-                weekday: "long",
-                month: "long",
-                day: "numeric",
-              })}
-            </div>
-
-            {error && (
-              <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
-                {error}
-              </p>
-            )}
-
-            <p className="rounded-lg bg-sand px-4 py-3 font-sans text-[14px] leading-[1.6] text-ink-600">
-              <span className="font-semibold text-ink-700">
-                Cancellation policy:
-              </span>{" "}
-              {site.cancellationPolicy}
-            </p>
-
-            <button type="submit" disabled={submitting} className="btn btn-primary btn-lg mt-1 w-full sm:w-auto sm:self-start">
-              {submitting ? "Confirming…" : "Confirm booking"}
-            </button>
-          </form>
-        </StepCard>
+        </div>
       )}
     </div>
   );
