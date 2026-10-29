@@ -1,4 +1,13 @@
+import { Allura } from "next/font/google";
 import { site } from "@/lib/site";
+
+// Handwritten face for the photographer's autograph on the photo.
+const autograph = Allura({ weight: "400", subsets: ["latin"], display: "swap" });
+
+const PHOTO_CREDIT = {
+  name: "",
+  url: "https://www.google.com/maps/contrib/105723441655519311194/photos/@41.4648607,-72.5963201,179655m/data=!3m2!1e3!4b1!4m3!8m2!3m1!1e1?entry=ttu&g_ep=EgoyMDI2MTAyNy4wIKXMDSoASAFQAw%3D%3D",
+};
 
 const query = encodeURIComponent(site.address);
 const MAP_EMBED = `https://www.google.com/maps?q=${query}&z=14&output=embed`;
@@ -23,15 +32,30 @@ export function OfficeLocation() {
           </p>
         </div>
 
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/imagery/shelburne-office-sunset.webp"
-          alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and Lake Champlain and the mountains beyond"
-          width={1672}
-          height={941}
-          loading="lazy"
-          className="mt-[clamp(32px,5vw,52px)] aspect-[4/3] w-full rounded-[18px] object-cover shadow-md sm:aspect-[16/9]"
-        />
+        <figure className="relative mt-[clamp(32px,5vw,52px)]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/imagery/shelburne-office-sunset.webp"
+            alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and Lake Champlain and the mountains beyond"
+            width={1672}
+            height={941}
+            loading="lazy"
+            className="aspect-[4/3] w-full rounded-[18px] object-cover shadow-md sm:aspect-[16/9]"
+          />
+          {PHOTO_CREDIT.name && (
+            <figcaption className="absolute bottom-2.5 right-4 sm:bottom-3.5 sm:right-5">
+              <a
+                href={PHOTO_CREDIT.url}
+                target="_blank"
+                rel="noreferrer"
+                aria-label={`Photo by ${PHOTO_CREDIT.name}`}
+                className={`${autograph.className} inline-block text-[22px] leading-none text-white/90 transition duration-200 [text-shadow:0_1px_2px_rgba(0,0,0,0.45)] hover:-translate-y-[2px] hover:text-white hover:[text-shadow:0_4px_10px_rgba(0,0,0,0.6)] focus-visible:-translate-y-[2px] sm:text-[26px]`}
+              >
+                {PHOTO_CREDIT.name}
+              </a>
+            </figcaption>
+          )}
+        </figure>
 
         <div className="mt-6 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
           <div className="flex flex-col justify-center rounded-[18px] border border-[color:var(--border)] bg-white p-7 text-center md:text-left">
