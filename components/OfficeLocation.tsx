@@ -26,10 +26,10 @@ export function OfficeLocation() {
 
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="/imagery/shelburne-office.webp"
-          alt="Sunset over the fields and tree lines of the office land in Shelburne, Vermont, with mountains on the horizon"
-          width={1800}
-          height={1200}
+          src="/imagery/shelburne-office-sunset.webp"
+          alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and the lake and mountains beyond"
+          width={1672}
+          height={941}
           loading="lazy"
           className="mt-[clamp(32px,5vw,52px)] aspect-[4/3] w-full rounded-[18px] object-cover shadow-md sm:aspect-[16/9]"
         />
