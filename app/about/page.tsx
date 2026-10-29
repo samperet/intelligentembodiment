@@ -96,7 +96,7 @@ export default function AboutPage() {
       <section className="px-6 pb-[clamp(48px,7vw,80px)]">
         <div className="mx-auto max-w-[760px]">
           <Eyebrow align="center">My Path</Eyebrow>
-          <div className="mt-6 space-y-5 font-sans text-[19px] leading-[1.8] text-ink-700">
+          <div className="mt-6 space-y-5 font-sans text-[21px] leading-[1.8] text-ink-700">
             <p>
               Integrating credentials with lived wisdom, Mackensie has woven
               thirty years of deep spiritual practice into an offering that
@@ -148,7 +148,7 @@ export default function AboutPage() {
                 <h3 className="mt-4 font-serif text-[26px] text-ink-900">
                   {p.title}
                 </h3>
-                <p className="mt-2 font-sans text-[17px] leading-[1.7] text-ink-500">
+                <p className="mt-2 font-sans text-[19px] leading-[1.7] text-ink-500">
                   {p.body}
                 </p>
               </div>
@@ -168,7 +168,7 @@ export default function AboutPage() {
                       className="aspect-[4/3] w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.03]"
                     />
                   </div>
-                  <figcaption className="mt-3 text-center font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                  <figcaption className="mt-3 text-center font-sans text-[15px] font-medium uppercase tracking-[0.16em] text-ink-500">
                     {p.caption}
                   </figcaption>
                 </figure>

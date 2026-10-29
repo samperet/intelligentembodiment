@@ -215,7 +215,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         <h2 className="font-serif text-[28px] text-ink-900">
           Not currently booking
         </h2>
-        <p className="mx-auto mt-3 max-w-[40ch] font-sans text-[17px] leading-[1.7] text-ink-500">
+        <p className="mx-auto mt-3 max-w-[40ch] font-sans text-[19px] leading-[1.7] text-ink-500">
           Mackensie isn&apos;t accepting new appointments online right now.
           Please call or text to be added to the list, and you&apos;ll hear as
           soon as sessions reopen.
@@ -232,7 +232,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       {/* Step 1, Session */}
       <StepCard showHeader={false}>
         {accept && !accept.massage && accept.phone && (
-          <p className="mx-auto mb-5 max-w-[520px] rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[15px] leading-[1.6] text-ink-600">
+          <p className="mx-auto mb-5 max-w-[520px] rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[17px] leading-[1.6] text-ink-600">
             Massages are not currently being scheduled. If you&apos;d like to be
             informed when they return,{" "}
             <a href="/about#newsletter" className="text-copper-800 underline">
@@ -272,7 +272,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                     {label}
                   </button>
                   <div className="px-7 pb-4">
-                    <WhatToExpect className="font-sans text-[14px] text-copper-100 underline underline-offset-4 transition hover:text-white" />
+                    <WhatToExpect className="font-sans text-[16px] text-copper-100 underline underline-offset-4 transition hover:text-white" />
                   </div>
                 </div>
               );
@@ -308,7 +308,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
             <div className="flex items-start justify-between gap-4 border-b border-[color:var(--border)] px-6 py-4 sm:px-8">
               <div className="min-w-0">
                 <p className="font-serif text-[24px] leading-tight text-ink-900">{service.name}</p>
-                <p className="mt-1 font-sans text-[14px] text-ink-400">
+                <p className="mt-1 font-sans text-[16px] text-ink-400">
                   {service.durationMinutes} min · ${service.price}
                   {service.category === "phone" ? " · By phone" : ""}
                 </p>
@@ -332,11 +332,11 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                     </svg>
                   </div>
                   <h2 className="mt-5 font-serif text-[32px] text-ink-900">You&apos;re booked</h2>
-                  <p className="mt-3 font-sans text-[17px] leading-[1.65] text-ink-500">
+                  <p className="mt-3 font-sans text-[19px] leading-[1.65] text-ink-500">
                     Your <strong>{confirmation.service}</strong> is confirmed for{" "}
                     <strong>{confirmation.when}</strong>.
                   </p>
-                  <p className="mt-2 font-sans text-[16px] text-ink-400">
+                  <p className="mt-2 font-sans text-[18px] text-ink-400">
                     A confirmation is on its way to <strong>{form.email}</strong>.{" "}
                     {service.category === "phone"
                       ? "This consult is by phone."
@@ -357,14 +357,14 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                         windowDays={windowDays}
                       />
                       <div>
-                        <p className="mb-3 font-sans text-[15px] font-medium uppercase tracking-[0.16em] text-ink-500">
+                        <p className="mb-3 font-sans text-[17px] font-medium uppercase tracking-[0.16em] text-ink-500">
                           {selectedDate ? "Available times" : "Select a date"}
                         </p>
                         {slotsLoading && (
-                          <p className="font-sans text-[16px] text-ink-400">Loading times…</p>
+                          <p className="font-sans text-[18px] text-ink-400">Loading times…</p>
                         )}
                         {!slotsLoading && selectedDate && slots.length === 0 && (
-                          <p className="font-sans text-[16px] text-ink-400">
+                          <p className="font-sans text-[18px] text-ink-400">
                             No openings this day. Try another date, or{" "}
                             <a href={site.phoneHref} className="underline">
                               call to arrange
@@ -380,7 +380,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                                 key={slot.start}
                                 type="button"
                                 onClick={() => setSelectedSlot(slot)}
-                                className={`rounded-full border px-2 py-2.5 font-sans text-[15px] transition ${
+                                className={`rounded-full border px-2 py-2.5 font-sans text-[17px] transition ${
                                   active
                                     ? "border-copper-800 bg-copper-700 text-white shadow-sm"
                                     : "border-copper-300 bg-copper-50 text-ink-700 hover:border-copper-700 hover:bg-copper-100"
@@ -414,7 +414,7 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                             />
                           </label>
 
-                          <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[16px] text-ink-700">
+                          <div className="mt-2 rounded-lg border border-copper-200 bg-paper-2 p-4 font-sans text-[18px] text-ink-700">
                             <strong className="text-ink-900">{service.name}</strong> · $
                             {service.price} · {selectedSlot.label},{" "}
                             {new Date(selectedSlot.start).toLocaleDateString(undefined, {
@@ -425,12 +425,12 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
                           </div>
 
                           {error && (
-                            <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[16px] text-copper-900">
+                            <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[18px] text-copper-900">
                               {error}
                             </p>
                           )}
 
-                          <p className="rounded-lg bg-sand px-4 py-3 font-sans text-[14px] leading-[1.6] text-ink-600">
+                          <p className="rounded-lg bg-sand px-4 py-3 font-sans text-[16px] leading-[1.6] text-ink-600">
                             <span className="font-semibold text-ink-700">
                               Cancellation policy:
                             </span>{" "}
@@ -581,7 +581,7 @@ function MonthCalendar({
       </div>
       <div className="grid grid-cols-7 gap-1 text-center">
         {WEEKDAY_LABELS.map((w) => (
-          <div key={w} className="py-1 font-sans text-[12px] font-medium uppercase tracking-[0.1em] text-ink-400">
+          <div key={w} className="py-1 font-sans text-[14px] font-medium uppercase tracking-[0.1em] text-ink-400">
             {w}
           </div>
         ))}
@@ -596,7 +596,7 @@ function MonthCalendar({
               type="button"
               disabled={!selectable}
               onClick={() => onSelect(key)}
-              className={`aspect-square rounded-md font-sans text-[16px] transition ${
+              className={`aspect-square rounded-md font-sans text-[18px] transition ${
                 isSelected
                   ? "bg-copper-700 text-white"
                   : selectable

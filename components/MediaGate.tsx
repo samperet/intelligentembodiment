@@ -44,7 +44,7 @@ export function MediaGate({ configured }: { configured: boolean }) {
         <h1 className="mt-3 font-serif text-[34px] leading-[1.1] text-ink-900">
           A quiet place to listen
         </h1>
-        <p className="mt-3 font-sans text-[16px] leading-[1.65] text-ink-500">
+        <p className="mt-3 font-sans text-[18px] leading-[1.65] text-ink-500">
           These recordings are shared with Mackensie&apos;s clients. Enter the
           password you were given.
         </p>
@@ -63,7 +63,7 @@ export function MediaGate({ configured }: { configured: boolean }) {
               />
             </label>
             {error && (
-              <p className="rounded-lg bg-copper-50 px-4 py-2.5 font-sans text-[14px] text-copper-900">
+              <p className="rounded-lg bg-copper-50 px-4 py-2.5 font-sans text-[16px] text-copper-900">
                 {error}
               </p>
             )}
@@ -76,7 +76,7 @@ export function MediaGate({ configured }: { configured: boolean }) {
             </button>
           </form>
         ) : (
-          <p className="mt-7 rounded-lg bg-sand px-4 py-3 font-sans text-[15px] text-ink-700">
+          <p className="mt-7 rounded-lg bg-sand px-4 py-3 font-sans text-[17px] text-ink-700">
             The listening room isn&apos;t open yet. Please check back soon.
           </p>
         )}

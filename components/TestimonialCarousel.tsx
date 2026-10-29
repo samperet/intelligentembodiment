@@ -80,7 +80,7 @@ export function TestimonialCarousel() {
               <blockquote className="font-serif text-[22px] italic leading-[1.55] text-ink-700 sm:text-[25px]">
                 {t.quote}
               </blockquote>
-              <figcaption className="mt-6 font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+              <figcaption className="mt-6 font-sans text-[15px] font-semibold uppercase tracking-[0.16em] text-copper-800">
                 {t.author}
               </figcaption>
             </div>

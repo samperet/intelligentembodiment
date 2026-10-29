@@ -62,7 +62,7 @@ export default function RetreatsPage() {
       <section className="px-6 pb-[clamp(64px,10vw,128px)]">
         <div className="mx-auto max-w-container">
           {posters.length === 0 ? (
-            <p className="mx-auto max-w-[46ch] text-center font-sans text-[17px] leading-[1.7] text-ink-500">
+            <p className="mx-auto max-w-[46ch] text-center font-sans text-[19px] leading-[1.7] text-ink-500">
               Posters from past gatherings will appear here soon. To hear about
               what&apos;s next,{" "}
               <Link href="/about#newsletter" className="text-copper-800 underline">

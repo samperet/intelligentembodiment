@@ -69,7 +69,7 @@ export function PhoneChoice() {
           ×
         </button>
         <h2 className="font-serif text-[26px] text-ink-900">Call or text</h2>
-        <p className="mt-1 font-sans text-[15px] text-ink-500">{site.phone}</p>
+        <p className="mt-1 font-sans text-[17px] text-ink-500">{site.phone}</p>
         <div className="mt-6 grid gap-3">
           <a
             href={tel}

@@ -49,10 +49,10 @@ export default async function RecipesPage() {
                 <h2 className="mt-4 font-serif text-[30px] leading-[1.1] text-ink-900 transition group-hover:text-copper-900">
                   {r.title}
                 </h2>
-                <p className="mt-3 flex-1 font-sans text-[16px] leading-[1.65] text-ink-500">
+                <p className="mt-3 flex-1 font-sans text-[18px] leading-[1.65] text-ink-500">
                   {r.intro[0]}
                 </p>
-                <span className="mt-5 inline-block font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+                <span className="mt-5 inline-block font-sans text-[15px] font-semibold uppercase tracking-[0.16em] text-copper-800">
                   Open recipe →
                 </span>
               </Link>

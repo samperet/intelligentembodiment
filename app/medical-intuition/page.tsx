@@ -64,7 +64,7 @@ export default function MedicalIntuitionPage() {
       {/* What it is */}
       <section className="px-6 pb-[clamp(48px,7vw,80px)]">
         <div className="mx-auto max-w-[760px]">
-          <div className="space-y-5 font-sans text-[19px] leading-[1.8] text-ink-700">
+          <div className="space-y-5 font-sans text-[21px] leading-[1.8] text-ink-700">
             <p>
               Medical intuition is the trained practice of perceiving patterns
               in the body — physical, emotional, and energetic — that underlie
@@ -106,7 +106,7 @@ export default function MedicalIntuitionPage() {
                 <h3 className="mt-2 font-serif text-[24px] text-ink-900">
                   {s.title}
                 </h3>
-                <p className="mt-2 font-sans text-[16px] leading-[1.7] text-ink-500">
+                <p className="mt-2 font-sans text-[18px] leading-[1.7] text-ink-500">
                   {s.body}
                 </p>
               </div>
@@ -130,7 +130,7 @@ export default function MedicalIntuitionPage() {
               ? testimonials[0].quote.slice(0, testimonials[0].quote.indexOf(".", 120) + 1)
               : testimonials[0].quote}
           </blockquote>
-          <p className="mt-5 font-sans text-[14px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+          <p className="mt-5 font-sans text-[16px] font-semibold uppercase tracking-[0.16em] text-copper-800">
             {testimonials[0].author}
           </p>
         </div>
@@ -157,7 +157,7 @@ export default function MedicalIntuitionPage() {
               <BookingWidget initialService="phone-consultation" />
             </Suspense>
           </div>
-          <p className="mt-8 text-center font-sans text-[15px] text-ink-500">
+          <p className="mt-8 text-center font-sans text-[17px] text-ink-500">
             Prefer to talk first?{" "}
             <a href={site.phoneHref} className="underline">
               {site.phone}
@@ -174,7 +174,7 @@ export default function MedicalIntuitionPage() {
             {faqs.map((f) => (
               <div key={f.q}>
                 <h3 className="font-serif text-[24px] text-ink-900">{f.q}</h3>
-                <p className="mt-2 font-sans text-[17px] leading-[1.75] text-ink-600">
+                <p className="mt-2 font-sans text-[19px] leading-[1.75] text-ink-600">
                   {f.a}
                 </p>
               </div>
@@ -182,7 +182,7 @@ export default function MedicalIntuitionPage() {
           </div>
           <div className="mt-12">
             <Rule ornament="mandala" />
-            <p className="mt-6 text-center font-sans text-[13px] leading-[1.7] text-ink-400">
+            <p className="mt-6 text-center font-sans text-[15px] leading-[1.7] text-ink-400">
               Medical intuition is a complementary practice and is not a
               substitute for professional medical diagnosis or treatment.
               Always consult your physician about medical concerns.

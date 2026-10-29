@@ -27,7 +27,7 @@ export function WhatToExpect({ className }: { className?: string }) {
         onClick={() => setOpen(true)}
         className={
           className ??
-          "font-sans text-[15px] text-copper-800 underline underline-offset-4 transition hover:text-copper-900"
+          "font-sans text-[17px] text-copper-800 underline underline-offset-4 transition hover:text-copper-900"
         }
       >
         What to expect in a session
@@ -66,7 +66,7 @@ export function WhatToExpect({ className }: { className?: string }) {
             <h2 className="font-serif text-[30px] text-ink-900">
               What to expect
             </h2>
-            <div className="mt-5 space-y-4 text-left font-sans text-[16px] leading-[1.75] text-ink-600">
+            <div className="mt-5 space-y-4 text-left font-sans text-[18px] leading-[1.75] text-ink-600">
               <p>
                 Every session begins with a conversation. Guided by intuition,
                 Mackensie will ask questions and listen closely for what your
@@ -83,7 +83,7 @@ export function WhatToExpect({ className }: { className?: string }) {
                 </strong>{" "}
                 If it doesn&apos;t serve you, you don&apos;t pay.
               </p>
-              <p className="text-[15px] text-ink-500">
+              <p className="text-[17px] text-ink-500">
                 {site.cancellationPolicy}
               </p>
             </div>

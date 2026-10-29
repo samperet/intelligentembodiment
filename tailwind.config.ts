@@ -34,7 +34,7 @@ const config: Config = {
         clay: "#E4D8C7",
         stone: "#CFC3B2",
         ink: {
-          400: "#857F97",
+          400: "#66607C", // 5.4:1 on paper; legible for small meta text
           500: "#5B5772",
           700: "#3C3952",
           900: "#211F33",

@@ -20,7 +20,7 @@
   body {
     @apply bg-paper text-ink-900 font-sans;
     font-weight: 400;
-    font-size: 18px;
+    font-size: 19px;
     line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -55,7 +55,7 @@
   /* Signature tracked eyebrow label */
   .eyebrow {
     @apply font-sans uppercase text-copper-800;
-    font-size: 12.5px;
+    font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.24em;
   }
@@ -65,7 +65,7 @@
   /* Italic serif lead line */
   .lead {
     @apply font-serif italic text-ink-500;
-    font-size: clamp(21px, 2.6vw, 27px);
+    font-size: clamp(22px, 2.8vw, 28px);
     line-height: 1.55;
   }
 
@@ -83,9 +83,9 @@
     outline: none;
     box-shadow: 0 0 0 3px var(--focus-ring);
   }
-  .btn-sm { padding: 9px 19px; font-size: 12.5px; }
-  .btn-md { padding: 13px 27px; font-size: 13.5px; }
-  .btn-lg { padding: 17px 35px; font-size: 15px; }
+  .btn-sm { padding: 10px 20px; font-size: 14px; }
+  .btn-md { padding: 14px 28px; font-size: 15px; }
+  .btn-lg { padding: 18px 36px; font-size: 16.5px; }
 
   .btn-primary {
     @apply bg-copper-700 text-white;
@@ -143,14 +143,14 @@
   /* Form controls */
   .field-label {
     @apply mb-2 block font-sans uppercase text-ink-500;
-    font-size: 12.5px;
+    font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.16em;
   }
   .field-input {
     @apply w-full rounded-lg bg-paper-2 px-4 py-3 font-sans text-ink-900 outline-none transition;
     border: 1px solid var(--border-strong);
-    font-size: 17px;
+    font-size: 19px;
   }
   .field-input::placeholder { @apply text-ink-400; }
   .field-input:focus {

@@ -90,7 +90,7 @@ export default async function WritingPage({
                 className={
                   i === 0
                     ? "font-serif text-[22px] italic leading-[1.65] text-ink-700"
-                    : "font-sans text-[16.5px] leading-[1.8] text-ink-700"
+                    : "font-sans text-[18.5px] leading-[1.8] text-ink-700"
                 }
               >
                 {p}
@@ -99,7 +99,7 @@ export default async function WritingPage({
           </div>
         )}
 
-        <p className="mt-10 text-right font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+        <p className="mt-10 text-right font-sans text-[15px] font-semibold uppercase tracking-[0.16em] text-copper-800">
           Mackensie Satya Priya
         </p>
 

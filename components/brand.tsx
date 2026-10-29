@@ -79,7 +79,7 @@ export function Stat({ value, label }: { value: string; label: string }) {
       >
         {value}
       </div>
-      <div className="mt-2.5 font-sans text-[13px] font-medium uppercase tracking-[0.16em] text-ink-500">
+      <div className="mt-2.5 font-sans text-[15px] font-medium uppercase tracking-[0.16em] text-ink-500">
         {label}
       </div>
     </div>
@@ -154,10 +154,10 @@ export function OfferingCard({ o }: { o: Offering }) {
             {o.price}
           </span>
           {o.note && (
-            <span className="font-sans text-[15px] text-ink-400">{o.note}</span>
+            <span className="font-sans text-[17px] text-ink-400">{o.note}</span>
           )}
         </div>
-        <p className="font-sans text-[17px] leading-[1.65] text-ink-500">
+        <p className="font-sans text-[19px] leading-[1.65] text-ink-500">
           {o.description}
         </p>
         <div className="mt-auto pt-1.5">

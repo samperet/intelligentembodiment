@@ -36,7 +36,7 @@ export default function VideosPage() {
                     {v.title}
                   </h2>
                   {v.note && (
-                    <p className="mt-1.5 font-sans text-[15px] leading-[1.6] text-white/65">
+                    <p className="mt-1.5 font-sans text-[17px] leading-[1.6] text-white/65">
                       {v.note}
                     </p>
                   )}

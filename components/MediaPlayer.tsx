@@ -235,7 +235,7 @@ export function MediaPlayer({
     return (
       <>
         <Hero />
-        <p className="mx-auto mb-24 max-w-[520px] rounded-xl bg-sand px-6 py-5 text-center font-sans text-[16px] text-ink-500">
+        <p className="mx-auto mb-24 max-w-[520px] rounded-xl bg-sand px-6 py-5 text-center font-sans text-[18px] text-ink-500">
           The library is being prepared. Please check back soon.
         </p>
       </>
@@ -314,7 +314,7 @@ export function MediaPlayer({
                   <span className="mt-4 block font-serif text-[22px] leading-tight text-ink-900 transition group-hover:text-copper-800 sm:text-[28px]">
                     {a.name}
                   </span>
-                  <span className="mt-1 block font-sans text-[13px] text-ink-400">
+                  <span className="mt-1 block font-sans text-[15px] text-ink-400">
                     {a.programs.length} program{a.programs.length === 1 ? "" : "s"} · {a.count} recording
                     {a.count === 1 ? "" : "s"}
                   </span>
@@ -330,7 +330,7 @@ export function MediaPlayer({
             <button
               type="button"
               onClick={allArtists}
-              className="-ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 font-sans text-[14px] text-ink-500 transition hover:text-copper-800"
+              className="-ml-2 inline-flex items-center gap-1.5 rounded-full px-2 py-1.5 font-sans text-[16px] text-ink-500 transition hover:text-copper-800"
             >
               <Chevron dir="left" />
               All artists
@@ -341,7 +341,7 @@ export function MediaPlayer({
               <div className="min-w-0">
                 <span className="eyebrow block">Artist</span>
                 <h1 className="mt-2 font-serif text-[34px] leading-[1.05] text-ink-900 sm:text-[48px]">{shown.name}</h1>
-                <p className="mt-2 font-sans text-[13px] text-ink-400">
+                <p className="mt-2 font-sans text-[15px] text-ink-400">
                   {shown.count} recording{shown.count === 1 ? "" : "s"}
                   {shown.duration > 0 && ` · ${formatTotal(shown.duration)}`}
                 </p>
@@ -363,7 +363,7 @@ export function MediaPlayer({
                     >
                       <span className="min-w-0">
                         <span className="block font-serif text-[21px] leading-snug text-ink-900">{p.name}</span>
-                        <span className="mt-0.5 block font-sans text-[13px] text-ink-400">
+                        <span className="mt-0.5 block font-sans text-[15px] text-ink-400">
                           {p.items.length} recording{p.items.length === 1 ? "" : "s"}
                           {p.duration > 0 && ` · ${formatTotal(p.duration)}`}
                         </span>
@@ -384,7 +384,7 @@ export function MediaPlayer({
                                   active ? "bg-white shadow-sm" : "hover:bg-white/60"
                                 }`}
                               >
-                                <span className="flex justify-center font-sans text-[14px] tabular-nums text-ink-400">
+                                <span className="flex justify-center font-sans text-[16px] tabular-nums text-ink-400">
                                   {active && playing ? (
                                     <span className="ie-eq" aria-hidden="true">
                                       <span />
@@ -396,13 +396,13 @@ export function MediaPlayer({
                                   )}
                                 </span>
                                 <span
-                                  className={`font-serif text-[19px] leading-snug ${
+                                  className={`font-serif text-[21px] leading-snug ${
                                     active ? "text-copper-800" : "text-ink-900"
                                   }`}
                                 >
                                   {t.title}
                                 </span>
-                                <span className="font-sans text-[13px] tabular-nums text-ink-400">
+                                <span className="font-sans text-[15px] tabular-nums text-ink-400">
                                   {formatDuration(t.duration)}
                                 </span>
                               </button>
@@ -434,10 +434,10 @@ export function MediaPlayer({
             >
               <Cover src={cover} spin={playing} className="h-12 w-12 flex-none rounded-lg" />
               <span className="min-w-0">
-                <span className="block truncate font-serif text-[17px] leading-tight text-ink-900">
+                <span className="block truncate font-serif text-[19px] leading-tight text-ink-900">
                   {current.title}
                 </span>
-                <span className={`block truncate font-sans text-[12px] ${error ? "text-copper-900" : "text-ink-400"}`}>
+                <span className={`block truncate font-sans text-[14px] ${error ? "text-copper-900" : "text-ink-400"}`}>
                   {error || subtitle}
                 </span>
               </span>
@@ -491,7 +491,7 @@ export function MediaPlayer({
 
             <div className="mt-6 text-center">
               <h2 className="font-serif text-[28px] leading-[1.15] text-ink-900">{current.title}</h2>
-              {subtitle && <p className="mt-1 font-sans text-[14px] text-ink-500">{subtitle}</p>}
+              {subtitle && <p className="mt-1 font-sans text-[16px] text-ink-500">{subtitle}</p>}
             </div>
 
             <div className="mt-5">
@@ -508,7 +508,7 @@ export function MediaPlayer({
                 className="ie-range w-full"
                 style={{ ["--pct" as string]: `${pct}%` }}
               />
-              <div className="mt-1 flex justify-between font-sans text-[12px] tabular-nums text-ink-400">
+              <div className="mt-1 flex justify-between font-sans text-[14px] tabular-nums text-ink-400">
                 <span>{formatDuration(at)}</span>
                 <span>{formatDuration(duration || current.duration)}</span>
               </div>
@@ -537,7 +537,7 @@ export function MediaPlayer({
               </IconButton>
             </div>
             {error && (
-              <p className="mt-4 rounded-lg bg-copper-50 px-4 py-2.5 text-center font-sans text-[14px] text-copper-900">
+              <p className="mt-4 rounded-lg bg-copper-50 px-4 py-2.5 text-center font-sans text-[16px] text-copper-900">
                 {error}
               </p>
             )}

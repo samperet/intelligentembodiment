@@ -5,7 +5,7 @@ import { site } from "@/lib/site";
 const autograph = Allura({ weight: "400", subsets: ["latin"], display: "swap" });
 
 const PHOTO_CREDIT = {
-  name: "",
+  name: "Shawn McGrath",
   url: "https://www.google.com/maps/contrib/105723441655519311194/photos/@41.4648607,-72.5963201,179655m/data=!3m2!1e3!4b1!4m3!8m2!3m1!1e1?entry=ttu&g_ep=EgoyMDI2MTAyNy4wIKXMDSoASAFQAw%3D%3D",
 };
 
@@ -24,7 +24,7 @@ export function OfficeLocation() {
           >
             A healing place in itself
           </h2>
-          <p className="mt-5 font-sans text-[18px] leading-[1.75] text-ink-500">
+          <p className="mt-5 font-sans text-[20px] leading-[1.75] text-ink-500">
             The office overlooks rolling meadows leading to a mountainscape
             vista above Lake Champlain. The land holds a healing atmosphere of
             its own, and it was once home to the All Souls Interfaith
@@ -41,6 +41,20 @@ export function OfficeLocation() {
             height={941}
             loading="lazy"
             className="aspect-[4/3] w-full rounded-[18px] object-cover shadow-md sm:aspect-[16/9]"
+          />
+          {/* The IE mandala, die-cut white like a sticker on the print. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/mandala.png"
+            alt=""
+            aria-hidden="true"
+            width={84}
+            height={84}
+            className="pointer-events-none absolute left-3 top-3 w-[60px] -rotate-[8deg] select-none sm:left-5 sm:top-5 sm:w-[84px]"
+            style={{
+              filter:
+                "brightness(0) invert(1) drop-shadow(0 1px 1px rgba(0,0,0,0.3)) drop-shadow(0 4px 8px rgba(0,0,0,0.3))",
+            }}
           />
           {PHOTO_CREDIT.name && (
             <figcaption className="absolute bottom-2.5 right-4 sm:bottom-3.5 sm:right-5">
@@ -65,7 +79,7 @@ export function OfficeLocation() {
               <br />
               Shelburne, VT
             </p>
-            <p className="mt-3 font-sans text-[14px] leading-[1.6] text-ink-400">
+            <p className="mt-3 font-sans text-[16px] leading-[1.6] text-ink-400">
               Medical intuition consults are by phone.
             </p>
             <a

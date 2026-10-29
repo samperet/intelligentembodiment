@@ -72,7 +72,7 @@ export function RetreatInterest() {
         {status === "submitting" ? "Sending…" : "Notify Me"}
       </button>
       {error && (
-        <p className="w-full text-center font-sans text-[15px] text-copper-800 sm:absolute">
+        <p className="w-full text-center font-sans text-[17px] text-copper-800 sm:absolute">
           {error}
         </p>
       )}

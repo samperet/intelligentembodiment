@@ -35,7 +35,7 @@ export default async function WritingsPage() {
                 href={`/writings/${w.slug}`}
                 className="group block rounded-xl border border-[color:var(--border)] bg-paper-2 p-8 transition hover:border-[color:var(--border-strong)] hover:shadow-md sm:p-10"
               >
-                <p className="font-sans text-[12px] font-medium uppercase tracking-[0.2em] text-ink-400">
+                <p className="font-sans text-[14px] font-medium uppercase tracking-[0.2em] text-ink-400">
                   {new Date(w.date + "T12:00:00").toLocaleDateString("en-US", {
                     month: "long",
                     day: "numeric",
@@ -49,7 +49,7 @@ export default async function WritingsPage() {
                 <p className="mt-3 max-w-[62ch] font-serif text-[20px] italic leading-[1.6] text-ink-500">
                   {w.excerpt}
                 </p>
-                <span className="mt-5 inline-block font-sans text-[13px] font-semibold uppercase tracking-[0.16em] text-copper-800">
+                <span className="mt-5 inline-block font-sans text-[15px] font-semibold uppercase tracking-[0.16em] text-copper-800">
                   Read →
                 </span>
               </Link>

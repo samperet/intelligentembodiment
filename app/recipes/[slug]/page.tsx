@@ -92,7 +92,7 @@ export default async function RecipePage({
               className={
                 i === 0
                   ? "font-serif text-[22px] italic leading-[1.6] text-ink-500"
-                  : "font-sans text-[18px] leading-[1.75] text-ink-500"
+                  : "font-sans text-[20px] leading-[1.75] text-ink-500"
               }
             >
               {p}
@@ -121,7 +121,7 @@ export default async function RecipePage({
               {r.benefits.map((b) => (
                 <li
                   key={b}
-                  className="flex items-start gap-2.5 font-sans text-[17px] leading-[1.6] text-ink-500"
+                  className="flex items-start gap-2.5 font-sans text-[19px] leading-[1.6] text-ink-500"
                 >
                   <span className="mt-[9px] h-[5px] w-[5px] flex-none rounded-full bg-copper-700" />
                   {b}
@@ -139,7 +139,7 @@ export default async function RecipePage({
               {r.ingredients.map((ing) => (
                 <li
                   key={ing}
-                  className="flex items-start gap-2.5 font-sans text-[17px] leading-[1.6] text-ink-700"
+                  className="flex items-start gap-2.5 font-sans text-[19px] leading-[1.6] text-ink-700"
                 >
                   <span className="mt-[9px] h-[5px] w-[5px] flex-none rounded-full bg-copper-700" />
                   {ing}
@@ -159,7 +159,7 @@ export default async function RecipePage({
                   <span className="font-serif text-[24px] italic leading-[1.3] text-copper-700">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <p className="font-sans text-[17px] leading-[1.7] text-ink-500">
+                  <p className="font-sans text-[19px] leading-[1.7] text-ink-500">
                     {d}
                   </p>
                 </li>
@@ -169,7 +169,7 @@ export default async function RecipePage({
         )}
 
         {r.note && (
-          <p className="mt-8 font-serif text-[19px] italic text-ink-500">
+          <p className="mt-8 font-serif text-[21px] italic text-ink-500">
             {r.note}
           </p>
         )}
@@ -199,7 +199,7 @@ export default async function RecipePage({
 function Meta({ k, v }: { k: string; v: string }) {
   return (
     <div>
-      <span className="block font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-ink-400">
+      <span className="block font-sans text-[13px] font-medium uppercase tracking-[0.2em] text-ink-400">
         {k}
       </span>
       <span className="font-serif text-[20px] text-ink-900">{v}</span>

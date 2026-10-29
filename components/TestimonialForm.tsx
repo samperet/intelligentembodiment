@@ -39,7 +39,7 @@ export function TestimonialForm() {
           className="mx-auto mb-5 opacity-70"
         />
         <h2 className="font-serif text-[30px] text-ink-900">Thank you</h2>
-        <p className="mx-auto mt-3 max-w-[42ch] font-sans text-[17px] leading-[1.7] text-ink-500">
+        <p className="mx-auto mt-3 max-w-[42ch] font-sans text-[19px] leading-[1.7] text-ink-500">
           Your words mean a great deal, {form.name.trim().split(" ")[0]}.
           Mackensie will review your note before it appears on the site.
         </p>
@@ -82,7 +82,7 @@ export function TestimonialForm() {
         />
       </label>
       {error && (
-        <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[15px] text-copper-900">
+        <p className="rounded-lg bg-copper-50 px-4 py-3 font-sans text-[17px] text-copper-900">
           {error}
         </p>
       )}
@@ -93,7 +93,7 @@ export function TestimonialForm() {
       >
         {status === "submitting" ? "Sending…" : "Share my experience"}
       </button>
-      <p className="font-sans text-[14px] text-ink-400">
+      <p className="font-sans text-[16px] text-ink-400">
         With your permission, your words may appear on this site. Nothing is
         published until Mackensie approves it.
       </p>
