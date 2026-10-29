@@ -94,9 +94,7 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href={site.addressMapUrl}
-                  target="_blank"
-                  rel="noreferrer"
+                  href="/#location"
                   className="inline-flex items-start gap-2.5 transition hover:text-copper-800"
                 >
                   <span className="mt-[2px] text-copper-800">

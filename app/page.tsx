@@ -5,6 +5,7 @@ import { Eyebrow, Rule, Stat } from "@/components/brand";
 import { TestimonialCarousel } from "@/components/TestimonialCarousel";
 import { Suspense } from "react";
 import { BookingWidget } from "@/components/BookingWidget";
+import { OfficeLocation } from "@/components/OfficeLocation";
 import { site } from "@/lib/site";
 import { getStats } from "@/lib/content";
 
@@ -136,6 +137,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── The office: photo, map, directions ────────────────────────────── */}
+      <OfficeLocation />
 
       {/* ── About teaser + stats ─────────────────────────────────────────── */}
       <section className="ie-section px-6">
