@@ -51,7 +51,7 @@ export default function MedicalIntuitionPage() {
   return (
     <>
       <PageHero
-        eyebrow="Medical Intuition · Charlotte, VT"
+        eyebrow="Medical Intuition · Shelburne, VT"
         title={
           <>
             When your body knows{" "}

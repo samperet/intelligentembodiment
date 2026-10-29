@@ -102,13 +102,14 @@ export function bookingClientEmail(o: {
   service: string;
   price: number;
   when: string;
+  where: string;
 }): Email {
   const inner = `
     <p style="${P}text-align:center;margin:0 0 24px;">Dear ${esc(firstName(o.name))}, thank you for booking. I look forward to meeting you on the table.</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${BORDER};border-bottom:1px solid ${BORDER};margin:0 0 22px;">
       ${detailRow("Session", `${esc(o.service)} &nbsp;&middot;&nbsp; $${o.price}`)}
       ${detailRow("When", esc(o.when))}
-      ${detailRow("Where", esc(site.address))}
+      ${detailRow("Where", esc(o.where))}
     </table>
     <p style="${P}text-align:center;font-size:13px;margin:0 0 14px;">A calendar invitation is attached. Need to change your time? Simply reply to this email or call ${site.phone}.</p>
     <p style="${P}text-align:center;font-size:13px;margin:0;color:#8a8494;">${esc(site.cancellationPolicy)}</p>
@@ -123,7 +124,7 @@ export function bookingClientEmail(o: {
     }),
     text: `Dear ${firstName(o.name)},
 
-Thank you for booking. Your ${o.service} ($${o.price}) is confirmed for ${o.when} at ${site.address}.
+Thank you for booking. Your ${o.service} ($${o.price}) is confirmed for ${o.when}. Where: ${o.where}.
 
 A calendar invitation is attached. To reschedule, reply to this email or call ${site.phone}.
 

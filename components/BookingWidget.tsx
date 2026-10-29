@@ -173,8 +173,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
           <strong>{confirmation.when}</strong>.
         </p>
         <p className="mt-2 font-sans text-[16px] text-ink-400">
-          A confirmation is on its way to <strong>{form.email}</strong>. See you
-          at {site.address}.
+          A confirmation is on its way to <strong>{form.email}</strong>.{" "}
+          {service?.category === "phone"
+            ? "This consult is by phone."
+            : `See you at ${site.address}.`}
         </p>
         <a href="/" className="btn btn-secondary btn-md mt-8">
           Return home
@@ -227,29 +229,50 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
         <div className="mx-auto grid max-w-[520px] gap-3.5">
           {bookableServices.map((s) => {
             const active = service?.id === s.id;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => chooseService(s)}
-                className={`flex items-baseline justify-between gap-4 rounded-full border px-7 py-4 text-left shadow-sm transition ${
-                  active
-                    ? "border-copper-900 bg-copper-800 shadow-md ring-2 ring-copper-300"
-                    : "border-copper-700 bg-copper-700 hover:bg-copper-800"
-                }`}
-              >
-                <span className="font-serif text-[22px] text-white">
+            const pill = `border shadow-sm transition ${
+              active
+                ? "border-copper-900 bg-copper-800 shadow-md ring-2 ring-copper-300"
+                : "border-copper-700 bg-copper-700 hover:bg-copper-800"
+            }`;
+            const label = (
+              <>
+                <span className="font-serif text-[22px] leading-tight text-white">
                   {s.name}
                 </span>
                 <span className="font-serif text-[22px] italic text-copper-100">
                   ${s.price}
                 </span>
+              </>
+            );
+            // The consult carries its own "What to expect" link, so it's a
+            // card holding two buttons rather than one button.
+            if (s.category === "phone") {
+              return (
+                <div key={s.id} className={`rounded-[30px] ${pill}`}>
+                  <button
+                    type="button"
+                    onClick={() => chooseService(s)}
+                    className="flex w-full items-baseline justify-between gap-4 rounded-[30px] px-7 pb-1.5 pt-4 text-left"
+                  >
+                    {label}
+                  </button>
+                  <div className="px-7 pb-4">
+                    <WhatToExpect className="font-sans text-[14px] text-copper-100 underline underline-offset-4 transition hover:text-white" />
+                  </div>
+                </div>
+              );
+            }
+            return (
+              <button
+                key={s.id}
+                type="button"
+                onClick={() => chooseService(s)}
+                className={`flex items-baseline justify-between gap-4 rounded-full px-7 py-4 text-left ${pill}`}
+              >
+                {label}
               </button>
             );
           })}
-        </div>
-        <div className="mt-6 text-center">
-          <WhatToExpect />
         </div>
       </StepCard>
 

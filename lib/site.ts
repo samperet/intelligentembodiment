@@ -10,11 +10,11 @@ export const site = {
   phone: "808.463.9195",
   phoneHref: "tel:+18084639195",
   email: "mackensie@intelligentembodiment.com",
-  address: "Charlotte, VT",
-  addressMapUrl: "https://maps.google.com/?q=Charlotte+VT",
+  address: "291 Bostwick Farm Road, Shelburne, VT",
+  addressMapUrl: "https://maps.google.com/?q=291+Bostwick+Farm+Road,+Shelburne,+VT",
   url: "https://intelligentembodiment.com",
   description:
-    "Intuitive massage therapy with Mackensie Grant in Charlotte, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
+    "Intuitive massage therapy with Mackensie Grant in Shelburne, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
   // Shown in the booking flow, confirmation email, and calendar invite.
   cancellationPolicy:
     "Please give at least 24 hours' notice to cancel or reschedule. Sessions canceled with less than 24 hours' notice are charged in full.",
@@ -53,7 +53,7 @@ export const services: Service[] = [
   },
   {
     id: "phone-consultation",
-    name: "Initial Consult",
+    name: "Medical Intuition Initial Consult",
     durationMinutes: 60,
     price: 75,
     category: "phone",
@@ -61,6 +61,11 @@ export const services: Service[] = [
       "A focused conversation by phone to explore your health, discuss what you're navigating, and find the right next step.",
   },
 ];
+
+/** Where a session happens: the practice address, or by phone for consults. */
+export function serviceLocation(service: Pick<Service, "category">): string {
+  return service.category === "phone" ? "By phone" : site.address;
+}
 
 export function getService(id: string): Service | undefined {
   return services.find((s) => s.id === id);

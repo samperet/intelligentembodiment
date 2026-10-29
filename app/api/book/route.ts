@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getService, isServiceBookable, site, TIMEZONE } from "@/lib/site";
+import { getService, isServiceBookable, serviceLocation, site, TIMEZONE } from "@/lib/site";
 import {
   createCalendarEvent,
   isGoogleConfigured,
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
           end: endDate,
           attendeeName: name.trim(),
           attendeeEmail: email,
-          location: site.address,
+          location: serviceLocation(service),
         });
         eventLink = created.htmlLink;
       } catch (calErr) {
@@ -142,7 +142,7 @@ export async function POST(request: Request) {
       uid: `${startDate.getTime()}-${service.id}@intelligentembodiment.com`,
       summary,
       description,
-      location: site.address,
+      location: serviceLocation(service),
       start: startDate,
       end: endDate,
       organizerEmail: process.env.OWNER_EMAIL || site.email,
@@ -156,6 +156,7 @@ export async function POST(request: Request) {
       service: service.name,
       price: service.price,
       when: whenLabel,
+      where: serviceLocation(service),
     });
     await sendEmail({
       to: [email],
