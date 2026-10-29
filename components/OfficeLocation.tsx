@@ -35,10 +35,10 @@ export function OfficeLocation() {
         <figure className="relative mt-[clamp(32px,5vw,52px)]">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/imagery/shelburne-office-sunset.webp"
-            alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and Lake Champlain and the mountains beyond"
-            width={1672}
-            height={941}
+            src="/imagery/shelburne-office-mcgrath.webp"
+            alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and Lake Champlain and the mountains beyond. Photo by Shawn McGrath."
+            width={1170}
+            height={666}
             loading="lazy"
             className="aspect-[4/3] w-full rounded-[18px] object-cover shadow-md sm:aspect-[16/9]"
           />
