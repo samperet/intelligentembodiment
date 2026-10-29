@@ -9,25 +9,24 @@ export function OfficeLocation() {
     <section id="location" className="ie-section bg-paper-2 px-6">
       <div className="mx-auto max-w-[1040px]">
         <div className="mx-auto max-w-[720px] text-center">
-          <span className="eyebrow block">The Office · Shelburne, VT</span>
           <h2
-            className="mt-3 font-serif text-ink-900"
+            className="font-serif text-ink-900"
             style={{ fontSize: "clamp(30px,4vw,48px)", lineHeight: 1.08 }}
           >
             A healing place in itself
           </h2>
           <p className="mt-5 font-sans text-[18px] leading-[1.75] text-ink-500">
-            Sessions take place among open fields in Shelburne, with views
-            across the meadows to the mountains. The land holds a healing
-            atmosphere of its own, and it was once home to the All Souls
-            Interface Gathering.
+            The office overlooks rolling meadows leading to a mountainscape
+            vista above Lake Champlain. The land holds a healing atmosphere of
+            its own, and it was once home to the All Souls Interfaith
+            Gathering.
           </p>
         </div>
 
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/imagery/shelburne-office-sunset.webp"
-          alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and the lake and mountains beyond"
+          alt="Sunset over the meadows of the office land in Shelburne, Vermont, with wildflowers in front and Lake Champlain and the mountains beyond"
           width={1672}
           height={941}
           loading="lazy"

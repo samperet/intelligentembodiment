@@ -1,4 +1,4 @@
-import { TIMEZONE, isServiceBookable, type Service } from "./site";
+import { TIMEZONE, hoursForWeekday, isServiceBookable, type Service } from "./site";
 import {
   parseISODate,
   weekdayInTimeZone,
@@ -43,32 +43,34 @@ export async function getAvailableSlots(
   if (!isServiceBookable(service, cfg)) return [];
 
   const durationMinutes = service.durationMinutes;
-  const dayOpen = zonedWallTimeToUtc(
-    { ...parsed, hour: cfg.dayStartHour, minute: 0 },
+  // Weekday of the date in practice time (noon avoids DST edges).
+  const weekday = weekdayInTimeZone(
+    zonedWallTimeToUtc({ ...parsed, hour: 12, minute: 0 }, TIMEZONE),
     TIMEZONE,
   );
-  const weekday = weekdayInTimeZone(dayOpen, TIMEZONE);
   if (!cfg.weekdays.includes(weekday)) return [];
 
-  const dayClose = zonedWallTimeToUtc(
-    { ...parsed, hour: cfg.dayEndHour, minute: 0 },
-    TIMEZONE,
-  );
+  // This day's hours, in minutes after midnight.
+  const hours = hoursForWeekday(cfg, weekday);
+  const at = (minutes: number) =>
+    zonedWallTimeToUtc(
+      { ...parsed, hour: Math.floor(minutes / 60), minute: minutes % 60 },
+      TIMEZONE,
+    );
+  const dayOpen = at(hours.start);
+  const dayClose = at(hours.end);
 
   const busy = await getBusyIntervals(dayOpen, dayClose);
   const minStart = new Date(now.getTime() + cfg.minLeadHours * 60 * 60 * 1000);
 
   const slots: Slot[] = [];
-  const totalMinutes = (cfg.dayEndHour - cfg.dayStartHour) * 60;
 
   for (
-    let offset = 0;
-    offset + durationMinutes <= totalMinutes;
+    let offset = hours.start;
+    offset + durationMinutes <= hours.end;
     offset += cfg.slotIntervalMinutes
   ) {
-    const hour = cfg.dayStartHour + Math.floor(offset / 60);
-    const minute = offset % 60;
-    const start = zonedWallTimeToUtc({ ...parsed, hour, minute }, TIMEZONE);
+    const start = at(offset);
     const end = new Date(start.getTime() + durationMinutes * 60 * 1000);
     const endWithBuffer = new Date(
       end.getTime() + cfg.bufferMinutes * 60 * 1000,

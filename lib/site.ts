@@ -108,13 +108,17 @@ export type BookingSettings = {
   acceptingMassage: boolean; // accept new massage clients
   acceptingPhone: boolean; // accept new phone consultations
   weekdays: number[]; // 0=Sun … 6=Sat
-  dayStartHour: number; // 0–23
+  dayStartHour: number; // 0–23, hours for days without their own
   dayEndHour: number; // 0–24, exclusive end
+  // Per-weekday hours ("0"=Sun … "6"=Sat), in minutes after midnight.
+  dayHours: Record<string, DayHours>;
   slotIntervalMinutes: number;
   bufferMinutes: number;
   bookingWindowDays: number;
   minLeadHours: number;
 };
+
+export type DayHours = { start: number; end: number };
 
 export const defaultBookingSettings: BookingSettings = {
   acceptingMassage: true,
@@ -122,6 +126,7 @@ export const defaultBookingSettings: BookingSettings = {
   weekdays: AVAILABLE_WEEKDAYS,
   dayStartHour: DAY_START_HOUR,
   dayEndHour: DAY_END_HOUR,
+  dayHours: {},
   slotIntervalMinutes: SLOT_INTERVAL_MINUTES,
   bufferMinutes: BUFFER_MINUTES,
   bookingWindowDays: BOOKING_WINDOW_DAYS,
@@ -147,6 +152,16 @@ export function normalizeBookingSettings(
   let dayStartHour = clampInt(s.dayStartHour, 0, 22, d.dayStartHour);
   let dayEndHour = clampInt(s.dayEndHour, 1, 24, d.dayEndHour);
   if (dayEndHour <= dayStartHour) dayEndHour = Math.min(24, dayStartHour + 1);
+  const dayHours: Record<string, DayHours> = {};
+  const rawHours = s.dayHours && typeof s.dayHours === "object" ? s.dayHours : {};
+  for (let day = 0; day <= 6; day++) {
+    const h = (rawHours as Record<string, Partial<DayHours>>)[String(day)];
+    if (!h) continue;
+    // Whole 5-minute steps within the day; the end must follow the start.
+    const start = Math.round(clampInt(h.start, 0, 1435, NaN) / 5) * 5;
+    const end = Math.round(clampInt(h.end, 5, 1440, NaN) / 5) * 5;
+    if (start >= 0 && end > start) dayHours[String(day)] = { start, end };
+  }
   // Accept the new per-category flags; fall back to the legacy single
   // `acceptingBookings` flag (or the default) for objects saved before the
   // split. Read from `input` (not `s`, which is spread over defaults).
@@ -163,9 +178,23 @@ export function normalizeBookingSettings(
     weekdays,
     dayStartHour,
     dayEndHour,
+    dayHours,
     slotIntervalMinutes: clampInt(s.slotIntervalMinutes, 5, 120, d.slotIntervalMinutes),
     bufferMinutes: clampInt(s.bufferMinutes, 0, 120, d.bufferMinutes),
     bookingWindowDays: clampInt(s.bookingWindowDays, 1, 365, d.bookingWindowDays),
     minLeadHours: clampInt(s.minLeadHours, 0, 720, d.minLeadHours),
   };
+}
+
+/** A weekday's bookable hours, in minutes after midnight (practice time). */
+export function hoursForWeekday(
+  settings: Pick<BookingSettings, "dayHours" | "dayStartHour" | "dayEndHour">,
+  weekday: number,
+): DayHours {
+  return (
+    settings.dayHours?.[String(weekday)] ?? {
+      start: settings.dayStartHour * 60,
+      end: settings.dayEndHour * 60,
+    }
+  );
 }

@@ -23,6 +23,7 @@ type BookingSettings = {
   weekdays: number[];
   dayStartHour: number;
   dayEndHour: number;
+  dayHours: Record<string, { start: number; end: number }>;
   slotIntervalMinutes: number;
   bufferMinutes: number;
   bookingWindowDays: number;
@@ -31,10 +32,24 @@ type BookingSettings = {
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-function hourLabel(h: number): string {
-  if (h === 0 || h === 24) return "12 AM";
-  if (h === 12) return "12 PM";
-  return h < 12 ? `${h} AM` : `${h - 12} PM`;
+/** 570 → "9:30 AM"; 1440 → "Midnight". */
+function timeLabel(minutes: number): string {
+  if (minutes === 1440) return "Midnight";
+  const h = Math.floor(minutes / 60);
+  const m = String(minutes % 60).padStart(2, "0");
+  return `${h % 12 === 0 ? 12 : h % 12}:${m} ${h < 12 ? "AM" : "PM"}`;
+}
+
+// Half-hour choices for opening and closing times.
+const TIMES = Array.from({ length: 49 }, (_, i) => i * 30);
+
+/** Give every weekday explicit hours (older settings only had one pair). */
+function withDayHours(s: BookingSettings): BookingSettings {
+  const dayHours = { ...(s.dayHours || {}) };
+  for (let d = 0; d <= 6; d++) {
+    dayHours[d] ??= { start: s.dayStartHour * 60, end: s.dayEndHour * 60 };
+  }
+  return { ...s, dayHours };
 }
 
 export function AdminPanel() {
@@ -155,7 +170,7 @@ export function AdminPanel() {
       const tj = await tRes.json();
       setEntries(subs.entries || []);
       setNote(subs.error || subs.note || null);
-      if (set?.settings) setSettings(set.settings);
+      if (set?.settings) setSettings(withDayHours(set.settings));
       setPersisted(typeof set?.persisted === "boolean" ? set.persisted : null);
       setTestimonials(Array.isArray(tj?.entries) ? tj.entries : []);
       setAuthed(true);
@@ -182,7 +197,7 @@ export function AdminPanel() {
       if (!res.ok) throw new Error(data.error || "Could not save.");
       // data.settings is the value read back from R2, so the editor now
       // reflects exactly what persisted.
-      if (data.settings) setSettings(data.settings);
+      if (data.settings) setSettings(withDayHours(data.settings));
       if (data.verified === false) {
         setSettingsOk(false);
         setPersisted(false);
@@ -215,6 +230,19 @@ export function AdminPanel() {
       ? settings.weekdays.filter((x) => x !== d)
       : [...settings.weekdays, d].sort((a, b) => a - b);
     set("weekdays", next);
+  }
+
+  function setHours(d: number, part: "start" | "end", value: number) {
+    if (!settings) return;
+    let { start, end } = settings.dayHours[d];
+    if (part === "start") start = value;
+    else end = value;
+    // Keep the day's window valid: an hour long if the edit crossed over.
+    if (end <= start) {
+      if (part === "start") end = Math.min(1440, start + 60);
+      else start = Math.max(0, end - 60);
+    }
+    set("dayHours", { ...settings.dayHours, [d]: { start, end } });
   }
 
   async function copyEmails() {
@@ -338,43 +366,54 @@ export function AdminPanel() {
             </div>
 
             <div>
-              <span className="field-label">Bookable days</span>
-              <div className="mt-1 flex flex-wrap gap-2">
-                {DAYS.map((label, d) => {
+              <span className="field-label">Days &amp; hours</span>
+              <p className="mt-1 font-sans text-[14px] text-ink-400">
+                Turn a day on and choose when sessions may be booked that day.
+              </p>
+              <ul className="mt-3 divide-y divide-[color:var(--border)] rounded-lg border border-[color:var(--border)] bg-white">
+                {[1, 2, 3, 4, 5, 6, 0].map((d) => {
                   const on = settings.weekdays.includes(d);
+                  const h = settings.dayHours[d];
                   return (
-                    <button
-                      key={d}
-                      type="button"
-                      onClick={() => toggleDay(d)}
-                      className={`rounded-full border px-4 py-2 font-sans text-[15px] transition ${
-                        on
-                          ? "border-copper-800 bg-copper-700 text-white"
-                          : "border-[color:var(--border-strong)] bg-white text-ink-700 hover:border-copper-700"
-                      }`}
-                    >
-                      {label}
-                    </button>
+                    <li key={d} className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+                      <button
+                        type="button"
+                        onClick={() => toggleDay(d)}
+                        aria-pressed={on}
+                        className={`w-[4.5rem] rounded-full border px-3 py-1.5 font-sans text-[15px] transition ${
+                          on
+                            ? "border-copper-800 bg-copper-700 text-white"
+                            : "border-[color:var(--border-strong)] bg-white text-ink-500 hover:border-copper-700"
+                        }`}
+                      >
+                        {DAYS[d]}
+                      </button>
+                      {on && h ? (
+                        <div className="flex items-center gap-2 font-sans text-[15px] text-ink-500">
+                          <TimeSelect
+                            label={`${DAYS[d]} opens`}
+                            value={h.start}
+                            options={TIMES.filter((t) => t < 1440)}
+                            onChange={(v) => setHours(d, "start", v)}
+                          />
+                          <span>to</span>
+                          <TimeSelect
+                            label={`${DAYS[d]} closes`}
+                            value={h.end}
+                            options={TIMES.filter((t) => t > 0)}
+                            onChange={(v) => setHours(d, "end", v)}
+                          />
+                        </div>
+                      ) : (
+                        <span className="font-sans text-[15px] text-ink-400">Closed</span>
+                      )}
+                    </li>
                   );
                 })}
-              </div>
+              </ul>
             </div>
 
             <div className="grid gap-5 sm:grid-cols-2">
-              <NumberField
-                label={`Opens — ${hourLabel(settings.dayStartHour)}`}
-                value={settings.dayStartHour}
-                min={0}
-                max={23}
-                onChange={(v) => set("dayStartHour", v)}
-              />
-              <NumberField
-                label={`Closes — ${hourLabel(settings.dayEndHour)}`}
-                value={settings.dayEndHour}
-                min={1}
-                max={24}
-                onChange={(v) => set("dayEndHour", v)}
-              />
               <SelectField
                 label="Time-slot interval (min)"
                 value={settings.slotIntervalMinutes}
@@ -697,6 +736,35 @@ function Toggle({
         />
       </button>
     </div>
+  );
+}
+
+function TimeSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  options: number[];
+  onChange: (v: number) => void;
+}) {
+  // Keep an off-grid saved time (e.g. 9:15) selectable.
+  const all = options.includes(value) ? options : [...options, value].sort((a, b) => a - b);
+  return (
+    <select
+      aria-label={label}
+      value={value}
+      onChange={(e) => onChange(Number(e.target.value))}
+      className="field-input !w-auto !py-2"
+    >
+      {all.map((t) => (
+        <option key={t} value={t}>
+          {timeLabel(t)}
+        </option>
+      ))}
+    </select>
   );
 }
 
