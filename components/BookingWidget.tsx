@@ -229,63 +229,83 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
 
   return (
     <div className="mx-auto grid max-w-4xl gap-6">
-      {/* Step 1, Session */}
+      {/* Step 1, Session: medical intuition first, then massage */}
       <StepCard showHeader={false}>
-        {accept && !accept.massage && accept.phone && (
-          <p className="mx-auto mb-5 max-w-[520px] rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[17px] leading-[1.6] text-ink-600">
-            Massages are not currently being scheduled. If you&apos;d like to be
-            informed when they return,{" "}
-            <a href="/about#newsletter" className="text-copper-800 underline">
-              sign up for the newsletter
-            </a>
-. Initial consults are available below.
-          </p>
-        )}
-        <div className="mx-auto grid max-w-[520px] gap-3.5">
-          {bookableServices.map((s) => {
-            const active = service?.id === s.id;
-            const pill = `border shadow-sm transition ${
-              active
-                ? "border-copper-900 bg-copper-800 shadow-md ring-2 ring-copper-300"
-                : "border-copper-700 bg-copper-700 hover:bg-copper-800"
-            }`;
-            const label = (
-              <>
-                <span className="font-serif text-[22px] leading-tight text-white">
-                  {s.name}
-                </span>
-                <span className="font-serif text-[22px] italic text-copper-100">
-                  ${s.price}
-                </span>
-              </>
-            );
-            // The consult carries its own "What to expect" link, so it's a
-            // card holding two buttons rather than one button.
-            if (s.category === "phone") {
-              return (
-                <div key={s.id} className={`rounded-[30px] ${pill}`}>
-                  <button
-                    type="button"
-                    onClick={() => chooseService(s)}
-                    className="flex w-full items-baseline justify-between gap-4 rounded-[30px] px-7 pb-1.5 pt-4 text-left"
-                  >
-                    {label}
-                  </button>
-                  <div className="px-7 pb-4">
-                    <WhatToExpect className="font-sans text-[16px] text-copper-100 underline underline-offset-4 transition hover:text-white" />
-                  </div>
-                </div>
-              );
-            }
+        <div className="mx-auto grid max-w-[520px] gap-10">
+          {(
+            [
+              { category: "phone", title: "Medical Intuition" },
+              { category: "massage", title: "Massage Therapy" },
+            ] as const
+          ).map((group) => {
+            const items = bookableServices.filter((s) => s.category === group.category);
+            const paused = group.category === "massage" && accept && !accept.massage;
+            if (!items.length && !paused) return null;
             return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => chooseService(s)}
-                className={`flex items-baseline justify-between gap-4 rounded-full px-7 py-4 text-left ${pill}`}
-              >
-                {label}
-              </button>
+              <section key={group.category}>
+                <h3 className="mb-4 text-center font-serif text-[26px] text-ink-900">
+                  {group.title}
+                </h3>
+                {paused ? (
+                  <p className="rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[17px] leading-[1.6] text-ink-600">
+                    Massages are not currently being scheduled. If you&apos;d
+                    like to be informed when they return,{" "}
+                    <a href="/about#newsletter" className="text-indigo-700 underline">
+                      sign up for the newsletter
+                    </a>
+                    .
+                  </p>
+                ) : (
+                  <div className="grid gap-3.5">
+                    {items.map((s) => {
+                      const active = service?.id === s.id;
+                      const pill = `border shadow-sm transition ${
+                        active
+                          ? "border-indigo-900 bg-indigo-800 shadow-md ring-2 ring-indigo-300"
+                          : "border-indigo-700 bg-indigo-700 hover:bg-indigo-800"
+                      }`;
+                      const label = (
+                        <>
+                          <span className="font-serif text-[22px] leading-tight text-white">
+                            {s.name}
+                          </span>
+                          <span className="font-serif text-[22px] italic text-indigo-100">
+                            ${s.price}
+                          </span>
+                        </>
+                      );
+                      // The consult carries its own "What to expect" link, so
+                      // it's a card holding two buttons rather than one button.
+                      if (s.category === "phone") {
+                        return (
+                          <div key={s.id} className={`rounded-[30px] ${pill}`}>
+                            <button
+                              type="button"
+                              onClick={() => chooseService(s)}
+                              className="flex w-full items-baseline justify-between gap-4 rounded-[30px] px-7 pb-1.5 pt-4 text-left"
+                            >
+                              {label}
+                            </button>
+                            <div className="px-7 pb-4">
+                              <WhatToExpect className="font-sans text-[16px] text-indigo-100 underline underline-offset-4 transition hover:text-white" />
+                            </div>
+                          </div>
+                        );
+                      }
+                      return (
+                        <button
+                          key={s.id}
+                          type="button"
+                          onClick={() => chooseService(s)}
+                          className={`flex items-baseline justify-between gap-4 rounded-full px-7 py-4 text-left ${pill}`}
+                        >
+                          {label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
             );
           })}
         </div>
