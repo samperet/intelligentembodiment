@@ -77,6 +77,10 @@ export function WhatToExpect({ className }: { className?: string }) {
                 potential next steps, so you leave with a clear sense of how to
                 continue if it serves you.
               </p>
+              <p>
+                After your initial consult, follow-up calls are $
+                {site.followUpCallRate} per hour, scheduled whenever you wish.
+              </p>
               <p className="rounded-lg bg-sand px-5 py-4 text-ink-700">
                 <strong className="text-ink-900">
                   Every session comes with a money-back guarantee.

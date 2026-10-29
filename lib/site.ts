@@ -16,6 +16,8 @@ export const site = {
   description:
     "Intuitive massage therapy with Mackensie Grant in Shelburne, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
   // Shown in the booking flow, confirmation email, and calendar invite.
+  // Follow-up calls after the initial consult, booked as the client wishes.
+  followUpCallRate: 200,
   cancellationPolicy:
     "Please give at least 24 hours' notice to cancel or reschedule. Sessions canceled with less than 24 hours' notice are charged in full.",
 };
