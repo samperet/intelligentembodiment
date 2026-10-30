@@ -106,6 +106,10 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
       : true,
   );
 
+  const consult = bookableServices.find((s) => s.category === "phone");
+  const massages = bookableServices.filter((s) => s.category === "massage");
+  const massagePaused = Boolean(accept && !accept.massage);
+
   const loadSlots = useCallback(async (date: string, serviceId: string) => {
     setSlotsLoading(true);
     setError(null);
@@ -231,83 +235,108 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     <div className="mx-auto grid max-w-4xl gap-6">
       {/* Step 1, Session: medical intuition first, then massage */}
       <StepCard showHeader={false}>
-        <div className="mx-auto grid max-w-[520px] gap-10">
-          {(
-            [
-              { category: "phone", title: "Medical Intuition" },
-              { category: "massage", title: "Massage Therapy" },
-            ] as const
-          ).map((group) => {
-            const items = bookableServices.filter((s) => s.category === group.category);
-            const paused = group.category === "massage" && accept && !accept.massage;
-            if (!items.length && !paused) return null;
-            return (
-              <section key={group.category}>
-                <h3 className="mb-4 text-center font-serif text-[26px] text-ink-900">
-                  {group.title}
+        <div className="mx-auto grid max-w-[600px] gap-12">
+          {consult && (
+            <article
+              className={`relative overflow-hidden rounded-[28px] bg-gradient-to-br from-indigo-800 via-indigo-700 to-indigo-900 px-7 py-9 text-center shadow-lg transition sm:px-10 sm:py-11 ${
+                service?.id === consult.id ? "ring-2 ring-copper-300 ring-offset-2 ring-offset-sand" : ""
+              }`}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="/mandala.png"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-16 -top-16 w-[260px] select-none opacity-[0.08]"
+                style={{ filter: "brightness(0) invert(1)" }}
+              />
+              {/* Fine copper inner frame */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-2.5 rounded-[22px] border border-copper-300/40"
+              />
+              <div className="relative">
+                <span className="block font-sans text-[14px] font-medium uppercase tracking-[0.28em] text-copper-300">
+                  Medical Intuition
+                </span>
+                <h3 className="mt-3 font-serif text-[34px] leading-[1.1] text-white sm:text-[40px]">
+                  Initial Consult
                 </h3>
-                {paused ? (
-                  <p className="rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[17px] leading-[1.6] text-ink-600">
-                    Massages are not currently being scheduled. If you&apos;d
-                    like to be informed when they return,{" "}
-                    <a href="/about#newsletter" className="text-indigo-700 underline">
-                      sign up for the newsletter
-                    </a>
-                    .
-                  </p>
-                ) : (
-                  <div className="grid gap-3.5">
-                    {items.map((s) => {
-                      const active = service?.id === s.id;
-                      const pill = `border shadow-sm transition ${
-                        active
-                          ? "border-indigo-900 bg-indigo-800 shadow-md ring-2 ring-indigo-300"
-                          : "border-indigo-700 bg-indigo-700 hover:bg-indigo-800"
-                      }`;
-                      const label = (
-                        <>
-                          <span className="font-serif text-[22px] leading-tight text-white">
-                            {s.name}
-                          </span>
-                          <span className="font-serif text-[22px] italic text-indigo-100">
-                            ${s.price}
-                          </span>
-                        </>
-                      );
-                      // The consult carries its own "What to expect" link, so
-                      // it's a card holding two buttons rather than one button.
-                      if (s.category === "phone") {
-                        return (
-                          <div key={s.id} className={`rounded-[30px] ${pill}`}>
-                            <button
-                              type="button"
-                              onClick={() => chooseService(s)}
-                              className="flex w-full items-baseline justify-between gap-4 rounded-[30px] px-7 pb-1.5 pt-4 text-left"
-                            >
-                              {label}
-                            </button>
-                            <div className="px-7 pb-4">
-                              <WhatToExpect className="font-sans text-[16px] text-indigo-100 underline underline-offset-4 transition hover:text-white" />
-                            </div>
-                          </div>
-                        );
-                      }
-                      return (
-                        <button
-                          key={s.id}
-                          type="button"
-                          onClick={() => chooseService(s)}
-                          className={`flex items-baseline justify-between gap-4 rounded-full px-7 py-4 text-left ${pill}`}
-                        >
-                          {label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </section>
-            );
-          })}
+                <div className="mx-auto mt-4 flex w-[120px] items-center gap-2.5" aria-hidden="true">
+                  <span className="h-px flex-1 bg-copper-300/60" />
+                  <span className="h-[5px] w-[5px] rotate-45 bg-copper-300" />
+                  <span className="h-px flex-1 bg-copper-300/60" />
+                </div>
+                <p className="mx-auto mt-5 max-w-[42ch] font-sans text-[18px] leading-[1.65] text-indigo-100">
+                  {consult.blurb}
+                </p>
+                <ul className="mt-5 flex flex-wrap justify-center gap-x-5 gap-y-1 font-sans text-[16px] text-indigo-100/90">
+                  <li>{consult.durationMinutes} minutes</li>
+                  <li aria-hidden="true" className="hidden text-copper-300 sm:list-item">·</li>
+                  <li>By phone</li>
+                  <li aria-hidden="true" className="hidden text-copper-300 sm:list-item">·</li>
+                  <li>Money-back guarantee</li>
+                </ul>
+                <p className="mt-6 font-serif text-[44px] italic leading-none text-copper-300">
+                  ${consult.price}
+                </p>
+                <div className="mt-7 flex flex-col items-center gap-4">
+                  <button
+                    type="button"
+                    onClick={() => chooseService(consult)}
+                    aria-label={`Book the ${consult.name}`}
+                    className="btn btn-lg bg-paper-2 text-indigo-800 shadow-md transition hover:bg-white focus-visible:ring-4 focus-visible:ring-copper-300"
+                  >
+                    Book a consult
+                  </button>
+                  <WhatToExpect className="font-sans text-[16px] text-indigo-100 underline underline-offset-4 transition hover:text-white" />
+                </div>
+              </div>
+            </article>
+          )}
+
+          {(massages.length > 0 || massagePaused) && (
+            <section>
+              <h3 className="mb-4 text-center font-serif text-[26px] text-ink-900">
+                Massage Therapy
+              </h3>
+              {massagePaused ? (
+                <p className="rounded-lg bg-sand px-5 py-3.5 text-center font-sans text-[17px] leading-[1.6] text-ink-600">
+                  Massages are not currently being scheduled. If you&apos;d like
+                  to be informed when they return,{" "}
+                  <a href="/about#newsletter" className="text-copper-800 underline">
+                    sign up for the newsletter
+                  </a>
+                  .
+                </p>
+              ) : (
+                <div className="mx-auto grid max-w-[520px] gap-3.5">
+                  {massages.map((s) => {
+                    const active = service?.id === s.id;
+                    return (
+                      <button
+                        key={s.id}
+                        type="button"
+                        onClick={() => chooseService(s)}
+                        className={`flex items-baseline justify-between gap-4 rounded-full border px-7 py-4 text-left shadow-sm transition ${
+                          active
+                            ? "border-copper-900 bg-copper-800 shadow-md ring-2 ring-copper-300"
+                            : "border-copper-700 bg-copper-700 hover:bg-copper-800"
+                        }`}
+                      >
+                        <span className="font-serif text-[22px] leading-tight text-white">
+                          {s.name}
+                        </span>
+                        <span className="font-serif text-[22px] italic text-copper-100">
+                          ${s.price}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          )}
         </div>
       </StepCard>
 
