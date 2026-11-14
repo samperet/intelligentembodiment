@@ -352,7 +352,7 @@ export function AdminPanel() {
               <Toggle
                 label="Accepting massage clients"
                 on={settings.acceptingMassage}
-                onText="60 & 90 minute massage sessions are bookable online."
+                onText="Massage sessions are bookable online."
                 offText="Massage booking is paused — visitors are asked to call."
                 onToggle={() => set("acceptingMassage", !settings.acceptingMassage)}
               />

@@ -14,7 +14,7 @@ export const site = {
   addressMapUrl: "https://maps.google.com/?q=291+Bostwick+Farm+Road,+Shelburne,+VT",
   url: "https://intelligentembodiment.com",
   description:
-    "Intuitive massage therapy with Mackensie Grant in Shelburne, VT. Bodywork that addresses physical tension and its deeper roots, in sessions of 60 or 90 minutes.",
+    "Intuitive massage therapy with Mackensie Grant in Shelburne, VT. Bodywork that addresses physical tension and its deeper roots.",
   // Shown in the booking flow, confirmation email, and calendar invite.
   // Follow-up calls after the initial consult, booked as the client wishes.
   followUpCallRate: 200,
@@ -36,22 +36,14 @@ export type Service = {
 // Bookable sessions. Add more here if desired.
 export const services: Service[] = [
   {
+    // Keeps the original id so existing ?service=massage-60 links still work.
     id: "massage-60",
-    name: "60 Min Massage",
+    name: "Massage Session",
     durationMinutes: 60,
-    price: 120,
+    price: 150,
     category: "massage",
     blurb:
-      "A focused hour of integrative bodywork, craniosacral, polarity, and intuitive touch to release tension and restore ease.",
-  },
-  {
-    id: "massage-90",
-    name: "90 Min Massage",
-    durationMinutes: 90,
-    price: 180,
-    category: "massage",
-    blurb:
-      "A spacious ninety minutes for whole-body release and deep nervous-system rest, working with both physical holding and its emotional roots.",
+      "Integrative bodywork, craniosacral, polarity, and intuitive touch to release tension and restore ease.",
   },
   {
     id: "phone-consultation",
