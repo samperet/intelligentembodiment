@@ -80,11 +80,11 @@ export default function RootLayout({
         </Suspense>
         <AdminHotkey />
         <PhoneChoice />
-        <ConditionalFooter hideOn={["/admin/write"]}>
+        <ConditionalFooter hideOn={["/admin/write", "/consult"]}>
           <Nav />
         </ConditionalFooter>
         <main>{children}</main>
-        <ConditionalFooter hideOn={["/share", "/admin/write"]}>
+        <ConditionalFooter hideOn={["/share", "/admin/write", "/consult"]}>
           <Footer />
         </ConditionalFooter>
       </body>

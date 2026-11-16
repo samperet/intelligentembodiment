@@ -33,7 +33,14 @@ function startOfToday(): Date {
   return d;
 }
 
-export function BookingWidget({ initialService }: { initialService?: string }) {
+export function BookingWidget({
+  initialService,
+  only,
+}: {
+  initialService?: string;
+  /** Show just one kind of session (e.g. "phone" on the consult landing page). */
+  only?: Service["category"];
+}) {
   const [service, setService] = useState<Service | null>(
     services.find((s) => s.id === initialService) ?? null,
   );
@@ -97,18 +104,20 @@ export function BookingWidget({ initialService }: { initialService?: string }) {
     };
   }, []);
 
-  const bookableServices = services.filter((s) =>
-    accept
-      ? isServiceBookable(s, {
-          acceptingMassage: accept.massage,
-          acceptingPhone: accept.phone,
-        })
-      : true,
+  const bookableServices = services.filter(
+    (s) =>
+      (!only || s.category === only) &&
+      (accept
+        ? isServiceBookable(s, {
+            acceptingMassage: accept.massage,
+            acceptingPhone: accept.phone,
+          })
+        : true),
   );
 
   const consult = bookableServices.find((s) => s.category === "phone");
   const massages = bookableServices.filter((s) => s.category === "massage");
-  const massagePaused = Boolean(accept && !accept.massage);
+  const massagePaused = Boolean(accept && !accept.massage) && only !== "phone";
 
   const loadSlots = useCallback(async (date: string, serviceId: string) => {
     setSlotsLoading(true);
