@@ -13,36 +13,36 @@ import { getStats, testimonials } from "@/lib/content";
 export const metadata: Metadata = {
   title: { absolute: "Medical Intuition Consult · Intelligent Embodiment" },
   description:
-    "A one-hour phone consult with Mackensie Satya Priya: thirty years of bodywork and formal training in medical intuition. $75, with a money-back guarantee.",
+    "Explore what may sit beneath pain, fatigue, or recurring symptoms in a one-hour phone consult with Mackensie Satya Priya. $75, nothing to pay when you book, money-back guarantee.",
   alternates: { canonical: "/consult" },
   openGraph: {
     title: "Medical Intuition Consult with Mackensie Satya Priya",
     description:
-      "Find the story beneath your symptoms. A one-hour phone consult, $75, with a money-back guarantee.",
+      "Find the story beneath your symptoms: a one-hour phone consult with a bodyworker of 30 years trained in medical intuition. $75, with a money-back guarantee.",
     url: "/consult",
   },
 };
 
 const forYou = [
-  "You live with pain, fatigue, or symptoms that keep returning, and you're looking for a deeper understanding of why.",
-  "You sense that a stressful or emotional chapter of your life is tied up in what your body is feeling.",
-  "You want to understand what your body may be asking for, not only quiet the symptom.",
-  "You'd like a calm, attentive hour to be truly heard about your health.",
-  "You're curious, maybe a little skeptical, and would rather experience it than read about it.",
+  "You live with pain, fatigue, or symptoms that keep coming back, and you want to understand why.",
+  "You suspect stress, grief, or a hard chapter of life is connected to how your body feels.",
+  "You want to know what your body may be asking for, not just quiet the symptom.",
+  "You'd like an unhurried hour to be truly heard about your health.",
+  "You're curious, even skeptical, and would rather try it than read about it.",
 ];
 
 const steps = [
   {
-    title: "Book a time",
-    body: "Choose a time below. You'll receive a confirmation and a calendar invitation. All you need is a quiet place to talk by phone.",
+    title: "Choose a time",
+    body: "Pick a time below. You'll get a confirmation email and a calendar invitation, and there's nothing to pay when you book.",
   },
   {
-    title: "A guided conversation",
-    body: "You talk, she listens, with more than her ears. Guided by intuition, Mackensie asks questions and reflects the patterns she perceives: physical, emotional, and energetic.",
+    title: "Talk it through",
+    body: "On the phone, Mackensie asks questions, listens closely, and shares the patterns she senses: physical, emotional, and energetic.",
   },
   {
-    title: "Clear next steps",
-    body: "You leave with a clearer picture of what your body may be asking for, and practical next steps: bodywork, practices, or questions worth bringing to your doctor.",
+    title: "Leave with next steps",
+    body: "You come away with a clearer picture of what your body may be asking for, and practical options: bodywork, simple practices, or questions to bring to your doctor.",
   },
 ];
 
@@ -52,33 +52,38 @@ export default function ConsultLandingPage() {
   const bodyworkYears = years["Years of Bodywork"];
   const yogaYears = years["Years Teaching Yoga"];
   const words = testimonials.find((t) => t.author === "Ally G.") ?? testimonials[0];
+  // A short excerpt in her own words: the sentences about Mackensie as an
+  // intuitive guide (falls back to the whole quote if it's ever reworded).
+  const sentences = words.quote.split(/(?<=\.)\s+/);
+  const excerpt = sentences.length > 3 ? sentences.slice(1, 3).join(" ") : words.quote;
 
   const faqs = [
     {
-      q: "Is this a replacement for my doctor?",
-      a: "No. Medical intuition complements medical care; it doesn't diagnose, prescribe, or treat. Many clients bring what they discover in a consult to their physicians as better questions.",
+      q: "What does it cost?",
+      a: `The one-hour initial consult is $${consult.price}, and nothing is charged when you book. Every session carries a money-back guarantee: if it doesn't serve you, you don't pay. If you'd like to continue afterward, follow-up calls are $${site.followUpCallRate} per hour, scheduled whenever you wish, with no obligation. ${site.cancellationPolicy}`,
     },
     {
       q: "What if I'm skeptical?",
-      a: "Healthy skepticism is welcome. That's why the consult carries a money-back guarantee: if it doesn't serve you, you don't pay. Judge it by your own experience.",
+      a: "Healthy skepticism is welcome. That's exactly why the consult carries a money-back guarantee. Judge it by your own experience, not by anyone's claims.",
     },
     {
-      q: "How can this work over the phone?",
-      a: "Medical intuition doesn't rely on touch. Mackensie works through conversation and intuitive perception, so the consult is by phone, wherever you are. Times are shown in Eastern time.",
+      q: "Is this instead of seeing my doctor?",
+      a: "No. Medical intuition complements medical care; it doesn't diagnose, prescribe, or treat. Many clients take what they learn back to their physicians as better questions.",
+    },
+    {
+      q: "How does this work over the phone?",
+      a: "Medical intuition doesn't rely on touch. Mackensie works through conversation and intuitive perception, so you can join from wherever you are. Times are shown in Eastern time.",
     },
     {
       q: "Do I need to prepare anything?",
       a: "No. A quiet, private place to talk is all you need. Some people like to jot down what's been on their mind about their health beforehand.",
     },
     {
-      q: "What does it cost?",
-      a: `The one-hour initial consult is $${consult.price}, with a money-back guarantee. If you'd like to continue afterward, follow-up calls are $${site.followUpCallRate} per hour, scheduled whenever you wish, with no obligation. ${site.cancellationPolicy}`,
-    },
-    {
       q: "Who is Mackensie?",
       a: `Mackensie Satya Priya has ${bodyworkYears} years of professional bodywork (craniosacral, polarity, Temple Lomi), ${yogaYears} years of teaching yoga, and formal training in medical intuition with Skylar Acamesis.`,
     },
   ];
+
 
   return (
     <>
@@ -131,17 +136,17 @@ export default function ConsultLandingPage() {
               <em className="text-copper-300">your symptoms</em>
             </h1>
             <p className="mx-auto mt-6 max-w-[40ch] font-sans text-[21px] leading-[1.65] text-indigo-100 md:mx-0">
-              A one-hour phone consult with Mackensie Satya Priya, who brings{" "}
-              {bodyworkYears} years of hands-on bodywork and formal training in
-              medical intuition. Gentle, practical, and alongside your medical
-              care, never instead of it.
+              A one-hour phone conversation with Mackensie Satya Priya, a
+              bodyworker of {bodyworkYears} years trained in medical intuition,
+              to explore what may sit beneath your pain, fatigue, or recurring
+              symptoms, and leave with clear next steps.
             </p>
             <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row md:justify-start sm:justify-center">
               <a
                 href="#book"
                 className="btn btn-lg bg-paper-2 text-indigo-800 shadow-md hover:bg-white"
               >
-                Book your consult · ${consult.price}
+                Book my consult · ${consult.price}
               </a>
               <a
                 href="#how"
@@ -152,8 +157,8 @@ export default function ConsultLandingPage() {
             </div>
             <ul className="mt-9 flex flex-wrap justify-center gap-x-7 gap-y-2 font-sans text-[17px] text-indigo-100 md:justify-start">
               <li>✓ 60 minutes, by phone</li>
+              <li>✓ Nothing to pay when you book</li>
               <li>✓ Money-back guarantee</li>
-              <li>✓ {bodyworkYears} years of bodywork</li>
             </ul>
           </div>
           <div className="relative mx-auto w-[240px] sm:w-[300px] md:w-full md:max-w-[380px]">
@@ -176,12 +181,12 @@ export default function ConsultLandingPage() {
       {/* ── Is this for you? ─────────────────────────────────────────────── */}
       <section className="px-6 py-[clamp(52px,8vw,96px)]">
         <div className="mx-auto max-w-[760px]">
-          <span className="eyebrow block text-center">Is this for you?</span>
+          <span className="eyebrow block text-center">Who it&apos;s for</span>
           <h2
             className="mt-3 text-center font-serif text-ink-900"
             style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
           >
-            People often come to medical intuition when&hellip;
+            This consult may be right for you if&hellip;
           </h2>
           <ul className="mt-9 space-y-4">
             {forYou.map((item) => (
@@ -195,8 +200,13 @@ export default function ConsultLandingPage() {
             ))}
           </ul>
           <p className="mt-8 text-center font-serif text-[23px] italic leading-[1.5] text-ink-500">
-            If any of these sound familiar, an initial consult is a gentle,
-            low-risk place to start.
+            If even one sounds familiar, the initial consult is a gentle,
+            low-risk first step.
+          </p>
+          <p className="mt-5 text-center">
+            <a href="#book" className="btn btn-primary btn-md">
+              Choose a time
+            </a>
           </p>
         </div>
       </section>
@@ -204,7 +214,7 @@ export default function ConsultLandingPage() {
       {/* ── What it is, and isn't ────────────────────────────────────────── */}
       <section className="bg-sand px-6 py-[clamp(52px,8vw,96px)]">
         <div className="mx-auto max-w-[1000px]">
-          <span className="eyebrow block text-center">Plain answers</span>
+          <span className="eyebrow block text-center">In plain terms</span>
           <h2
             className="mt-3 text-center font-serif text-ink-900"
             style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
@@ -215,20 +225,18 @@ export default function ConsultLandingPage() {
             <div className="rounded-2xl bg-paper-2 p-8 shadow-sm">
               <h3 className="font-serif text-[27px] text-ink-900">What it is</h3>
               <p className="mt-3 font-sans text-[19px] leading-[1.75] text-ink-600">
-                A trained practice of perceiving patterns in the body,
-                physical, emotional, and energetic, that may sit beneath
-                chronic pain, fatigue, and illness. It asks a different
-                question: <em>why is this happening, and what is it connected
-                to?</em>
+                A trained way of sensing the patterns, physical, emotional, and
+                energetic, that may sit beneath chronic pain, fatigue, or
+                illness. Rather than naming a condition, it asks:{" "}
+                <em>why might this be happening, and what is it connected to?</em>
               </p>
             </div>
             <div className="rounded-2xl bg-paper-2 p-8 shadow-sm">
               <h3 className="font-serif text-[27px] text-ink-900">What it isn&apos;t</h3>
               <p className="mt-3 font-sans text-[19px] leading-[1.75] text-ink-600">
-                It isn&apos;t a diagnosis, and it doesn&apos;t replace your
-                doctor. Mackensie doesn&apos;t prescribe or treat. Many clients
-                bring what they discover to their physicians as better
-                questions.
+                It isn&apos;t a diagnosis or a treatment, and it never replaces
+                your doctor. Mackensie doesn&apos;t prescribe. Many clients take
+                what they learn back to their physicians as better questions.
               </p>
             </div>
           </div>
@@ -243,7 +251,7 @@ export default function ConsultLandingPage() {
             className="mt-3 text-center font-serif text-ink-900"
             style={{ fontSize: "clamp(30px,4vw,46px)", lineHeight: 1.1 }}
           >
-            One hour, by phone
+            What happens in your consult
           </h2>
           <ol className="mx-auto mt-10 grid max-w-[1020px] gap-6 sm:grid-cols-3">
             {steps.map((s, i) => (
@@ -259,6 +267,11 @@ export default function ConsultLandingPage() {
               </li>
             ))}
           </ol>
+          <p className="mt-10 text-center">
+            <a href="#book" className="btn btn-primary btn-md">
+              Book my consult · ${consult.price}
+            </a>
+          </p>
         </div>
       </section>
 
@@ -314,7 +327,7 @@ export default function ConsultLandingPage() {
             &ldquo;
           </div>
           <blockquote className="font-serif text-[24px] italic leading-[1.55] text-ink-700">
-            {words.quote}
+            {excerpt}
           </blockquote>
           <figcaption className="mt-5 font-sans text-[16px] uppercase tracking-[0.16em] text-copper-800">
             {words.author}
@@ -337,11 +350,16 @@ export default function ConsultLandingPage() {
               Book your initial consult
             </h2>
             <p className="lead mx-auto mt-4 max-w-[46ch]">
-              One hour by phone, ${consult.price}. If it doesn&apos;t serve
+              One hour by phone · ${consult.price} · If it doesn&apos;t serve
               you, you don&apos;t pay.
             </p>
           </div>
-          <div className="mt-[clamp(32px,4vw,48px)]">
+          <ul className="mx-auto mt-6 flex max-w-[720px] flex-wrap justify-center gap-x-6 gap-y-2 font-sans text-[17px] text-ink-600">
+            <li>✓ Nothing to pay when you book</li>
+            <li>✓ Confirmation and calendar invite by email</li>
+            <li>✓ Reschedule with 24 hours&apos; notice</li>
+          </ul>
+          <div className="mt-[clamp(28px,4vw,44px)]">
             <Suspense>
               <BookingWidget only="phone" />
             </Suspense>
@@ -367,8 +385,8 @@ export default function ConsultLandingPage() {
             Before you book
           </h2>
           <div className="mt-9 divide-y divide-[color:var(--border)] rounded-2xl border border-[color:var(--border)] bg-paper-2">
-            {faqs.map((f) => (
-              <details key={f.q} className="group px-6 py-5">
+            {faqs.map((f, i) => (
+              <details key={f.q} open={i === 0} className="group px-6 py-5">
                 <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-serif text-[23px] text-ink-900 [&::-webkit-details-marker]:hidden">
                   {f.q}
                   <span
@@ -400,17 +418,17 @@ export default function ConsultLandingPage() {
             className="font-serif text-white"
             style={{ fontSize: "clamp(30px,4.2vw,48px)", lineHeight: 1.1 }}
           >
-            Ready to hear what your body is saying?
+            Ready to understand what your body is telling you?
           </h2>
           <p className="mx-auto mt-4 max-w-[44ch] font-sans text-[19px] leading-[1.65] text-indigo-100">
-            One hour by phone with Mackensie. ${consult.price}, with a
-            money-back guarantee.
+            One hour by phone with Mackensie. ${consult.price}, nothing to pay
+            when you book, and a money-back guarantee.
           </p>
           <a
             href="#book"
             className="btn btn-lg mt-8 bg-paper-2 text-indigo-800 shadow-md hover:bg-white"
           >
-            Book your consult
+            Choose a time
           </a>
         </div>
       </section>

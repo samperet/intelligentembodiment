@@ -43,7 +43,7 @@ export function ConsultStickyCta({ price }: { price: number }) {
         className="flex items-center justify-between rounded-full bg-indigo-800 px-6 py-4 text-white shadow-lg ring-1 ring-copper-300/40"
       >
         <span className="font-sans text-[17px] font-medium uppercase tracking-[0.12em]">
-          Book your consult
+          Book my consult
         </span>
         <span className="font-serif text-[22px] italic text-copper-300">${price}</span>
       </a>
