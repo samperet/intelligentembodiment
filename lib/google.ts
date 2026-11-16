@@ -86,33 +86,132 @@ export type CreateBookingInput = {
   location?: string;
 };
 
-export type CreatedEvent = { id: string; htmlLink: string | null };
+export type CreatedEvent = {
+  id: string;
+  htmlLink: string | null;
+  /** Whether Google also emailed the client an invitation. */
+  invited: boolean;
+};
 
-/** Create the booking on the practice calendar and invite the client. */
+/**
+ * Google refuses attendee invitations from a service account unless it has
+ * Workspace domain-wide delegation, which a personal Gmail calendar can't
+ * grant. That must never keep the booking off the calendar.
+ */
+function isInviteRefusal(err: unknown): boolean {
+  const e = err as { code?: number; message?: string; errors?: { reason?: string }[] };
+  return (
+    e?.code === 403 &&
+    (/delegation|invite attendees/i.test(e.message || "") ||
+      (e.errors || []).some((x) => x.reason === "forbiddenForServiceAccounts"))
+  );
+}
+
+/**
+ * Create the booking on the practice calendar. Tries to invite the client
+ * too; if Google won't allow that, creates the event without the invitation
+ * (the client still gets the site's own confirmation email).
+ */
 export async function createCalendarEvent(
   input: CreateBookingInput,
 ): Promise<CreatedEvent> {
   const calendar = getClient();
-  const res = await calendar.events.insert({
-    calendarId: getCalendarId(),
-    sendUpdates: "all",
-    requestBody: {
-      summary: input.summary,
-      description: input.description,
-      location: input.location,
-      start: { dateTime: input.start.toISOString(), timeZone: TIMEZONE },
-      end: { dateTime: input.end.toISOString(), timeZone: TIMEZONE },
-      attendees: [
-        { email: input.attendeeEmail, displayName: input.attendeeName },
+  const requestBody: calendar_v3.Schema$Event = {
+    summary: input.summary,
+    description: input.description,
+    location: input.location,
+    start: { dateTime: input.start.toISOString(), timeZone: TIMEZONE },
+    end: { dateTime: input.end.toISOString(), timeZone: TIMEZONE },
+    reminders: {
+      useDefault: false,
+      overrides: [
+        { method: "email", minutes: 24 * 60 },
+        { method: "popup", minutes: 120 },
       ],
-      reminders: {
-        useDefault: false,
-        overrides: [
-          { method: "email", minutes: 24 * 60 },
-          { method: "popup", minutes: 120 },
-        ],
-      },
     },
-  });
-  return { id: res.data.id!, htmlLink: res.data.htmlLink ?? null };
+  };
+  try {
+    const res = await calendar.events.insert({
+      calendarId: getCalendarId(),
+      sendUpdates: "all",
+      requestBody: {
+        ...requestBody,
+        attendees: [{ email: input.attendeeEmail, displayName: input.attendeeName }],
+      },
+    });
+    return { id: res.data.id!, htmlLink: res.data.htmlLink ?? null, invited: true };
+  } catch (err) {
+    if (!isInviteRefusal(err)) throw err;
+    const res = await calendar.events.insert({
+      calendarId: getCalendarId(),
+      sendUpdates: "none",
+      requestBody,
+    });
+    return { id: res.data.id!, htmlLink: res.data.htmlLink ?? null, invited: false };
+  }
+}
+
+export type CalendarCheck = { ok: boolean; message: string };
+
+/**
+ * Prove the booking calendar works end to end: read free/busy, then create
+ * and immediately delete a private test event (no guests, no notifications).
+ */
+export async function checkCalendar(): Promise<CalendarCheck> {
+  if (!isGoogleConfigured()) {
+    return {
+      ok: false,
+      message:
+        "Google Calendar isn't set up: GOOGLE_CLIENT_EMAIL, GOOGLE_PRIVATE_KEY, and GOOGLE_CALENDAR_ID are needed.",
+    };
+  }
+  const calendarId = getCalendarId();
+  let calendar: calendar_v3.Calendar;
+  try {
+    calendar = getClient();
+    const now = new Date();
+    const fb = await calendar.freebusy.query({
+      requestBody: {
+        timeMin: now.toISOString(),
+        timeMax: new Date(now.getTime() + 86400000).toISOString(),
+        items: [{ id: calendarId }],
+      },
+    });
+    const errs = fb.data.calendars?.[calendarId]?.errors;
+    if (errs?.length) {
+      return {
+        ok: false,
+        message:
+          errs[0].reason === "notFound"
+            ? `The calendar ${calendarId} isn't shared with the booking service account (${process.env.GOOGLE_CLIENT_EMAIL}). Share it with "Make changes to events" permission.`
+            : `Google couldn't read the calendar: ${errs.map((e) => e.reason).join(", ")}.`,
+      };
+    }
+  } catch (err: any) {
+    return { ok: false, message: `Google rejected the connection: ${String(err?.message || err)}` };
+  }
+
+  try {
+    // A quiet hour well in the future, removed right away.
+    const start = new Date(Date.now() + 400 * 86400000);
+    start.setUTCHours(8, 0, 0, 0);
+    const created = await calendar.events.insert({
+      calendarId,
+      sendUpdates: "none",
+      requestBody: {
+        summary: "Website booking test (auto-deleted)",
+        start: { dateTime: start.toISOString() },
+        end: { dateTime: new Date(start.getTime() + 15 * 60000).toISOString() },
+        reminders: { useDefault: false },
+      },
+    });
+    await calendar.events.delete({ calendarId, eventId: created.data.id!, sendUpdates: "none" });
+  } catch (err: any) {
+    return {
+      ok: false,
+      message: `The calendar can be read but not written to. Give the service account "Make changes to events" permission. (${String(err?.message || err)})`,
+    };
+  }
+
+  return { ok: true, message: `Connected: bookings will be added to ${calendarId}.` };
 }

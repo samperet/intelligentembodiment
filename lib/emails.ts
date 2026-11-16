@@ -145,14 +145,22 @@ export function bookingOwnerEmail(o: {
   price: number;
   when: string;
   notes?: string;
+  /** False when the event couldn't be added to the calendar automatically. */
+  onCalendar?: boolean;
 }): Email {
+  const onCalendar = o.onCalendar !== false;
   const rows = [
     detailRow("Client", esc(o.name)),
     detailRow(
       "Email",
       `<a href="mailto:${esc(o.email)}" style="color:${INDIGO};">${esc(o.email)}</a>`,
     ),
-    o.phone ? detailRow("Phone", esc(o.phone)) : "",
+    o.phone
+      ? detailRow(
+          "Cell",
+          `<a href="tel:${esc(o.phone.replace(/[^\d+]/g, ""))}" style="color:${INDIGO};">${esc(o.phone)}</a>`,
+        )
+      : "",
     detailRow("Session", `${esc(o.service)} &nbsp;&middot;&nbsp; $${o.price}`),
     detailRow("When", esc(o.when)),
     o.notes ? detailRow("Notes", esc(o.notes)) : "",
@@ -162,16 +170,20 @@ export function bookingOwnerEmail(o: {
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-top:1px solid ${BORDER};border-bottom:1px solid ${BORDER};">
       ${rows}
     </table>
-    <p style="${P}text-align:center;font-size:13px;margin:22px 0 0;">The event has been added to your calendar. Reply to reach ${esc(firstName(o.name))} directly.</p>`;
+    <p style="${P}text-align:center;font-size:13px;margin:22px 0 0;">${
+      onCalendar
+        ? "The event has been added to your calendar."
+        : "<strong>This booking could not be added to your calendar automatically. Please add it now</strong> (the attached invite will do it)."
+    } Reply to reach ${esc(firstName(o.name))} directly.</p>`;
   return {
-    subject: `New booking: ${o.service}, ${o.name} (${o.when})`,
+    subject: `${onCalendar ? "New booking" : "New booking, add to your calendar"}: ${o.service}, ${o.name} (${o.when})`,
     html: shell({
       preheader: `${o.name} booked a ${o.service} for ${o.when}.`,
       eyebrow: "New booking",
       heading: "A new session",
       inner,
     }),
-    text: `New booking\n\nClient: ${o.name}\nEmail: ${o.email}${o.phone ? `\nPhone: ${o.phone}` : ""}\nSession: ${o.service} ($${o.price})\nWhen: ${o.when}${o.notes ? `\nNotes: ${o.notes}` : ""}`,
+    text: `New booking${onCalendar ? "" : " (NOT on your calendar yet: please add it)"}\n\nClient: ${o.name}\nEmail: ${o.email}${o.phone ? `\nCell: ${o.phone}` : ""}\nSession: ${o.service} ($${o.price})\nWhen: ${o.when}${o.notes ? `\nNotes: ${o.notes}` : ""}`,
   };
 }
 

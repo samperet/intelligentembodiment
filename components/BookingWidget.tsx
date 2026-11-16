@@ -11,6 +11,7 @@ import {
 } from "@/lib/site";
 import { WhatToExpect } from "./WhatToExpect";
 import { readUtmSource } from "./UtmCapture";
+import { normalizeCell } from "@/lib/phone";
 
 type Slot = { start: string; end: string; label: string };
 
@@ -190,6 +191,10 @@ export function BookingWidget({
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!service || !selectedSlot) return;
+    if (!normalizeCell(form.phone)) {
+      setError("Please enter a valid cell phone number, including the area code.");
+      return;
+    }
     setSubmitting(true);
     setError(null);
     try {
@@ -461,7 +466,16 @@ export function BookingWidget({
                             <Field label="Name" required value={form.name} onChange={(v) => setForm({ ...form, name: v })} />
                             <Field label="Email" type="email" required value={form.email} onChange={(v) => setForm({ ...form, email: v })} />
                           </div>
-                          <Field label="Phone (optional)" type="tel" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
+                          <Field
+                            label="Cell phone"
+                            type="tel"
+                            required
+                            autoComplete="tel"
+                            placeholder="(802) 555-0123"
+                            hint="For appointment details and so Mackensie can reach you."
+                            value={form.phone}
+                            onChange={(v) => setForm({ ...form, phone: v })}
+                          />
                           <label className="block">
                             <span className="field-label">What brings you in? (optional)</span>
                             <textarea
@@ -544,12 +558,18 @@ function Field({
   onChange,
   type = "text",
   required = false,
+  autoComplete,
+  placeholder,
+  hint,
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
   type?: string;
   required?: boolean;
+  autoComplete?: string;
+  placeholder?: string;
+  hint?: string;
 }) {
   return (
     <label className="block">
@@ -557,10 +577,13 @@ function Field({
       <input
         type={type}
         required={required}
+        autoComplete={autoComplete}
+        placeholder={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="field-input"
       />
+      {hint && <span className="mt-1.5 block font-sans text-[15px] text-ink-400">{hint}</span>}
     </label>
   );
 }

@@ -65,6 +65,8 @@ export function AdminPanel() {
   const [savingSettings, setSavingSettings] = useState(false);
   const [settingsMsg, setSettingsMsg] = useState<string | null>(null);
   const [settingsOk, setSettingsOk] = useState(false);
+  const [calCheck, setCalCheck] = useState<{ ok: boolean; message: string } | null>(null);
+  const [calChecking, setCalChecking] = useState(false);
   const [persisted, setPersisted] = useState<boolean | null>(null);
 
   const [copied, setCopied] = useState(false);
@@ -215,6 +217,24 @@ export function AdminPanel() {
       setSettingsMsg(e.message);
     } finally {
       setSavingSettings(false);
+    }
+  }
+
+  async function checkCalendar() {
+    setCalChecking(true);
+    setCalCheck(null);
+    try {
+      const res = await fetch("/api/admin/calendar", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      setCalCheck(
+        res.ok && typeof data.ok === "boolean"
+          ? data
+          : { ok: false, message: data.error || "Couldn't run the check." },
+      );
+    } catch {
+      setCalCheck({ ok: false, message: "Couldn't run the check." });
+    } finally {
+      setCalChecking(false);
     }
   }
 
@@ -461,6 +481,31 @@ export function AdminPanel() {
                   {settingsMsg}
                 </span>
               )}
+            </div>
+
+            <div className="border-t border-[color:var(--border)] pt-5">
+              <span className="field-label">Google Calendar</span>
+              <p className="font-sans text-[15px] text-ink-400">
+                Bookings are added to your calendar automatically. Check that the
+                connection works (a test event is created and deleted at once).
+              </p>
+              <div className="mt-3 flex flex-wrap items-center gap-4">
+                <button
+                  type="button"
+                  onClick={checkCalendar}
+                  disabled={calChecking}
+                  className="btn btn-secondary btn-sm"
+                >
+                  {calChecking ? "Checking…" : "Check calendar connection"}
+                </button>
+                {calCheck && (
+                  <span
+                    className={`font-sans text-[16px] ${calCheck.ok ? "text-sage" : "text-copper-900"}`}
+                  >
+                    {calCheck.message}
+                  </span>
+                )}
+              </div>
             </div>
           </div>
         )}

@@ -11,6 +11,7 @@ import { buildICS } from "@/lib/ics";
 import { sendEmail } from "@/lib/email";
 import { bookingClientEmail, bookingOwnerEmail } from "@/lib/emails";
 import { formatInTimeZone } from "@/lib/time";
+import { normalizeCell } from "@/lib/phone";
 
 export const dynamic = "force-dynamic";
 
@@ -59,6 +60,13 @@ export async function POST(request: Request) {
       { status: 400 },
     );
   }
+  const cell = normalizeCell(phone);
+  if (!cell) {
+    return NextResponse.json(
+      { error: "Please enter a valid cell phone number." },
+      { status: 400 },
+    );
+  }
   const startDate = new Date(start);
   if (!start || Number.isNaN(startDate.getTime())) {
     return NextResponse.json(
@@ -87,13 +95,17 @@ export async function POST(request: Request) {
     hour12: true,
   })}`;
 
-  const summary = `${service.name}, ${name.trim()}`;
+  // Consults are by phone, so the number to call is in the event title.
+  const summary =
+    service.category === "phone"
+      ? `${service.name}, ${name.trim()} · ${cell}`
+      : `${service.name}, ${name.trim()}`;
   const descriptionLines = [
     `Booking via ${site.url}`,
     `Session: ${service.name} ($${service.price})`,
     `Client: ${name.trim()}`,
     `Email: ${email}`,
-    phone ? `Phone: ${phone}` : null,
+    `Cell: ${cell}`,
     notes ? `Notes: ${notes}` : null,
     source ? `Source: ${source}` : null,
     `Policy: ${site.cancellationPolicy}`,
@@ -103,6 +115,7 @@ export async function POST(request: Request) {
   // ── Book it ─────────────────────────────────────────────────────────────
   try {
     let eventLink: string | null = null;
+    let onCalendar = false;
 
     if (isGoogleConfigured()) {
       // Guard against a double-book between availability load and submit.
@@ -124,9 +137,11 @@ export async function POST(request: Request) {
           end: endDate,
           attendeeName: name.trim(),
           attendeeEmail: email,
-          location: serviceLocation(service),
+          location:
+            service.category === "phone" ? `By phone: ${cell}` : serviceLocation(service),
         });
         eventLink = created.htmlLink;
+        onCalendar = true;
       } catch (calErr) {
         // Calendar is misconfigured (bad key / not shared / API off). Don't
         // fail the booking — fall through to the email/ICS fallback so the
@@ -171,7 +186,8 @@ export async function POST(request: Request) {
     const ownerEmail = bookingOwnerEmail({
       name: name.trim(),
       email,
-      phone,
+      phone: cell,
+      onCalendar,
       service: service.name,
       price: service.price,
       when: whenLabel,
@@ -189,7 +205,9 @@ export async function POST(request: Request) {
     // Push notification to the practitioner's installed admin app.
     try {
       await sendPushToAdmins({
-        title: `New booking · ${service.name}`,
+        title: onCalendar
+          ? `New booking · ${service.name}`
+          : `New booking (add to your calendar) · ${service.name}`,
         body: `${name.trim()} — ${whenLabel}${source ? ` (via ${source})` : ""}`,
         url: "/admin",
         tag: `booking-${startDate.getTime()}`,
@@ -204,6 +222,7 @@ export async function POST(request: Request) {
       service: service.name,
       price: service.price,
       calendarConnected: isGoogleConfigured(),
+      calendarAdded: onCalendar,
       eventLink,
     });
   } catch (err) {
